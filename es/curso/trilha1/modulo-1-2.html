@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Módulo 1.2 — Anatomía VLA — VLA Mastery</title>
+<meta content="Anatomía de un modelo VLA: codificador de visión, backbone de lenguaje, fusión multimodal, action head, propiocepción y ciclo de control." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha1/modulo-1-2.html" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha1/modulo-1-2.html" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha1/modulo-1-2.html" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../../../curso/trilha1/modulo-1-2.html" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="../../../en/curso/trilha1/modulo-1-2.html" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="modulo-1-2.html" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10 transition-colors" href="../trilha1/">Ruta 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors" href="../trilha2/">Ruta 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors" href="../trilha3/">Ruta 3</a>
+<button aria-label="Cambiar tema" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Cambiar tema" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Mapa del curso</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Ruta 1 — Fundamentos</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Ruta 2 — Herramientas</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Ruta 3 — Avanzado</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-emerald-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-emerald-400 mb-4 inline-block" href="index.html">← Ruta 1</a>
+<span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full mb-4">MÓDULO 1.2</span>
+<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🧬 Anatomía VLA: Vision + Language + Action</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Abrimos la caja negra. Un VLA tiene tres órganos: un encoder de visión que convierte píxeles en tokens, un backbone de lenguaje que razona y una cabeza de acción que emite comandos motores, todo conectado mediante fusión multimodal, propiocepción y un loop de control a decenas de Hz.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Temas</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">~40</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">Básico</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nivel</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">Teoría</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<nav class="text-sm dark:text-gray-500 light-text-gray-500 mb-10"><a class="hover:text-emerald-400" href="../">Curso</a> / <a class="hover:text-emerald-400" href="index.html">Ruta 1</a> / <span class="text-emerald-400">Módulo 1.2</span></nav>
+<h2 class="text-xl font-bold dark:text-white light-text-gray-900 mb-8 pb-3 border-b border-dark-600 light-border-gray-200">Contenido detallado</h2>
+<!-- DIAGRAMA DE BLOCOS GERAL -->
+<div class="rounded-2xl border border-emerald-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-12">
+<svg aria-label="Diagrama de bloques de un VLA: el encoder de visión y el tokenizador de texto alimentan el backbone LLM, que envía el estado latente a la cabeza de acción" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 820 300">
+<defs>
+<lineargradient id="m12-g" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#10b981"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
+<filter id="m12-glow"><fegaussianblur stddeviation="1.8"></fegaussianblur></filter>
+<marker id="m12-arr" markerheight="10" markerwidth="10" orient="auto" refx="7" refy="3"><path d="M0,0 L7,3 L0,6 Z" fill="#38bdf8"></path></marker>
+<pattern height="24" id="m12-dots" patternunits="userSpaceOnUse" width="24"><circle cx="1.2" cy="1.2" fill="#10b981" opacity="0.08" r="1.2"></circle></pattern>
+</defs>
+<rect fill="url(#m12-dots)" height="300" width="820" x="0" y="0"></rect>
+<rect fill="#0b0f1a" height="50" rx="10" stroke="#38bdf8" stroke-width="2" width="150" x="20" y="40"></rect>
+<text fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle" x="95" y="62">👁 Vision encoder</text>
+<text fill="#94a3b8" font-size="10" text-anchor="middle" x="95" y="79">ViT / DINOv2 / SigLIP</text>
+<rect fill="#0b0f1a" height="50" rx="10" stroke="#38bdf8" stroke-width="2" width="150" x="20" y="120"></rect>
+<text fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle" x="95" y="142">💬 Texto</text>
+<text fill="#94a3b8" font-size="10" text-anchor="middle" x="95" y="159">instrucción → tokens</text>
+<rect fill="#0b0f1a" height="50" rx="10" stroke="#38bdf8" stroke-width="2" width="150" x="20" y="200"></rect>
+<text fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle" x="95" y="222">📐 Estado</text>
+<text fill="#94a3b8" font-size="10" text-anchor="middle" x="95" y="239">articulaciones, fuerza</text>
+<rect fill="#10b981" filter="url(#m12-glow)" height="100" opacity="0.14" rx="16" width="220" x="300" y="100"></rect>
+<rect fill="#0b0f1a" height="100" rx="16" stroke="url(#m12-g)" stroke-width="2.5" width="220" x="300" y="100"></rect>
+<text fill="#e2e8f0" font-size="16" font-weight="800" text-anchor="middle" x="410" y="140">Backbone LLM</text>
+<text fill="#10b981" font-size="12" text-anchor="middle" x="410" y="162">fusión multimodal</text>
+<text fill="#64748b" font-size="10" text-anchor="middle" x="410" y="180">cross-attention / early fusion</text>
+<rect fill="#0b0f1a" height="60" rx="12" stroke="url(#m12-g)" stroke-width="2.5" width="160" x="640" y="120"></rect>
+<text fill="#10b981" font-size="14" font-weight="700" text-anchor="middle" x="720" y="146">🦾 Action head</text>
+<text fill="#94a3b8" font-size="10" text-anchor="middle" x="720" y="165">Δpose · gripper</text>
+<path d="M170 65 L300 120 M170 145 L300 150 M170 225 L300 180" fill="none" marker-end="url(#m12-arr)" stroke="#38bdf8" stroke-width="2"></path>
+<path d="M520 150 L640 150" marker-end="url(#m12-arr)" stroke="url(#m12-g)" stroke-width="3"></path>
+</svg>
+<p class="text-xs dark:text-gray-500 light-text-gray-500 mt-3 text-center">El flujo de tokens: tres entradas convergen en el backbone, que entrega un estado latente a la cabeza de acción.</p>
+</div>
+<!-- TÓPICO 1 -->
+<section class="mb-16" id="topico-1">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">1</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">👁 Encoder de visión: ViT, DINOv2, SigLIP</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La imagen entra como una cuadrícula de <strong class="text-emerald-400">patches</strong> (p. ej., 16×16 px), cada uno proyectado en un <strong class="text-emerald-400">patch embedding</strong> — el token visual. Un ViT procesa estos tokens con self-attention. Las opciones comunes tienen objetivos distintos: <strong class="text-emerald-400">SigLIP</strong> alinea visión y texto mediante contrastive (bueno para semántica/lenguaje), mientras que <strong class="text-emerald-400">DINOv2</strong> aprende features espaciales densas autosupervisadas (bueno para ubicación y geometría). OpenVLA usa un <strong class="text-emerald-400">codificador dual</strong> (SigLIP + DINOv2) precisamente para combinar semántica y espacio.</p>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Hacer</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Combinar SigLIP (semántica) + DINOv2 (espacio) para mayor robustez.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Mantener el encoder preentrenado y hacer un fine-tuning ligero.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Usar múltiples cámaras (frontal + wrist) como tokens adicionales.</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Entrenar el encoder desde cero con pocas demostraciones.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Resolución demasiado baja que pierde detalles de agarre.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Agotar el token budget con cámaras redundantes.</span></li>
+</ul>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Patch embedding</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Patch de imagen → token.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">SigLIP</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Alineación contrastiva visión-texto.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">DINOv2</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Características espaciales autosupervisadas.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Codificador dual</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Dos encoders concatenados.</p></div>
+</div>
+</section>
+<!-- TÓPICO 2 -->
+<section class="mb-16" id="topico-2">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">2</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">💬 Backbone de lenguaje: Llama, PaliGemma</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">El corazón del VLA es un <strong class="text-emerald-400">LLM preentrenado</strong> que funciona como motor de razonamiento multimodal. OpenVLA usa un VLM Prismatic con base <strong class="text-emerald-400">Llama 2-7B</strong>; π0 parte del <strong class="text-emerald-400">PaliGemma</strong> (3B). La ventaja es heredar miles de millones de tokens de conocimiento web —gramática, mundo, relaciones entre objetos— que aportan grounding semántico a la instrucción. El backbone recibe tokens de visión + texto (+ estado) y produce un estado latente que condiciona la acción.</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Backbones en la práctica</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>OpenVLA</strong> — 7B, base Llama 2, Prismatic VLM.</li>
+<li><strong>π0</strong> — base PaliGemma 3B + action expert mediante flow matching.</li>
+<li><strong>RT-2</strong> — PaLI-X / PaLM-E (hasta 55B, según el artículo de RT-2, 2023), cerrado.</li>
+<li><strong>SmolVLA</strong> (jun/2025) — 450M, base SmolVLM2-500M; corre en hardware de consumo (Apache-2.0).</li>
+<li><strong>GR00T N1.7</strong> (2026) — 3B; el S2 es el Cosmos-Reason2-2B (arquitectura Qwen3-VL) y el S1 es un DiT de 32 capas.</li>
+</ul>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">El tamaño del backbone es un trade-off directo con la <strong class="text-primary">latencia de inferencia</strong>. Los modelos de 7B exigen una GPU potente y action chunking para correr a 10-50Hz; las bases más pequeñas (0,45B–3B) facilitan el deploy en el borde. En 2026 la tendencia es separar el backbone lento de un controlador rápido (mira el tema 6).</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">PaliGemma</p><p class="text-xs dark:text-gray-400 light-text-gray-600">VLM base de π0.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Prismatic</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Receta de VLM de OpenVLA.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Decoder transformer</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Núcleo autoregresivo de razonamiento.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Grounding semántico</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Conocimiento web aplicado a la tarea.</p></div>
+</div>
+</section>
+<!-- TÓPICO 3 -->
+<section class="mb-16" id="topico-3">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">3</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔗 Fusión multimodal: cross-attention vs early fusion</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">¿Cómo entran la visión y el texto en el mismo contexto? En <strong class="text-emerald-400">early fusion</strong> (OpenVLA, π0), los tokens visuales y de texto simplemente se <strong class="text-emerald-400">concatenados</strong> en la secuencia de entrada del LLM, que los mezcla mediante self-attention — simple y eficaz, pero el número de tokens visuales aumenta el costo. En <strong class="text-emerald-400">cross-attention</strong> (Flamingo, algunos VLA), el texto consulta la imagen mediante capas dedicadas de atención cruzada, manteniendo más ligero el backbone de lenguaje. La principal contrapartida es <strong class="text-emerald-400">presupuesto de tokens</strong> versus capacidad de grounding fino.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Early fusion (concatenação)
+seq = [img_tok_1 ... img_tok_256, txt_tok_1 ... txt_tok_K]
+latent = LLM(seq)            # self-attention mistura tudo
+
+# Cross-attention
+latent = LLM(txt_tok)        # texto no fluxo principal
+latent = CrossAttn(latent, img_tok)  # consulta a imagem</code></pre>
+</div>
+<div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 Por qué la fusión temprana se impuso en los VLA</h3>
+<p class="dark:text-gray-300 light-text-gray-700">La concatenación es la forma más sencilla de reutilizar un VLM listo sin cambiar la arquitectura. Como los VLA parten de VLM ya entrenados con early fusion, heredan esta elección. El costo es gestionar cuidadosamente el token budget visual.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Fusión temprana</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Concatenar tokens en la entrada.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Cross-attention</p><p class="text-xs dark:text-gray-400 light-text-gray-600">El texto consulta la imagen.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Token budget</p><p class="text-xs dark:text-gray-400 light-text-gray-600">El costo crece con los tokens visuales.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Grounding fino</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Vincular la palabra con la región de la imagen.</p></div>
+</div>
+</section>
+<!-- TÓPICO 4 -->
+<section class="mb-16" id="topico-4">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">4</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🦾 La cabeza de acción (action head)</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">El action head convierte el estado latente en comandos motores — normalmente <strong class="text-emerald-400">Δpose</strong> del efector (traslación y rotación relativas) más el estado del <strong class="text-emerald-400">gripper</strong> (abrir/cerrar). Hay tres familias: (1) <strong class="text-emerald-400">detokenizer</strong>, cuando las acciones se discretizaron en tokens (RT-1/RT-2/OpenVLA); (2) <strong class="text-emerald-400">action expert</strong> mediante difusión/flow, un módulo separado que genera acciones continuas (π0); (3) <strong class="text-emerald-400">regresión directa</strong> de floats. La elección determina la expresividad y la latencia: tema de los Módulos 1.5 y 1.6.</p>
+<div class="space-y-6 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Detokenizer (discreto)</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">El LLM predice tokens de acción; un mapa fijo los convierte en valores motores. Es simple y se integra al vocabulario.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Action expert (difusión/flow)</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">El módulo dedicado genera fragmentos de acción continua condicionados por el espacio latente. Expresivo, multimodal.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Regresión directa</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">El MLP emite valores float. Tiene baja latencia, pero le cuesta manejar la multimodalidad si se entrena con MSE.</p>
+</div>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Δpose</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Movimiento relativo del efector.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Action expert</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Módulo de acción separado.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Detokenizer</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Token → valor motor.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Estado del gripper</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Comando de abrir/cerrar.</p></div>
+</div>
+</section>
+<!-- TÓPICO 5 -->
+<section class="mb-16" id="topico-5">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">5</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📐 Propiocepción y estado</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La cámara no basta. El robot necesita conocer su propio estado — <strong class="text-emerald-400">ángulos de articulación, velocidades, fuerza en el efector</strong> y el estado del gripper. Estos valores se incorporan como un <strong class="text-emerald-400">state token</strong> adicional. Igual de importante es el <strong class="text-emerald-400">historial temporal</strong>: ver solo el frame actual crea ambigüedad (¿el brazo está subiendo o bajando?). Apilar observaciones recientes le da al modelo una noción del movimiento y la intención en curso.</p>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Atención al <strong class="text-primary">confusión causal</strong>: si la propiocepción se correlaciona fuertemente con la acción en las demos, el modelo puede "hacer trampa" copiando el estado anterior en vez de mirar la cámara. Equilibra el peso del estado y valida con perturbaciones.</p>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Componentes del estado</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Juntas</strong> — posición y velocidad de cada DOF.</li>
+<li><strong>Fuerza/torque</strong> — sensor en la muñeca para el contacto.</li>
+<li><strong>Historial</strong> — N frames recientes para inferir movimiento.</li>
+</ul>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Propiocepción</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Sentido del propio cuerpo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Token de estado</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Estado codificado como token.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Observation history</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Ventana temporal de observaciones.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Confusión causal</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Atajo que ignora la visión.</p></div>
+</div>
+</section>
+<!-- TÓPICO 6 -->
+<section class="mb-16" id="topico-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">6</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⏱ El loop de control: Hz, latencia, action chunking</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La manipulación fina necesita comandos a <strong class="text-emerald-400">~50Hz</strong>, pero un VLA de 7B no infiere tan rápido. La solución es el <strong class="text-emerald-400">action chunking</strong>: el modelo predice un <strong class="text-emerald-400">bloque</strong> de H acciones futuras de una vez (ej.: 16-50 pasos), que se ejecutan de forma abierta mientras se ejecuta la siguiente inferencia. Con <strong class="text-emerald-400">horizonte móvil</strong>, vuelve a predecir antes de que termine el chunk, manteniendo la reactividad. Esto amortigua la latencia de la red y suaviza la trayectoria — idea introducida por ACT y adoptada por Diffusion Policy y π0. PI publicó el <strong class="text-emerald-400">Real-Time Action Chunking</strong> (jun/2025) para ejecutar chunks de VLAs grandes con latencia alta; LeRobot soporta RTC desde la v0.5 (mar/2026).</p>
+<div class="space-y-6 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Inferir un chunk</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">El modelo predice H acciones futuras de una sola vez.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Ejecutar en lazo abierto</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Las acciones del chunk se ejecutan a 50Hz mientras la red piensa en el siguiente.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Volver a predecir (horizonte móvil)</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Antes de que termine el chunk, una nueva inferencia mantiene el ciclo reactivo.</p>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 La latencia es un presupuesto</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Si la inferencia tarda 100ms y el chunk cubre 320ms (16 pasos a 50Hz), tienes margen para reaccionar. Los chunks demasiado grandes reducen la capacidad de reacción; los demasiado pequeños exceden la latencia. Ajustar H es ingeniería, no un detalle.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mt-3">En 2026 la jerarquía ganó un tercer nivel. En el <strong class="text-emerald-400">Helix 02</strong> de Figure (ene/2026), el S2 (VLM lento) planifica, el S1 emite objetivos de articulación a <strong>200 Hz</strong> y un nuevo <strong>S0</strong> — controlador de cuerpo completo aprendido, 10M de parámetros — corre a <strong>1 kHz</strong>, reemplazando 109.504 líneas de C++. GR00T N1.7 llama a su versión "Action Cascade", y Gemini Robotics ER 2 (jul/2026) orquesta el VLA como herramienta.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Action chunking</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Predecir bloques de acciones futuras.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Horizonte móvil</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Replanificar antes de terminar.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Control rate</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Hz de ejecución motora.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Horizonte H</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Tamaño del chunk previsto.</p></div>
+</div>
+</section>
+<!-- RESUMO -->
+<section class="mb-12">
+<div class="bg-gradient-to-br dark:from-emerald-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-8">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumen del módulo</h2>
+<div class="space-y-3 mb-8">
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Tres órganos</strong><span class="dark:text-gray-400 light-text-gray-600"> — vision encoder, backbone LLM y action head.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Fusión multimodal</strong><span class="dark:text-gray-400 light-text-gray-600"> — predomina la early fusion; cross-attention es la alternativa ligera.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">El estado importa</strong><span class="dark:text-gray-400 light-text-gray-600"> — la propiocepción y el historial evitan la ambigüedad temporal.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Ciclo de control</strong><span class="dark:text-gray-400 light-text-gray-600"> — action chunking + receding horizon amortizan la latencia.</span></div></div>
+</div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-emerald-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">1.3 — Evolución de los Modelos: RT-1, RT-2, OpenVLA, π0, π0.7 — el linaje hasta oct/2026.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Actualizado en oct/2026.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-start">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Volver a la ruta</a>
+<a class="text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition" href="modulo-1-3.html">Próximo módulo →</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos los derechos reservados.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

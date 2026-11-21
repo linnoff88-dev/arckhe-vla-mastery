@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hardware: brazos, sensores, Edge Computing — VLA Mastery</title>
+<meta content="Hardware para VLA: brazos SO-101/Franka/UR/xArm, pinzas y tacto GelSight, RealSense/ZED, Jetson Orin/Thor y teleoperación." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha2/modulo-2-5.html" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha2/modulo-2-5.html" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha2/modulo-2-5.html" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../../../curso/trilha2/modulo-2-5.html" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="../../../en/curso/trilha2/modulo-2-5.html" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="modulo-2-5.html" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors" href="../trilha1/">Ruta 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10 transition-colors" href="../trilha2/">Ruta 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors" href="../trilha3/">Ruta 3</a>
+<button aria-label="Cambiar tema" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Cambiar tema" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Mapa del curso</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Ruta 1 — Fundamentos</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Ruta 2 — Herramientas</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Ruta 3 — Avanzado</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-blue-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-blue-400 mb-4 inline-block" href="index.html">← Volver a la Ruta 2</a>
+<span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-4">MÓDULO 2.5</span>
+<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🦿 Hardware: Brazos, Sensores, Edge Computing</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">La policy necesita un cuerpo. Aquí comparas brazos (SO-101, Franka, UR, xArm), pinzas y táctil, cámaras RGB-D, compute de borde Jetson Orin/Thor y montajes de teleoperación — del brazo de entrada de cientos de dólares a la plataforma de investigación.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Temas</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">40</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">Inter.</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nivel</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">T+P</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-10">Contenido detallado</h2>
+<div class="rounded-2xl border border-blue-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-10">
+<svg aria-label="Anatomía del robot: brazo, sensores y computación de borde señalados" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 760 250">
+<defs>
+<filter id="m25-glow"><fegaussianblur stddeviation="1.8"></fegaussianblur></filter>
+<lineargradient id="m25-grad" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#3b82f6"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
+<pattern height="22" id="m25-dots" patternunits="userSpaceOnUse" width="22"><circle cx="1.5" cy="1.5" fill="#3b82f6" opacity="0.12" r="1.2"></circle></pattern>
+</defs>
+<rect fill="url(#m25-dots)" height="250" width="760" x="0" y="0"></rect>
+<text fill="#e5e7eb" font-size="16" font-weight="800" text-anchor="middle" x="380" y="32">Anatomía del robot manipulador</text>
+<!-- braço estilizado -->
+<rect fill="#0b0f1a" height="30" rx="6" stroke="#3b82f6" stroke-width="2" width="90" x="150" y="180"></rect>
+<line stroke="#38bdf8" stroke-linecap="round" stroke-width="6" x1="195" x2="240" y1="180" y2="110"></line>
+<line stroke="#38bdf8" stroke-linecap="round" stroke-width="6" x1="240" x2="320" y1="110" y2="90"></line>
+<circle cx="195" cy="180" fill="#3b82f6" r="8"></circle><circle cx="240" cy="110" fill="#3b82f6" r="8"></circle>
+<rect fill="#0b0f1a" filter="url(#m25-glow)" height="24" rx="4" stroke="#38bdf8" stroke-width="2" width="26" x="318" y="78"></rect>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="195" y="232">base (6 DOF)</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="331" y="64">pinza + táctil</text>
+<!-- câmera -->
+<rect fill="#0b0f1a" height="44" rx="10" stroke="#38bdf8" stroke-width="2" width="120" x="430" y="70"></rect><text fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle" x="490" y="90">RGB-D</text><text fill="#94a3b8" font-size="10" text-anchor="middle" x="490" y="106">RealSense/ZED</text>
+<!-- compute -->
+<rect fill="#0b0f1a" height="44" rx="10" stroke="#38bdf8" stroke-width="2" width="120" x="430" y="140"></rect><text fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle" x="490" y="160">Jetson</text><text fill="#94a3b8" font-size="10" text-anchor="middle" x="490" y="176">Orin / Thor</text>
+<!-- VLA -->
+<rect fill="#0b0f1a" height="50" rx="12" stroke="#3b82f6" stroke-width="2" width="130" x="600" y="105"></rect><text fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle" x="665" y="128">VLA local</text><text fill="#94a3b8" font-size="10" text-anchor="middle" x="665" y="145">cuantizado</text>
+<g fill="none" stroke="url(#m25-grad)" stroke-width="2.5">
+<line x1="344" x2="428" y1="90" y2="92"></line><line x1="550" x2="490" y1="92" y2="138"></line><line x1="550" x2="598" y1="162" y2="135"></line>
+</g>
+</svg>
+</div>
+<!-- TÓPICO 1 -->
+<section class="mb-16" id="topico-1">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">1</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Brazos manipuladores: SO-101, Franka, UR, xArm</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Los brazos difieren en tres ejes: <strong class="text-blue-400">DOF</strong> (grados de libertad), <strong class="text-blue-400">payload</strong> e <strong class="text-blue-400">repetibilidad</strong>. O <strong class="text-blue-400">SO-101</strong> es el punto de entrada (servos Feetech; ~US$ 100–200 por brazo en DIY, estimación, y ~US$ 433 el par líder + seguidor armado, según el revendedor OpenELAB en 2026); el <strong class="text-blue-400">Franka</strong> (hoy FR3, usada en DROID) es el estándar de investigación con 7 DOF y control de torque/fuerza; <strong class="text-blue-400">UR</strong> e <strong class="text-blue-400">xArm</strong> son cobots industriales.</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Comparación rápida</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>SO-101</strong> — brazo de entrada de LeRobot (y el único de LeLab, oct/2026), 6 DOF, ideal para aprender y recolectar demos.</li>
+<li><strong>Franka FR3</strong> — 7 DOF, control de fuerza, referencia de la academia; FR3 Duo bimanual mostrado como prototipo (Automatica 2025), sin precio público.</li>
+<li><strong>UR5e / UR10e / UR15</strong> — cobots industriales; según UR, el UR15 tiene un TCP de hasta 5 m/s y una carga de 15 kg, y el "AI Accelerator" es un kit con NVIDIA sobre Jetson AGX Orin.</li>
+<li><strong>xArm 7</strong> — buena relación costo-beneficio para investigación, carga útil media.</li>
+</ul>
+</div>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># controlar um Franka via libfranka / franka_ros2 (controle de torque)
+ros2 launch franka_bringup franka.launch.py robot_ip:=172.16.0.2
+# enviar setpoints de junta a partir da policy VLA -&gt; /joint_trajectory
+# repetibilidade: confira a ficha técnica do fabricante; servos de hobby (SO-101) ficam muito atrás</code></pre>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Control por <strong>torque/admittance</strong> (Franka) permite contacto seguro; los brazos solo por posición requieren mucho cuidado en la inserción. Para empezar con VLA, el SO-101 cubre la mayor parte del aprendizaje por una fracción del costo.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">DOF</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Grados de libertad.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Payload</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Carga máxima.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Repetibilidad</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Precisión del retorno.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Control de fuerza</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Contacto seguro.</p></div>
+</div>
+</section>
+<!-- TÓPICO 2 -->
+<section class="mb-16" id="topico-2">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">2</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Pinzas y manos: paralela, succión, multidáctil, táctil</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O <strong class="text-blue-400">end-effector</strong> define lo que el robot puede agarrar. Una pinza <strong class="text-blue-400">paralela</strong> es simple y robusta; <strong class="text-blue-400">succión</strong> domina el bin-picking de superficies planas; las manos <strong class="text-blue-400">multidedo</strong> (Allegro, Shadow) aportan destreza a costa de complejidad. Los sensores táctiles como <strong class="text-blue-400">GelSight</strong> aportan retroalimentación del contacto que la cámara no capta.</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Elección del end-effector según la tarea</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Pick-and-place</strong> — basta con una pinza paralela.</li>
+<li><strong>Bin picking de cajas/placas</strong> — succión.</li>
+<li><strong>Manipulación fina / in-hand</strong> — múltiples dedos + táctil.</li>
+<li><strong>Inserción (peg-in-hole)</strong> — fuerza/admittance + GelSight.</li>
+</ul>
+</div>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Hacer</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Empieza con una pinza paralela: cubre la mayoría de las tareas.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Agregar táctil para inserción/manipulación fina y in-hand.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Hacer coincidir el efector final con la tarea, no al revés.</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Una mano de 20 DOF para un simple pick-and-place.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Succión en objetos porosos o irregulares.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Ignorar el estado del gripper en las observaciones del VLA.</span></li>
+</ul>
+</div>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">El tacto es la frontera: las policies <strong>vision-tactile</strong> (p. ej., integrar GelSight al VLA) resuelven la inserción y la manipulación de objetos translúcidos o resbaladizos que la cámara por sí sola no puede ver. Pero agrega el tacto solo cuando la tarea lo requiera: un sensor adicional es otro eje que el modelo debe aprender.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Paralela</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Simple y robusta.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Succión</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Bin picking plano.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Multidedo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Destreza, en la mano.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">GelSight</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Tacto de alta resolución.</p></div>
+</div>
+</section>
+<!-- TÓPICO 3 -->
+<section class="mb-16" id="topico-3">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">3</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Sensores: RGB-D, wrist cam, IMU, encoders</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La visión es la entrada dominante del VLA. <strong class="text-blue-400">RealSense</strong> (D435/D455) e <strong class="text-blue-400">ZED</strong> ofrecen RGB-D accesible; la <strong class="text-blue-400">cámara de muñeca</strong> (en la muñeca) resuelve la oclusión y mejora la manipulación fina. <strong class="text-blue-400">Encoders</strong> de articulación completan la propiocepción y la <strong class="text-blue-400">IMU</strong> ayuda en bases móviles/humanoides.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># RealSense via SDK / ROS2
+ros2 launch realsense2_camera rs_launch.py \
+  enable_depth:=true align_depth.enable:=true rgb_camera.color_profile:=640x480x30
+
+# múltiplas câmeras: top + wrist viram chaves no LeRobotDataset
+# observation.images.top / observation.images.wrist</code></pre>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Función de cada sensor</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Cámara de primera</strong> — visión global de la escena, contexto de la tarea.</li>
+<li><strong>Cámara en la muñeca</strong> — detalle local, prevención de oclusiones en la pinza.</li>
+<li><strong>Encoders</strong> — estado de articulación (parte del <code class="font-mono text-xs">observation.state</code>).</li>
+<li><strong>Sensor F/T</strong> — fuerza en la muñeca para un contacto controlado.</li>
+</ul>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">RGB-D</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Color + profundidad.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Cámara en la muñeca</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Antioclusiones.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Encoder</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Estado de articulación.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">IMU</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Aceleración/orientación.</p></div>
+</div>
+</section>
+<!-- TÓPICO 4 -->
+<section class="mb-16" id="topico-4">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">4</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Computación de borde: Jetson Orin/Thor, rendimiento vs. consumo</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Ejecuta el VLA <strong class="text-blue-400">on-board</strong> elimina la latencia de red. La línea <strong class="text-blue-400">Jetson</strong> domina: <strong class="text-blue-400">Orin</strong> (Nano/NX/AGX) cubre desde policies pequeñas hasta medianas en un envelope de decenas de watts; <strong class="text-blue-400">Thor</strong> (GPU Blackwell, ago/2025; según la prensa, 2.070 TFLOPS FP4, 128 GB y 130 W) eleva el listón para los foundation models de robótica en el edge: según NVIDIA, el Cosmos 3 Edge (4B, 07/2026) corre en RTX, DGX y Jetson Thor; el GR00T N1.7 (3B, 2026) exporta a ONNX y TensorRT, el camino para embarcar. <strong class="text-blue-400">Los precios cambiaron:</strong> según cnx-software (jul/2026), el dev kit Jetson AGX Thor pasó de US$ 3.499 a US$ 5.499 y el Orin Nano Super dev kit de US$ 249 a US$ 399, sin anuncio y atribuido al costo de la memoria. La clave es combinar la cuantización con el envelope de potencia.</p>
+<div class="space-y-6 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Elegir el módulo</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Orin Nano/NX para policies pequeñas; AGX Orin/Thor para VLA 3-7B en el edge.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Optimizar</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">TensorRT, INT8/FP8, fusión de kernels; reducir la latencia sin perder mucha tasa de éxito.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Gestionar la temperatura/energía</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Modo de potencia (<code class="font-mono text-xs">nvpmodel</code>), <code class="font-mono text-xs">jetson_clocks</code> y la disipación definen el throughput sostenido.</p>
+</div>
+</div>
+</div>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># fixar modo de potência máximo e clocks no Jetson
+sudo nvpmodel -m 0          # MAXN
+sudo jetson_clocks
+tegrastats                  # monitorar GPU/CPU/EMC e temperatura
+
+# compilar a policy com TensorRT (INT8) para inferência on-board
+trtexec --onnx=policy.onnx --int8 --saveEngine=policy.engine</code></pre>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Jetson Orin</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Edge, policies pequeñas/medianas.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Jetson Thor</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Blackwell para FMs.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">TensorRT</p><p class="text-xs dark:text-gray-400 light-text-gray-600">INT8/FP8 en el edge.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Envolvente térmica</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Throughput sostenido.</p></div>
+</div>
+</section>
+<!-- TÓPICO 5 -->
+<section class="mb-16" id="topico-5">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">5</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Teleoperación: leader-follower, VR, guantes, ergonomía</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Toda imitación comienza con la teleoperación. <strong class="text-blue-400">Leader-follower</strong> (ALOHA, SO-101) es lo más directo: un brazo refleja los movimientos del otro. <strong class="text-blue-400">VR</strong> e <strong class="text-blue-400">guantes</strong> capturan manos hábiles y las mapean al robot. La <strong class="text-blue-400">ergonomía</strong> importa: la recolección agotadora genera demos deficientes, y los datos deficientes entran directamente al modelo.</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Modalidades de teleoperación</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Leader-follower</strong> — barato, intuitivo, coincide con el espacio de acción del robot.</li>
+<li><strong>VR (Quest/Vision Pro)</strong> — captura de la mano en 6-DOF, buena para humanoides.</li>
+<li><strong>Guantes</strong> — manos con varios dedos, datos de destreza.</li>
+<li><strong>Reflejo cinemático</strong> — retarget de la pose humana al robot.</li>
+<li><strong>VR para SO-101 (Isaac Teleop, 07/2026)</strong> — teleoperar el SO-101 con control de VR vía CloudXR/OpenXR, conectado al ecosistema LeRobot.</li>
+<li><strong>Video humano egocéntrico</strong> — en 2026 se convirtió en una gran fuente de preentrenamiento, sin robot en la recolección: Index de Figure (08/2026), EgoVerse (04/2026), "20.000+ horas" de video humano egocéntrico citadas por NVIDIA en GR00T N1.7. Ver módulo 2.6.</li>
+</ul>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Asegúrate de que el <strong>espacio de acción</strong> de teleop sea idéntico a lo que indica la policy (Δpose vs juntas). La discrepancia ahí crea un sesgo sistemático que el VLA aprende como ruido.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Leader-follower</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Reflejo directo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">VR</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Captura 6-DOF.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Guantes</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Destreza con varios dedos.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Ergonomía</p><p class="text-xs dark:text-gray-400 light-text-gray-600">La comodidad = buenos datos.</p></div>
+</div>
+<div class="grid md:grid-cols-2 gap-6 mt-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Hacer</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Hacer coincidir el espacio de acción de la teleoperación con lo que ordena la policy.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Sesiones cortas y cómodas para mantener la calidad.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Variar intencionalmente la posición del objeto (cobertura).</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Discrepancia del espacio de acción (Δpose vs juntas).</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>La recopilación exhaustiva degrada la calidad de las demos.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Grabar 200 episodios idénticos sin variación.</span></li>
+</ul>
+</div>
+</div>
+</section>
+<!-- TÓPICO 6 -->
+<section class="mb-16" id="topico-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">6</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Presupuesto y montaje: de $100 a la plataforma de investigación</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">El costo de entrada se desplomó. Un setup completo de aprendizaje VLA — <strong class="text-blue-400">SO-101 líder + seguidor + 2 cámaras + Jetson</strong> — queda cerca de mil dólares en oct/2026, sumando los precios citados abajo, muy por debajo de una celda de investigación con Franka. La barrera hoy es menos dinero y más método.</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Rangos de presupuesto</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Entrada</strong> — SO-101 DIY, ~US$ 100–200 por brazo (estimación, 2026), cámara USB, entrena en laptop/cloud.</li>
+<li><strong>Intermedio</strong> — par SO-101 líder + seguidor armado (~US$ 433, según OpenELAB) + Jetson Orin Nano Super dev kit (US$ 399, según cnx-software, jul/2026) + 2 cámaras.</li>
+<li><strong>Robot de escritorio</strong> — Reachy Mini (HF/Pollen), US$ 299 Lite / US$ 449 Wireless en el lanzamiento, según la prensa; tiene app/SDK propios y no es hardware nativo de LeRobot.</li>
+<li><strong>Investigación</strong> — ALOHA bimanual, Franka/UR con F/T, Jetson AGX Thor (US$ 5.499 desde jul/2026, según cnx-software); Franka sin precio público: pide cotización.</li>
+</ul>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Empieza con poco presupuesto, entrena en la cloud y luego ejecuta la inferencia en el edge. El montaje de SO-101 + LeRobot es el camino más corto desde cero hasta tener una policy funcionando en un brazo real.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Entrada</p><p class="text-xs dark:text-gray-400 light-text-gray-600">SO-101, cientos de US$.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Intermedio</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Leader+follower+Jetson.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Investigación</p><p class="text-xs dark:text-gray-400 light-text-gray-600">ALOHA / Franka.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Método &gt; presupuesto</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Los buenos datos importan más.</p></div>
+</div>
+</section>
+<section class="mb-12">
+<div class="bg-gradient-to-br dark:from-blue-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-blue-500/30 p-8">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumen del módulo</h2>
+<div class="space-y-3 mb-8">
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Brazo por DOF/payload/repetibilidad</strong><span class="dark:text-gray-400 light-text-gray-600"> — SO-101 entra, Franka investiga.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">El efector final sigue la tarea</strong><span class="dark:text-gray-400 light-text-gray-600"> — paralela, succión, multifinger, táctil.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Sensores</strong><span class="dark:text-gray-400 light-text-gray-600"> — RGB-D + wrist cam + encoders alimentan el VLA.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Jetson + cuantización</strong><span class="dark:text-gray-400 light-text-gray-600"> — inferencia on-board que equilibra potencia y throughput.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">El costo se desplomó</strong><span class="dark:text-gray-400 light-text-gray-600"> — VLA accesible; el método importa más que el presupuesto.</span></div></div>
+</div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">2.6 — Datasets: Open X-Embodiment, DROID y LIBERO, el combustible con el que se entrena todo lo que vimos.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Actualizado en oct/2026.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-start">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Volver a la ruta</a>
+<a class="text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-6.html">Próximo módulo →</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos los derechos reservados.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Module 1.6 — Action Tokenization — VLA Mastery</title>
+<meta content="Action representations: continuous, discrete binning, the high-frequency problem, and FAST (DCT+BPE) from Physical Intelligence." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha1/modulo-1-6.html" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha1/modulo-1-6.html" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha1/modulo-1-6.html" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../../../curso/trilha1/modulo-1-6.html" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="modulo-1-6.html" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">EN</a><a href="../../../es/curso/trilha1/modulo-1-6.html" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10 transition-colors" href="../trilha1/">Track 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors" href="../trilha2/">Track 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors" href="../trilha3/">Track 3</a>
+<button aria-label="Switch theme" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Switch theme" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Course map</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Track 1 — Fundamentals</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Track 2 — Tools</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Track 3 — Advanced</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-emerald-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-emerald-400 mb-4 inline-block" href="index.html">← Track 1</a>
+<span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full mb-4">MODULE 1.6</span>
+<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🔢 Action Tokenization: Discrete vs Continuous vs FAST</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">How to represent actions for the model is just as important as the architecture. From continuous regression to RT-2’s discrete binning, to the long-sequence problem at high frequency, and finally FAST—DCT+BPE tokenization that compresses in the frequency domain. The technical close of Track 1.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Topics</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">~45</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutes</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">Advanced</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Level</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">Theory</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Type</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<nav class="text-sm dark:text-gray-500 light-text-gray-500 mb-10"><a class="hover:text-emerald-400" href="../">Course</a> / <a class="hover:text-emerald-400" href="index.html">Track 1</a> / <span class="text-emerald-400">Module 1.6</span></nav>
+<h2 class="text-xl font-bold dark:text-white light-text-gray-900 mb-8 pb-3 border-b border-dark-600 light-border-gray-200">Detailed content</h2>
+<!-- SVG comparação 3 vias -->
+<div class="rounded-2xl border border-emerald-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-12">
+<svg aria-label="Comparison of three action tokenizations: continuous emits floats, binning emits redundant tokens per timestep, FAST compresses in the frequency domain into a few tokens" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 820 280">
+<defs>
+<lineargradient id="m16-g" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#10b981"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
+</defs>
+<!-- signal -->
+<path d="M30 70 Q 70 30, 110 70 T 190 70 T 270 70" fill="none" stroke="#94a3b8" stroke-width="2"></path>
+<text fill="#64748b" font-size="11" x="20" y="40">action signal</text>
+<!-- continuo -->
+<rect fill="#0b0f1a" height="46" rx="10" stroke="#10b981" stroke-width="2" width="240" x="30" y="100"></rect>
+<text fill="#10b981" font-size="12" font-weight="700" text-anchor="middle" x="150" y="120">Continuous · floats</text>
+<text fill="#94a3b8" font-size="10" text-anchor="middle" x="150" y="137">0.12  -0.03  0.41 ...</text>
+<!-- binning -->
+<rect fill="#0b0f1a" height="46" rx="10" stroke="#facc15" stroke-width="2" width="240" x="30" y="166"></rect>
+<text fill="#facc15" font-size="12" font-weight="700" text-anchor="middle" x="150" y="186">Binning · tokens/timestep</text>
+<g fill="#facc15">
+<rect height="10" rx="2" width="10" x="42" y="194"></rect><rect height="10" rx="2" width="10" x="56" y="194"></rect><rect height="10" rx="2" width="10" x="70" y="194"></rect><rect height="10" rx="2" width="10" x="84" y="194"></rect><rect height="10" rx="2" width="10" x="98" y="194"></rect><rect height="10" rx="2" width="10" x="112" y="194"></rect><rect height="10" rx="2" width="10" x="126" y="194"></rect><rect height="10" rx="2" width="10" x="140" y="194"></rect><rect height="10" rx="2" width="10" x="154" y="194"></rect><rect height="10" rx="2" width="10" x="168" y="194"></rect><rect height="10" rx="2" width="10" x="182" y="194"></rect><rect height="10" rx="2" width="10" x="196" y="194"></rect><rect height="10" rx="2" width="10" x="210" y="194"></rect><rect height="10" rx="2" width="10" x="224" y="194"></rect><rect height="10" rx="2" width="10" x="238" y="194"></rect>
+</g>
+<text fill="#ef4444" font-size="10" text-anchor="middle" x="150" y="232">many redundant tokens (50Hz)</text>
+<!-- arrow to FAST -->
+<path d="M280 150 L380 150" stroke="url(#m16-g)" stroke-width="3"></path>
+<text fill="#38bdf8" font-size="11" text-anchor="middle" x="330" y="140">DCT + BPE</text>
+<!-- FAST -->
+<rect fill="#0b0f1a" height="100" rx="14" stroke="url(#m16-g)" stroke-width="2.5" width="390" x="400" y="100"></rect>
+<text fill="#38bdf8" font-size="14" font-weight="800" text-anchor="middle" x="595" y="128">FAST · frequency domain</text>
+<g fill="#38bdf8">
+<rect height="14" rx="3" width="14" x="500" y="150"></rect><rect height="14" rx="3" width="14" x="522" y="150"></rect><rect height="14" rx="3" width="14" x="544" y="150"></rect><rect height="14" rx="3" width="14" x="566" y="150"></rect>
+</g>
+<text fill="#10b981" font-size="11" text-anchor="middle" x="595" y="190">few tokens, high fidelity</text>
+</svg>
+<p class="text-xs dark:text-gray-500 light-text-gray-500 mt-3 text-center">Three paths to the same signal: continuous floats, redundant tokens per timestep, or a few compressed tokens via DCT (FAST).</p>
+</div>
+<!-- TÓPICO 1 -->
+<section class="mb-16" id="topico-1">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">1</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📈 Continuous action: direct regression</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">The most natural representation: the head outputs <strong class="text-emerald-400">floats directly</strong> for each action dimension (Δx, Δy, Δz, rotation, gripper). It’s simple, preserves full resolution, and wastes nothing on discretization. The problem, as seen in Module 1.4, is that when trained with <strong class="text-emerald-400">MSE/L1</strong> it is <strong class="text-emerald-400">unimodal</strong> — collapses modes. That’s why continuous regression shines only when paired with an expressive head (diffusion/flow), rather than a simple MLP+MSE.</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 When pure continuous works</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Unimodal tasks</strong> — a single clear solution per state.</li>
+<li><strong>Minimum latency</strong> — one forward pass, no denoising steps.</li>
+<li><strong>Baseline</strong> — starting point for measuring gains from the other options.</li>
+</ul>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Regression</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Emit floats per dimension.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">L1/L2</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Common regression losses.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Unimodality</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Average limitation.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Full resolution</p><p class="text-xs dark:text-gray-400 light-text-gray-600">No loss from binning.</p></div>
+</div>
+</section>
+<!-- TÓPICO 2 -->
+<section class="mb-16" id="topico-2">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">2</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔲 Discrete binning (RT-1/RT-2)</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">RT-1, RT-2, and OpenVLA discretize each dimension into <strong class="text-emerald-400">uniform bins</strong> (RT-1 uses 256) and treat prediction as <strong class="text-emerald-400">classification</strong> via cross-entropy. The advantage: it becomes a token problem, integrating seamlessly with the LLM’s vocabulary and capturing multimodality (categorical distribution). The drawbacks: <strong class="text-emerald-400">loss of resolution</strong> (quantization) and loss of <strong class="text-emerald-400">correlation between dimensions</strong>, since each one is tokenized independently.</p>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Advantages of binning</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Integrates into the LLM vocabulary.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Captures multimodality via softmax.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Simple autoregressive training (cross-entropy).</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Disadvantages</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Resolution limited by the number of bins.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Ignores correlation between dimensions.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Long sequences at high frequency (next topic).</span></li>
+</ul>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Uniform binning</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Divide interval into bins.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Quantization</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Loss of resolution.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Cross-entropy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Action as classification.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Independence</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Tokenized dimensions separately.</p></div>
+</div>
+</section>
+<!-- TÓPICO 3 -->
+<section class="mb-16" id="topico-3">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">3</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🌊 The high-frequency problem</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">This is where the pain that motivated FAST lives. At 50Hz, actions at consecutive timesteps are <strong class="text-emerald-400">almost identical</strong> — the arm moves very little in 20ms. Tokenizing each timestep generates <strong class="text-emerald-400">redundant tokens</strong> and enormous sequences: a 1-second chunk at 50Hz with 7 dimensions contains 350 tokens, most of them repeated. Long sequences make autoregressive training prohibitively expensive and degrade learning. Naive binning simply doesn't scale to high-frequency dynamic control.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Custo de binning por timestep a 50Hz
+chunk = 1s · 50Hz = 50 timesteps
+dims  = 7 (xyz + rot + gripper)
+tokens = 50 × 7 = 350  ← maioria redundante
+# treino autoregressivo nessa sequência: lento e instável</code></pre>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Practical tip</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Redundancy is a clue: if the signal varies slowly between timesteps, it's <strong class="text-primary">compressible</strong>. Smooth signals concentrate energy in a few low frequencies—exactly what the DCT exploits in FAST.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Temporal redundancy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Nearly identical timesteps.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Long sequence</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Hundreds of tokens per chunk.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Dynamic control</p><p class="text-xs dark:text-gray-400 light-text-gray-600">High frequency, fast motion.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Compressibility</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Smooth signal → few coefficients.</p></div>
+</div>
+</section>
+<!-- TÓPICO 4 -->
+<section class="mb-16" id="topico-4">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">4</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⚡ FAST: DCT + BPE tokenization</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">FAST</strong> (Frequency-space Action Sequence Tokenization, Physical Intelligence, 2025) reverses the logic: instead of tokenizing in time, it transforms the trajectory into <strong class="text-emerald-400">frequency domain via DCT</strong> (the same transform as JPEG), quantize the coefficients, and compress them with <strong class="text-emerald-400">BPE</strong>. Since smooth signals concentrate energy in a few low frequencies, the result is <strong class="text-emerald-400">few high-fidelity tokens</strong>. According to PI, FAST makes autoregressive VLAs competitive with diffusion in high-frequency control and trains "5 times faster" — RT-2/OpenVLA-style, but dexterous. The checkpoint <code>pi0_fast_base</code> is open in openpi (Apache-2.0) and LeRobot has supported Pi0-FAST since v0.5 (Mar/2026).</p>
+<div class="space-y-6 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Trajectory DCT</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Transforms the action chunk into frequency coefficients.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Quantize and discard</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Keeps the dominant coefficients (low frequency), zeros out the rest.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Compress with BPE</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Byte-Pair Encoding groups patterns into a few dense tokens.</p>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 Why FAST matters</h3>
+<p class="dark:text-gray-300 light-text-gray-700">FAST drastically reduces sequence length while maintaining fidelity, speeding up training and enabling autoregressive VLAs for dexterous tasks. It is the bridge between the simplicity of the token paradigm and the high-frequency demands of fine manipulation.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mt-3">In 2026 FAST gained a <strong class="text-emerald-400">open reimplementation</strong>, with open data, in MolmoAct 2 (Ai2, May 2026), which reaches 97.2% on LIBERO (98.1% in Think mode) and, according to Ai2, makes an action call in 180 ms versus 6,700 ms for MolmoAct 1. Autoregressive models are back in force: Galaxea G0.5 (checkpoint Jun 2026) uses "a single autoregressive stream" for reasoning and action — but note, the weights have <strong class="text-emerald-400">non-commercial license</strong>.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">DCT</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Frequency transform.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">BPE</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Byte-pair compression.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Frequency domain</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Compress concentrated energy.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Competitive AR</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Dexterous tokens at high frequency.</p></div>
+</div>
+</section>
+<!-- TÓPICO 5 -->
+<section class="mb-16" id="topico-5">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">5</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⚖️ Trade-offs: length × fidelity × speed</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Every tokenization lives in a <strong class="text-emerald-400">Pareto frontier</strong>: fewer tokens train faster but may lose fidelity; more tokens preserve detail but cost more in training and latency. Naive binning lands in a bad spot (many tokens, average fidelity). FAST <strong class="text-emerald-400">shifts the frontier</strong> — few tokens AND high fidelity — by exploiting the signal's frequency structure. The right choice depends on how compressible your signal is.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-xs sm:text-sm dark:text-gray-300 light-text-gray-700"><code>Esquema     Tokens/chunk   Fidelidade   Treino
+contínuo    1 (vetor)      total        rápido*  (*precisa head expressiva)
+binning     muitos         média        lento
+FAST        poucos         alta         rápido</code></pre>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 The FAST gain</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>↓ length</strong> — far fewer tokens than per-timestep binning on smooth signals.</li>
+<li><strong>↑ speed</strong> — faster autoregressive training ("5 times", according to PI).</li>
+<li><strong>= fidelity</strong> — quality comparable to diffusion on dexterous tasks, according to PI.</li>
+</ul>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Pareto</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Length × fidelity trade-off.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Sequence length</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Number of tokens per chunk.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Training speed</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Fewer tokens → faster.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Shift the boundary</p><p class="text-xs dark:text-gray-400 light-text-gray-600">FAST improves both axes.</p></div>
+</div>
+</section>
+<!-- TÓPICO 6 -->
+<section class="mb-16" id="topico-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">6</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🎛 Choose by use case and impact on the action head</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">There is no universal tokenization—the choice shapes the entire action head. <strong class="text-emerald-400">Slow, quasi-static task</strong> (paused pick-and-place)? Binning works. <strong class="text-emerald-400">Dexterous, dynamic manipulation</strong> (folding clothes, insertions)? FAST (autoregressive) or diffusion/flow. The representation choice determines whether the head is a detokenizer, a generative action expert, or a regressor—closing the conceptual loop that began in Module 1.2.</p>
+<div class="space-y-6 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Characterize the task</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Frequency, dynamics, and multimodality required.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Choose the representation</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Binning, FAST, or continuous+diffusion, depending on the profile.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Match the head</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Detokenizer, action expert, or regressor—consistent with the representation.</p>
+</div>
+</div>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Practical tip</h3>
+<p class="dark:text-gray-300 light-text-gray-700">As of Oct/2026, two paths win in practice: <strong class="text-primary">FAST + autoregressive backbone</strong> (π0-FAST, MolmoAct 2, Galaxea G0.5) or <strong class="text-primary">flow matching / DiT</strong> (π0/π0.5, SmolVLA, GR00T N1.7). There are also hybrids with both branches, such as Wall-OSS-0.5 (Jun 2026). In LeRobot 0.6 they all become a <code>--policy.type</code>: start with what your stack already supports and iterate.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Task dynamics</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Slow vs. dynamic.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Head design</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Head follows the representation.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Representation decision.</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Defines the entire output.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Closed loop</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Connects back to M1.2.</p></div>
+</div>
+</section>
+<!-- RESUMO -->
+<section class="mb-12">
+<div class="bg-gradient-to-br dark:from-emerald-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-8">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Module and Track 1 summary</h2>
+<div class="space-y-3 mb-8">
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Continuous vs. binning</strong><span class="dark:text-gray-400 light-text-gray-600"> — floats are simple but unimodal; bins integrate with the LLM at the cost of resolution.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">High frequency breaks binning</strong><span class="dark:text-gray-400 light-text-gray-600"> — redundant tokens and enormous sequences at 50Hz.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">FAST</strong><span class="dark:text-gray-400 light-text-gray-600"> — DCT+BPE compresses in the frequency domain, making AR competitive with diffusion.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">The representation shapes the head</strong><span class="dark:text-gray-400 light-text-gray-600"> — and completes the theory underpinning all the practice in Track 2.</span></div></div>
+</div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Next: Track 2 — Tools</h3><p class="dark:text-gray-300 light-text-gray-700">M2.1 — Python + PyTorch: the dominant stack for implementing everything you learned here, from tensors and LoRA to inference at 10-50Hz.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Updated in Oct/2026.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-start">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Back to the track</a>
+<a class="text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="../trilha2/">Go to Track 2 →</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. All rights reserved.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trilha 1 — Fundamentos da IA Incorporada — VLA Mastery</title>
+<meta content="Fundamentos de Vision-Language-Action: da pilha cognitiva aos modelos RT-2, OpenVLA, π0, diffusion policy e tokenização de ações." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+    /* Dark defaults */
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+
+    /* Topic expandable (índice de trilha) */
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    /* Light mode — base */
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+
+    /* Light mode — remove gradientes (fundo uniforme) */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    /* Light mode — cores de acento (as 3 trilhas presentes no nav) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+
+    /* Light mode — SVG futurista mais discreto */
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+
+    /* SVG glow só com motion habilitado */
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+
+    .modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(0,0,0,.7); }
+    .modal.hidden { display: none; }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha1/" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha1/" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha1/" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="./" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">PT</a><a href="../../en/curso/trilha1/" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="../../es/curso/trilha1/" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10 transition-colors" href="../trilha1/">Trilha 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors" href="../trilha2/">Trilha 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors" href="../trilha3/">Trilha 3</a>
+<button aria-label="Alternar tema" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Alternar tema" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Mapa do curso</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Trilha 1 — Fundamentos</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Trilha 2 — Ferramentas</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Trilha 3 — Avançado</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<!-- HEADER DA TRILHA -->
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-emerald-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-emerald-400 mb-4 inline-block" href="../">← Mapa do curso</a>
+<span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full mb-4">TRILHA 1</span>
+<h1 class="text-3xl sm:text-5xl font-extrabold dark:text-white light-text-gray-900 mb-4">🦾 Fundamentos da IA Incorporada</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">O mapa conceitual completo dos modelos Vision-Language-Action: da pilha cognitiva percepção→linguagem→ação até a anatomia interna de um VLA, a evolução RT-1→π0→π0.7, imitation learning (e RL depois dela), diffusion policy, flow matching e tokenização de ações. A base teórica que sustenta tudo que vem depois — revisada em out/2026.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Módulos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">36</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tópicos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">~4h</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Duração</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">B→A</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Básico→Avançado</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<!-- HERO SVG -->
+<div class="rounded-2xl border border-emerald-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-14">
+<svg aria-label="Pilha cognitiva percepção, linguagem e ação alimentando um único modelo VLA que controla N robôs" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 960 320">
+<defs>
+<lineargradient id="t1hero-g" x1="0" x2="1" y1="0" y2="1">
+<stop offset="0" stop-color="#10b981"></stop><stop offset="1" stop-color="#38bdf8"></stop>
+</lineargradient>
+<filter id="t1hero-glow"><fegaussianblur stddeviation="2.2"></fegaussianblur></filter>
+<pattern height="26" id="t1hero-dots" patternunits="userSpaceOnUse" width="26">
+<circle cx="1.4" cy="1.4" fill="#38bdf8" opacity="0.10" r="1.4"></circle>
+</pattern>
+</defs>
+<rect fill="url(#t1hero-dots)" height="320" width="960" x="0" y="0"></rect>
+<!-- Stack -->
+<g>
+<rect fill="#0b0f1a" height="56" rx="12" stroke="#38bdf8" stroke-width="2" width="200" x="60" y="40"></rect>
+<text fill="#38bdf8" font-size="15" font-weight="700" text-anchor="middle" x="160" y="66">👁 Percepção</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="160" y="84">pixels → tokens visuais</text>
+<rect fill="#0b0f1a" height="56" rx="12" stroke="#10b981" stroke-width="2" width="200" x="60" y="132"></rect>
+<text fill="#10b981" font-size="15" font-weight="700" text-anchor="middle" x="160" y="158">💬 Linguagem</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="160" y="176">instrução → raciocínio</text>
+<rect fill="#0b0f1a" height="56" rx="12" stroke="url(#t1hero-g)" stroke-width="2.5" width="200" x="60" y="224"></rect>
+<text fill="#e2e8f0" font-size="15" font-weight="700" text-anchor="middle" x="160" y="250">🦾 Ação</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="160" y="268">Δpose · gripper · torque</text>
+<path d="M160 96 L160 132 M160 188 L160 224" marker-end="url(#t1hero-arrow)" stroke="url(#t1hero-g)" stroke-width="2.5"></path>
+</g>
+<!-- VLA core -->
+<g filter="url(#t1hero-glow)">
+<rect fill="#10b981" height="84" opacity="0.16" rx="18" width="190" x="380" y="118"></rect>
+</g>
+<rect fill="#0b0f1a" height="84" rx="18" stroke="url(#t1hero-g)" stroke-width="2.5" width="190" x="380" y="118"></rect>
+<text fill="#e2e8f0" font-size="18" font-weight="800" text-anchor="middle" x="475" y="150">Modelo VLA</text>
+<text fill="#10b981" font-size="12" text-anchor="middle" x="475" y="174">Vision · Language · Action</text>
+<text fill="#64748b" font-size="10" text-anchor="middle" x="475" y="190">um cérebro, N corpos</text>
+<path d="M260 160 L380 160" marker-end="url(#t1hero-arrow)" stroke="url(#t1hero-g)" stroke-width="3"></path>
+<!-- Fan-out robots -->
+<g fill="#0b0f1a" stroke="#38bdf8" stroke-width="2">
+<rect height="44" rx="10" width="200" x="690" y="40"></rect>
+<rect height="44" rx="10" width="200" x="690" y="138"></rect>
+<rect height="44" rx="10" width="200" x="690" y="236"></rect>
+</g>
+<text fill="#38bdf8" font-size="13" font-weight="600" text-anchor="middle" x="790" y="67">🤖 Braço fixo</text>
+<text fill="#38bdf8" font-size="13" font-weight="600" text-anchor="middle" x="790" y="165">🦿 Humanoide</text>
+<text fill="#38bdf8" font-size="13" font-weight="600" text-anchor="middle" x="790" y="263">🚗 Móvel/manip.</text>
+<path d="M570 160 L690 62 M570 160 L690 160 M570 160 L690 258" fill="none" marker-end="url(#t1hero-arrow)" opacity="0.75" stroke="#38bdf8" stroke-width="2"></path>
+<defs>
+<marker id="t1hero-arrow" markerheight="10" markerwidth="10" orient="auto" refx="7" refy="3"><path d="M0,0 L7,3 L0,6 Z" fill="#38bdf8"></path></marker>
+</defs>
+</svg>
+<p class="text-xs dark:text-gray-500 light-text-gray-500 mt-3 text-center">A tese central da Trilha 1: um único modelo VLA generaliza percepção, linguagem e ação para muitos corpos robóticos.</p>
+</div>
+<!-- MAPA DA TRILHA -->
+<h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-2">Mapa da trilha</h2>
+<p class="dark:text-gray-400 light-text-gray-600 mb-8">Seis módulos, do panorama estratégico à matemática da geração de ações.</p>
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
+<a class="group dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-emerald-500/60 transition-colors" href="#modulo-1-1">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-emerald-400">1.1</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~35 min</span></div>
+<div class="text-2xl mb-2">🌐</div>
+<h3 class="font-bold dark:text-white light-text-gray-900 mb-1">O Grande Cenário</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">De LLMs a robôs que agem</p>
+</a>
+<a class="group dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-emerald-500/60 transition-colors" href="#modulo-1-2">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-emerald-400">1.2</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~40 min</span></div>
+<div class="text-2xl mb-2">🧬</div>
+<h3 class="font-bold dark:text-white light-text-gray-900 mb-1">Anatomia VLA</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Vision, language e action por dentro</p>
+</a>
+<a class="group dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-emerald-500/60 transition-colors" href="#modulo-1-3">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-emerald-400">1.3</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~45 min</span></div>
+<div class="text-2xl mb-2">📈</div>
+<h3 class="font-bold dark:text-white light-text-gray-900 mb-1">Evolução dos Modelos</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">RT-1 até π0 e π0.7</p>
+</a>
+<a class="group dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-emerald-500/60 transition-colors" href="#modulo-1-4">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-emerald-400">1.4</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~40 min</span></div>
+<div class="text-2xl mb-2">🎯</div>
+<h3 class="font-bold dark:text-white light-text-gray-900 mb-1">Imitation &amp; BC</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Clonar comportamento, vencer o drift</p>
+</a>
+<a class="group dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-emerald-500/60 transition-colors" href="#modulo-1-5">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-emerald-400">1.5</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~50 min</span></div>
+<div class="text-2xl mb-2">🌫️</div>
+<h3 class="font-bold dark:text-white light-text-gray-900 mb-1">Diffusion &amp; Flow</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Gerar ação a partir do ruído</p>
+</a>
+<a class="group dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-emerald-500/60 transition-colors" href="#modulo-1-6">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-emerald-400">1.6</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~45 min</span></div>
+<div class="text-2xl mb-2">🔢</div>
+<h3 class="font-bold dark:text-white light-text-gray-900 mb-1">Tokenização de Ações</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Discreto, contínuo e FAST</p>
+</a>
+</div>
+<!-- CONTEÚDO DETALHADO -->
+<h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-8">Conteúdo detalhado</h2>
+<!-- ===== MÓDULO 1.1 ===== -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8 scroll-mt-24" data-module-card="" id="modulo-1-1">
+<div class="flex items-center justify-between mb-2">
+<span class="text-sm font-bold text-emerald-400">Módulo 1.1</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500">~35 min · Básico</span>
+</div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-2">🌐 O Grande Cenário: De LLMs a Robôs que Agem</h3>
+<p class="dark:text-gray-400 light-text-gray-600 mb-6">Por que LLMs sozinhos não tocam o mundo, o que é IA incorporada e por que 2026 é o momento dos foundation models para robótica.</p>
+<div class="space-y-3">
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🧠 A pilha da cognição: percepção → linguagem → ação</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> a cadeia que transforma pixels e instruções em torque motor. LLMs dominam a etapa de linguagem mas não fecham o loop com o mundo físico.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> entender onde o gargalo da "ação" mora é o que separa um chatbot de um robô.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> grounding, embodiment, loop sensório-motor.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🤖 Embodied AI e o paradoxo de Moravec</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> raciocínio abstrato é fácil para máquinas; sensório-motricidade é difícil. Manipulação destrava o gargalo mais antigo da IA.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> explica por que "pegar um copo" é mais difícil que jogar xadrez.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> paradoxo de Moravec, contato, dexterity gap.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🌍 Foundation models para robótica</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> a tese de generalização — um modelo treinado em muitas tarefas e corpos supera N políticas especializadas.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é a aposta que move Google, PI e NVIDIA.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> generalist policy, cross-embodiment, transferência positiva.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🚀 O salto RT-1 → RT-2</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> co-fine-tuning de um VLM web-scale transfere conhecimento semântico para a ação (generalização para objetos nunca vistos em demos).</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é o nascimento do paradigma VLA moderno.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> web→action transfer, semantic generalization, emergent skills.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🏢 O ecossistema 2023 → out/2026</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> Google DeepMind, Physical Intelligence, NVIDIA, Figure e Tesla — quem faz o quê, o que é aberto e o que virou API (out/2026).</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> mapear os players orienta carreira e leitura de papers.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> GR00T N1.7, π0.7, Gemini Robotics 2, Helix 02, World Action Models.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">⏰ Por que agora: dados, compute, arquitetura</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> a convergência de Open X-Embodiment, GPUs e transformers/difusão tornou os VLAs viáveis.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> entender o "porquê 2026" antecipa a próxima onda.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> Open X-Embodiment, scaling, momento Pareto.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 justify-start mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-1-1')">Ver em Modal</button>
+<a class="px-5 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition text-center" href="modulo-1-1.html">Ver Completo →</a>
+</div>
+</div>
+<!-- ===== MÓDULO 1.2 ===== -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8 scroll-mt-24" data-module-card="" id="modulo-1-2">
+<div class="flex items-center justify-between mb-2">
+<span class="text-sm font-bold text-emerald-400">Módulo 1.2</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500">~40 min · Básico</span>
+</div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-2">🧬 Anatomia VLA: Vision + Language + Action</h3>
+<p class="dark:text-gray-400 light-text-gray-600 mb-6">Os blocos internos de um VLA: encoder de visão, backbone de linguagem, fusão multimodal, action head, propriocepção e o loop de controle.</p>
+<div class="space-y-3">
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">👁 Encoder de visão: ViT, DINOv2, SigLIP</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> patches de imagem viram tokens visuais; DINOv2 traz features espaciais, SigLIP alinha visão e texto.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> a escolha do encoder define o que o robô "enxerga".</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> patch embedding, dual encoder, frozen backbone.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">💬 Backbone de linguagem: Llama, PaliGemma</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> um LLM pré-treinado vira o núcleo de raciocínio que integra instrução, contexto e visão.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é onde mora a generalização semântica.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> PaliGemma, Prismatic, transformer decoder.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🔗 Fusão multimodal: cross-attention vs early fusion</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> como tokens de imagem e texto entram no mesmo contexto — concatenados (early) ou via atenção cruzada.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> define eficiência e capacidade de grounding.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> early fusion, cross-attention, token budget.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🦾 A cabeça de ação (action head)</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> converte o estado latente do backbone em comandos motores — Δpose do efetuador e gripper.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é o ponto onde difusão, tokens e regressão competem.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> action expert, detokenizer, end-effector delta.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📐 Propriocepção e estado</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> juntas, força e histórico temporal entram como observação adicional além da câmera.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> sem estado, o robô "esquece" onde está.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> proprioception, observation history, state token.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">⏱ O loop de controle: Hz, latência, action chunking</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> frequência de inferência, latência e a predição de blocos de ações (chunks) com receding horizon.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> latência mal resolvida mata a tarefa real.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> action chunking, horizonte de predição, control rate.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 justify-start mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-1-2')">Ver em Modal</button>
+<a class="px-5 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition text-center" href="modulo-1-2.html">Ver Completo →</a>
+</div>
+</div>
+<!-- ===== MÓDULO 1.3 ===== -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8 scroll-mt-24" data-module-card="" id="modulo-1-3">
+<div class="flex items-center justify-between mb-2">
+<span class="text-sm font-bold text-emerald-400">Módulo 1.3</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500">~45 min · Intermediário</span>
+</div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-2">📈 Evolução dos Modelos: RT-1, RT-2, OpenVLA, π0, π0.7</h3>
+<p class="dark:text-gray-400 light-text-gray-600 mb-6">A linhagem dos VLAs de 2022 a out/2026, com tamanhos, dados, tokenização, licenças, acesso (aberto × API) e os saltos arquiteturais de cada geração.</p>
+<div class="space-y-3">
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🟢 RT-1 (2022): transformer + FiLM</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> transformer com condicionamento FiLM, ações discretizadas em bins, treinado em ~130k demos.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é a fundação que provou tokenizar ações.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> FiLM, action binning, EfficientNet tokens.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🔵 RT-2 (2023): VLM co-fine-tuned</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> ações viram tokens de texto num VLM (PaLI-X/PaLM-E), com co-fine-tuning web+robô.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> inaugurou a generalização semântica emergente.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> action-as-text, co-fine-tuning, chain-of-thought robótico.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🟡 Octo &amp; OpenVLA (2024): open-source</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> OpenVLA-7B (Prismatic VLM + OXE) e Octo abrem o paradigma com fine-tuning eficiente via LoRA.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> são os modelos que você consegue rodar de fato.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> Prismatic, OXE, LoRA, quantização.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🌊 π0 / π0.5 (Physical Intelligence)</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> VLA generalista com action expert via flow matching, ação contínua a 50Hz, PaliGemma como base; última geração da PI com pesos abertos (openpi, Apache-2.0).</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é a referência aberta em manipulação fluida; π*0.6 e π0.7 vieram depois, fechados.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> flow matching, action expert, open-world.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🧠 Raciocínio, RL e a família 2025–2026</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> embodied reasoning (Gemini Robotics 1.5 → 2, GR00T N1.7, MolmoAct 2), RL depois da imitação (Recap, RL Token) e o π0.7 steerable.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> mostra para onde a fronteira foi em 2026.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> reasoning-VLA, RL pós-treino, World Action Models, steerability.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📊 Linha do tempo comparativa</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> tabela tamanho × tokenização × licença/acesso dos principais VLAs até out/2026 (LIBERO já saturado).</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> escolher modelo exige comparar trade-offs.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> benchmark, licença, parâmetros vs dados.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 justify-start mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-1-3')">Ver em Modal</button>
+<a class="px-5 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition text-center" href="modulo-1-3.html">Ver Completo →</a>
+</div>
+</div>
+<!-- ===== MÓDULO 1.4 ===== -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8 scroll-mt-24" data-module-card="" id="modulo-1-4">
+<div class="flex items-center justify-between mb-2">
+<span class="text-sm font-bold text-emerald-400">Módulo 1.4</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500">~40 min · Intermediário</span>
+</div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-2">🎯 Aprendizado por Imitação e Behavior Cloning</h3>
+<p class="dark:text-gray-400 light-text-gray-600 mb-6">Como robôs aprendem com demonstrações humanas, por que behavior cloning quebra com o tempo e o que fazer a respeito.</p>
+<div class="space-y-3">
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📝 Behavior Cloning: a formulação básica</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> regressão supervisionada estado→ação que copia o demonstrador.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> 90% dos VLAs treinam por BC.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> supervised policy, π(a|s), maximum likelihood.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📉 Distribution shift e erro composto</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> pequenos erros tiram o robô da distribuição de treino, e o erro se acumula quadraticamente no horizonte.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é a falha número um do BC ingênuo.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> covariate shift, compounding error, O(T²).</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🔄 DAgger e teleoperação</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> DAgger coleta correções nos estados visitados pela política; teleoperação gera as demos humanas.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> qualidade da coleta define o teto da política.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> DAgger, on-policy correction, leader-follower.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🌀 Multimodalidade das ações: por que MSE falha</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> múltiplas ações válidas para um mesmo estado; a média (MSE) cai no vão entre elas.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> justifica difusão e políticas expressivas.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> multimodal actions, mode averaging, expressive policy.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🧹 Qualidade de dados: cobertura e diversidade</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> diversidade de objetos, posições e demonstrações ótimas vs sub-ótimas importam mais que volume bruto.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> dado ruim limita qualquer arquitetura.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> coverage, diversity, demo quality.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📏 Métricas: success rate e generalização</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> success rate é o norte, mas generalização para objetos/posições/instruções novas é o teste real.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> métrica errada engana.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> success rate, OOD eval, generalization axes.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 justify-start mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-1-4')">Ver em Modal</button>
+<a class="px-5 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition text-center" href="modulo-1-4.html">Ver Completo →</a>
+</div>
+</div>
+<!-- ===== MÓDULO 1.5 ===== -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8 scroll-mt-24" data-module-card="" id="modulo-1-5">
+<div class="flex items-center justify-between mb-2">
+<span class="text-sm font-bold text-emerald-400">Módulo 1.5</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500">~50 min · Avançado</span>
+</div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-2">🌫️ Diffusion Policy e Flow Matching</h3>
+<p class="dark:text-gray-400 light-text-gray-600 mb-6">A matemática que gera ações multimodais a partir do ruído: DDPM condicionado, score matching, flow matching e o custo de inferência.</p>
+<div class="space-y-3">
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🎲 Por que difusão para ação</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> difusão captura distribuições multimodais fazendo denoising de trajetórias inteiras.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> resolve o mode averaging do MSE.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> denoising, multimodal, trajectory generation.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🌊 Diffusion Policy (2023)</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> DDPM condicionado na observação, com action chunking e receding horizon.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> virou o baseline de manipulação fina.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> DDPM, receding horizon, U-Net/transformer policy.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📐 Score matching e processo reverso</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> aprender o gradiente da densidade (score) para reverter o ruído; conditioning via FiLM/cross-attention.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é a engrenagem matemática da difusão.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> score function, reverse process, conditioning.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">➡️ Flow Matching e o uso em π0</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> aprender um campo vetorial que transporta ruído→ação por uma ODE; treino mais simples e estável.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é o que faz o π0 fluir a 50Hz.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> flow matching, ODE, conditional vector field.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">⚡ Custo de inferência e destilação</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> número de passos de denoising vira latência; consistency models e destilação cortam para poucos passos.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> tempo real exige poucos NFEs.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> NFE, consistency model, distillation.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">⚖️ Difusão vs autoregressivo</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> trade-off entre a expressividade da difusão e a simplicidade/latência dos tokens autoregressivos.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> dita a escolha de action head.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> expressividade × latência, AR vs diffusion.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 justify-start mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-1-5')">Ver em Modal</button>
+<a class="px-5 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition text-center" href="modulo-1-5.html">Ver Completo →</a>
+</div>
+</div>
+<!-- ===== MÓDULO 1.6 ===== -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8 scroll-mt-24" data-module-card="" id="modulo-1-6">
+<div class="flex items-center justify-between mb-2">
+<span class="text-sm font-bold text-emerald-400">Módulo 1.6</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500">~45 min · Avançado</span>
+</div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-2">🔢 Tokenização de Ações: Discreto vs Contínuo vs FAST</h3>
+<p class="dark:text-gray-400 light-text-gray-600 mb-6">Como representar ações para o modelo: regressão contínua, binning discreto e o esquema FAST baseado em DCT que comprime no domínio da frequência.</p>
+<div class="space-y-3">
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📈 Ação contínua: regressão direta</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> a cabeça emite floats diretamente; simples, mas pobre em multimodalidade se usada com MSE.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é o baseline contra o qual se mede o resto.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> regressão, L1/L2, unimodalidade.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🔲 Binning discreto (RT-1/RT-2)</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> cada dimensão é dividida em bins e tratada como classe; ganha multimodalidade, perde resolução e correlação entre dimensões.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> foi o esquema dominante por anos.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> uniform binning, quantização, cross-entropy.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🌊 O problema da frequência alta</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> a 50Hz, tokens por timestep ficam quase idênticos e redundantes, criando sequências longuíssimas.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é a dor que o FAST resolve.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> redundância temporal, sequência longa, controle dinâmico.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">⚡ FAST: tokenização por DCT + BPE</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> aplica DCT na trajetória, quantiza coeficientes e comprime com BPE — tokens curtos no domínio da frequência (PI, 2025).</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> destrava treino autoregressivo rápido e fiel.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> DCT, BPE, frequency-domain compression.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">⚖️ Trade-offs: comprimento × fidelidade × velocidade</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> menos tokens treinam mais rápido mas podem perder fidelidade; FAST move a fronteira de Pareto.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> é a decisão de engenharia central.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> Pareto, sequence length, training speed.</p>
+</div>
+</div>
+<div class="topic-item rounded-xl border border-dark-600 light-border-gray-200 overflow-hidden">
+<button class="w-full flex items-center gap-3 p-4 text-left dark:hover:bg-dark-700 light-hover-bg-gray-50 transition-colors" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🎛 Escolha por caso e impacto no action head</span>
+</button>
+<div class="topic-explanation px-4 pb-4 pl-15">
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">O que é:</strong> tarefa lenta tolera binning; tarefa dinâmica pede FAST ou difusão. A escolha molda toda a cabeça de ação.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 mb-2"><strong class="text-emerald-400">Por que aprender:</strong> fecha a Trilha 1 conectando representação e arquitetura.</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600"><strong class="text-emerald-400">Conceitos-chave:</strong> task dynamics, head design, decisão de representação.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 justify-start mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-1-6')">Ver em Modal</button>
+<a class="px-5 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition text-center" href="modulo-1-6.html">Ver Completo →</a>
+</div>
+</div>
+<!-- NAV PARA TRILHA 2 -->
+<div class="bg-gradient-to-br dark:from-blue-900/30 dark:to-dark-800 light-bg-white rounded-2xl border border-blue-500/30 p-8 mt-12">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-2">Pronto para a Trilha 2</h2>
+<p class="dark:text-gray-400 light-text-gray-600 mb-6">Com a base teórica firme, é hora de colocar a mão na massa: PyTorch, LeRobot, simuladores, ROS2, hardware e datasets.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-start">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="../">← Mapa do curso</a>
+<a class="text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="../trilha2/">Ir para a Trilha 2 →</a>
+</div>
+</div>
+</main>
+<!-- MODAIS -->
+<div class="modal hidden" id="modal-1-1">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-emerald-500/30 overflow-hidden">
+<button class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 font-bold" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-1-1.html" title="Módulo 1.1"></iframe>
+</div>
+</div>
+<div class="modal hidden" id="modal-1-2">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-emerald-500/30 overflow-hidden">
+<button class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 font-bold" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-1-2.html" title="Módulo 1.2"></iframe>
+</div>
+</div>
+<div class="modal hidden" id="modal-1-3">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-emerald-500/30 overflow-hidden">
+<button class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 font-bold" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-1-3.html" title="Módulo 1.3"></iframe>
+</div>
+</div>
+<div class="modal hidden" id="modal-1-4">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-emerald-500/30 overflow-hidden">
+<button class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 font-bold" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-1-4.html" title="Módulo 1.4"></iframe>
+</div>
+</div>
+<div class="modal hidden" id="modal-1-5">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-emerald-500/30 overflow-hidden">
+<button class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 font-bold" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-1-5.html" title="Módulo 1.5"></iframe>
+</div>
+</div>
+<div class="modal hidden" id="modal-1-6">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-emerald-500/30 overflow-hidden">
+<button class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 font-bold" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-1-6.html" title="Módulo 1.6"></iframe>
+</div>
+</div>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos os direitos reservados.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    // Topic expandable (índice de trilha)
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    // Modal com iframe
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

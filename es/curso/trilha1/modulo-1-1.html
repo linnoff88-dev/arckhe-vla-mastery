@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Módulo 1.1 — El gran escenario — VLA Mastery</title>
+<meta content="De los LLM a robots que actúan: la pila cognitiva, la paradoja de Moravec, foundation models para robótica y el salto de RT-1→RT-2." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha1/modulo-1-1.html" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha1/modulo-1-1.html" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha1/modulo-1-1.html" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../../../curso/trilha1/modulo-1-1.html" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="../../../en/curso/trilha1/modulo-1-1.html" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="modulo-1-1.html" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10 transition-colors" href="../trilha1/">Ruta 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors" href="../trilha2/">Ruta 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors" href="../trilha3/">Ruta 3</a>
+<button aria-label="Cambiar tema" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Cambiar tema" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Mapa del curso</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Ruta 1 — Fundamentos</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Ruta 2 — Herramientas</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Ruta 3 — Avanzado</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-emerald-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-emerald-400 mb-4 inline-block" href="index.html">← Ruta 1</a>
+<span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full mb-4">MÓDULO 1.1</span>
+<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🌐 El gran panorama: de los LLM a los robots que actúan</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Los LLM saben hablar del mundo, pero no lo tocan. Este módulo mapea la pila cognitiva percepción→lenguaje→acción, explica por qué la manipulación es el cuello de botella más antiguo de la IA y muestra cómo los foundation models para robótica se convirtieron en la apuesta de 2026, y qué cambió hasta oct/2026 (π0.7, Gemini Robotics 2, GR00T N1.7, World Action Models, video humano).</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Temas</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">~35</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">Básico</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nivel</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">Teoría</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<nav class="text-sm dark:text-gray-500 light-text-gray-500 mb-10"><a class="hover:text-emerald-400" href="../">Curso</a> / <a class="hover:text-emerald-400" href="index.html">Ruta 1</a> / <span class="text-emerald-400">Módulo 1.1</span></nav>
+<h2 class="text-xl font-bold dark:text-white light-text-gray-900 mb-8 pb-3 border-b border-dark-600 light-border-gray-200">Contenido detallado</h2>
+<!-- TÓPICO 1 -->
+<section class="mb-16" id="topico-1">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">1</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🧠 La pila de la cognición: percepción → lenguaje → acción</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Todo agente incorporado ejecuta el mismo ciclo: <strong class="text-emerald-400">percibir</strong> el mundo mediante sensores, <strong class="text-emerald-400">razonar</strong> sobre el objetivo y el contexto, y <strong class="text-emerald-400">actuar</strong> emitiendo comandos motores. Un LLM puro vive enteramente en la capa intermedia: opera sobre tokens, no sobre el mundo. No tiene grounding sensorial (no sabe dónde está el vaso en coordenadas métricas) ni canal de acción (no emite torque). El salto de VLA consiste en cerrar ese ciclo: conectar la percepción visual en la entrada y una cabeza de acción en la salida del mismo backbone que ya razona.</p>
+<div class="rounded-2xl border border-emerald-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-6">
+<svg aria-label="Pila vertical de cognición: la percepción alimenta el lenguaje, que alimenta la acción, formando un bucle cerrado con el mundo" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 760 300">
+<defs>
+<lineargradient id="m11-g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#10b981"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
+<filter id="m11-glow"><fegaussianblur stddeviation="1.8"></fegaussianblur></filter>
+<marker id="m11-arr" markerheight="10" markerwidth="10" orient="auto" refx="7" refy="3"><path d="M0,0 L7,3 L0,6 Z" fill="#10b981"></path></marker>
+</defs>
+<rect fill="#0b0f1a" height="56" rx="12" stroke="#38bdf8" stroke-width="2" width="260" x="250" y="20"></rect>
+<text fill="#38bdf8" font-size="15" font-weight="700" text-anchor="middle" x="380" y="44">👁 PERCEPCIÓN</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="380" y="63">cámaras, fuerza, propiocepción → tokens</text>
+<rect fill="#0b0f1a" filter="url(#m11-glow)" height="56" rx="12" stroke="#10b981" stroke-width="2.5" width="260" x="250" y="112"></rect>
+<rect fill="none" height="56" rx="12" stroke="#10b981" stroke-width="2.5" width="260" x="250" y="112"></rect>
+<text fill="#10b981" font-size="15" font-weight="700" text-anchor="middle" x="380" y="136">💬 LENGUAJE / RAZONAMIENTO</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="380" y="155">dominio nativo de los LLM</text>
+<rect fill="#0b0f1a" height="56" rx="12" stroke="url(#m11-g)" stroke-width="2.5" width="260" x="250" y="204"></rect>
+<text fill="#e2e8f0" font-size="15" font-weight="700" text-anchor="middle" x="380" y="228">🦾 ACCIÓN</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="380" y="247">Δpose · gripper · torque</text>
+<path d="M380 76 L380 112 M380 168 L380 204" marker-end="url(#m11-arr)" stroke="url(#m11-g)" stroke-width="3"></path>
+<path d="M250 232 C 100 232, 100 48, 250 48" fill="none" marker-end="url(#m11-arr)" stroke="#38bdf8" stroke-dasharray="5 5" stroke-width="2"></path>
+<text fill="#64748b" font-size="11" text-anchor="middle" transform="rotate(-90 60 148)" x="60" y="148">retroalimentación del mundo</text>
+</svg>
+<p class="text-xs dark:text-gray-500 light-text-gray-500 mt-3 text-center">El loop se cierra: la acción cambia el mundo, que vuelve como nueva percepción. Los LLMs cubren solo la franja central.</p>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por qué la acción es el eslabón que falta</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>0%</strong> — fracción de la acción física que un LLM de texto puede ejecutar sin un canal motor.</li>
+<li><strong>~50Hz</strong> — tasa de control típica de la manipulación fina; el texto autorregresivo no se acerca ni de lejos sin chunking.</li>
+<li><strong>3D métrico</strong> — el espacio de acción real, no el espacio de tokens.</li>
+</ul>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Grounding</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Anclar símbolos en el mundo físico.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Ciclo sensoriomotor</p><p class="text-xs dark:text-gray-400 light-text-gray-600">La acción altera la siguiente percepción.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Encarnación</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Un cuerpo con sensores y actuadores.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Canal de acción</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Salida motora además del texto.</p></div>
+</div>
+</section>
+<!-- TÓPICO 2 -->
+<section class="mb-16" id="topico-2">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">2</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🤖 IA incorporada y la paradoja de Moravec</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O <strong class="text-emerald-400">paradoja de Moravec</strong> (años 1980) observa una inversión contraintuitiva: las tareas que los humanos consideran "fáciles" —recoger un objeto, mantener el equilibrio, percibir la profundidad— requieren una enorme capacidad de cómputo sensoriomotor, mientras que el razonamiento "difícil", como el ajedrez o las integrales, es relativamente barato para las máquinas. La razón es evolutiva: miles de millones de años perfeccionaron nuestra motricidad y la volvieron inconsciente; la matemática formal existe desde hace apenas unos milenios. Por eso un modelo supera a los humanos en exámenes de matemáticas, pero aún se equivoca al doblar una toalla.</p>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Qué hace viable VLA hoy</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Reaprovechar los priors visuales y semánticos de modelos a escala web.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Los datasets cross-embodiment ofrecen cobertura sensoriomotora.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Action chunking amortiza la latencia del control fino.</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Por qué la manipulación todavía falla</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>La dinámica de contacto es discontinua y difícil de modelar.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Los objetos deformables y la fricción variable quedan fuera del entrenamiento.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Un error de milímetros hace fallar la tarea; el texto tolera la ambigüedad.</span></li>
+</ul>
+</div>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Al evaluar un VLA, no confundas la fluidez del lenguaje con la competencia motora. Un modelo que describe perfectamente "cómo" agarrar el vaso puede aun así fallar al ejecutarlo. Mide <strong class="text-primary">tasa de éxito físico</strong>, no la calidad de la narración.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Paradoja de Moravec</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Sensoriomotor &gt; razonamiento en costo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Dinámica de contacto</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Fuerzas no suaves al tocar.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Brecha de destreza</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Distancia hasta la mano humana.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Embodied AI</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Inteligencia situada en un cuerpo.</p></div>
+</div>
+</section>
+<!-- TÓPICO 3 -->
+<section class="mb-16" id="topico-3">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">3</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🌍 Modelos fundacionales para robótica</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La robótica clásica entrenaba <strong class="text-emerald-400">una política por tarea por robot</strong> — N×M modelos frágiles. La tesis del foundation model invierte esto: entrenar <strong class="text-emerald-400">un modelo grande para muchas tareas y muchos cuerpos</strong> y obtener generalización. La apuesta es que los datos diversos inducen representaciones compartidas — así como un LLM aprende la sintaxis de un idioma y la transfiere a otro, un VLA aprende a «agarrar» con un brazo y lo transfiere a otro.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Paradigma antigo            # Paradigma foundation
+politica_pegar_braçoA()       modelo_vla(obs, instrução)
+politica_empurrar_braçoA()      → ação  # qualquer tarefa
+politica_pegar_braçoB()         # qualquer corpo
+...  # N×M políticas frágeis   # 1 modelo, generaliza</code></pre>
+</div>
+<div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 La tesis de generalización en tres ejes</h3>
+<p class="dark:text-gray-300 light-text-gray-700 mb-2">Un buen VLA generaliza en <strong class="text-emerald-400">objetos</strong> (agarrar algo nunca visto), <strong class="text-emerald-400">posiciones/escenas</strong> (mesa nueva, iluminación nueva) y <strong class="text-emerald-400">instrucciones</strong> (comando reformulado). RT-2 mostró que el tercer eje —el lenguaje— hereda directamente del preentrenamiento web.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Política generalista</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Una política para muchas tareas.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Cross-embodiment</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Transferir entre cuerpos distintos.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Transferencia positiva</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Más datos ayudan, no estorban.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Ejes de generalización</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Objeto · escena · instrucción.</p></div>
+</div>
+</section>
+<!-- TÓPICO 4 -->
+<section class="mb-16" id="topico-4">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">4</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🚀 El salto RT-1 → RT-2</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">RT-1</strong> (Google, 2022) demostró que un transformer podía mapear cámara+instrucción a acciones tokenizadas, entrenado con ~130 mil episodios (según el artículo de RT-1, 2022). Pero su conocimiento se detenía en las demos. <strong class="text-emerald-400">RT-2</strong> (2023) dio el salto: tomó un VLM ya preentrenado en la web (PaLI-X / PaLM-E) y lo coajustó con datos de robots, representando acciones como tokens de texto. El resultado fue <strong class="text-emerald-400">generalización semántica emergente</strong> — el robot podía «recoger al animal extinto» (el dinosaurio de juguete) por heredar conceptos de la web, sin haber visto nunca esta instrucción en demos.</p>
+<div class="space-y-6 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">RT-1 — tokenización de acciones</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Transformer + FiLM, acciones en bins discretos. Sólido, pero sin conocimiento más allá del conjunto de datos.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">RT-2 — VLM como base</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Las acciones se convierten en tokens de texto en un VLM web-scale; el co-fine-tuning preserva el conocimiento de internet.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Emergencia semántica</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">El razonamiento de varios pasos y las referencias a conceptos nunca demostrados aparecen «gratis».</p>
+</div>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Transferencia de web a acción</p><p class="text-xs dark:text-gray-400 light-text-gray-600">El conocimiento web se convierte en acción.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Co-fine-tuning</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mezcla datos web y del robot durante el entrenamiento.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Action-as-text</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Acciones como tokens del vocabulario.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Habilidades emergentes</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Capacidades no demostradas.</p></div>
+</div>
+</section>
+<!-- TÓPICO 5 -->
+<section class="mb-16" id="topico-5">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">5</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🏢 El ecosistema 2023 → oct/2026</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">El campo se organizó en torno a unos pocos polos. <strong class="text-emerald-400">Google DeepMind</strong> dio el impulso académico (RT-1/RT-2/RT-X). <strong class="text-emerald-400">Physical Intelligence</strong> entregó los generalistas π0/π0.5 con flow matching (pesos abiertos en openpi) y luego cerró la línea: π*0.6 (nov/2025), π0.7 (abr/2026) y Pi API beta (13/10/2026). <strong class="text-emerald-400">Google DeepMind</strong> llegó a la familia Gemini Robotics 2 (30/07/2026), con VLA de cuerpo completo y el ER 2 como "agente físico" que llama a VLAs como herramienta. <strong class="text-emerald-400">NVIDIA</strong> impulsa el stack abierto con GR00T N1.7 (3B, GA) y Cosmos 3 (may/2026). <strong class="text-emerald-400">Figure</strong> (Helix 02 en ene/2026, Helix 2.5 en sep/2026) y <strong class="text-emerald-400">Tesla</strong> (Optimus) apuestan por los humanoides; en oct/2026 ninguno de ellos vende al consumidor y el Optimus V3 no se había mostrado públicamente hasta ago/2026.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Dos giros de 2026 cambian el mapa: los <strong class="text-emerald-400">World Action Models</strong> (DreamZero, feb/2026; GR00T N2 anunciado para fines de 2026), que predicen video futuro y acciones juntos, y el <strong class="text-emerald-400">video humano egocéntrico</strong> como fuente principal de preentrenamiento (según Figure, el preentrenamiento en el dataset Index llevó el éxito zero-shot de Helix 2.5 de 9% a 56% en 30 casas nunca vistas, sep/2026).</p>
+<div class="grid sm:grid-cols-2 gap-4 mb-6">
+<div class="dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold text-emerald-400 mb-1">Google DeepMind</h4><p class="text-sm dark:text-gray-400 light-text-gray-600">RT-1, RT-2, RT-X → Gemini Robotics 1.5 (sep/2025), ER 1.6 (abr/2026) y Gemini Robotics 2 (jul/2026). ER 2 en vista previa en AI Studio; VLA 2 solo para socios.</p></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold text-emerald-400 mb-1">Physical Intelligence</h4><p class="text-sm dark:text-gray-400 light-text-gray-600">π0/π0.5 y FAST abiertos (openpi, Apache-2.0). π*0.6 + Recap (RL), π0.7 "steerable" y Pi API: cerrados.</p></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold text-emerald-400 mb-1">NVIDIA</h4><p class="text-sm dark:text-gray-400 light-text-gray-600">GR00T N1.7 (3B, código Apache-2.0, pesos NVIDIA Open Model License), Cosmos 3 (64B/16B/4B, OpenMDW), Isaac Sim/Lab.</p></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold text-emerald-400 mb-1">Figure / Tesla</h4><p class="text-sm dark:text-gray-400 light-text-gray-600">Helix 02 (S0/S1/S2, cuerpo completo) y Optimus. Pilotos industriales; sin venta al consumidor en oct/2026.</p></div>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Acompaña quién es <strong class="text-primary">open</strong> (OpenVLA, SmolVLA, π0/π0.5, MolmoAct 2, X-VLA, GR00T N1.7, LeRobot) versus <strong class="text-primary">cerrado o solo por API</strong> (π0.7, Gemini Robotics 2, Helix, Optimus). Lee la licencia de los pesos: Apache-2.0, licencia propia de NVIDIA y "no comercial" (Galaxea G0.5) son cosas distintas. Para aprender y prototipar, el ecosistema open es donde efectivamente corres código.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">GR00T</p><p class="text-xs dark:text-gray-400 light-text-gray-600">VLA abierto de NVIDIA; N1.7 con backbone Cosmos-Reason2-2B.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">π0</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Generalista de PI; pesos abiertos hasta π0.5.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Helix</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Hoy Helix 02/2.5: S0 a 1 kHz, S1 a 200 Hz.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Optimus</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Humanoide de Tesla; V3 no mostrado hasta ago/2026.</p></div>
+</div>
+</section>
+<!-- TÓPICO 6 -->
+<section class="mb-16" id="topico-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">6</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⏰ Por qué ahora: datos, compute, arquitectura</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Los VLAs no surgieron de un único invento, sino de la <strong class="text-emerald-400">convergencia de tres curvas</strong>. <strong class="text-emerald-400">Datos:</strong> Open X-Embodiment reunió decenas de datasets de laboratorios — según el artículo de Open X-Embodiment (2023), ~1M de trayectorias en 22 cuerpos. En 2026 la curva de datos pasó a incluir video humano egocéntrico a escala. <strong class="text-emerald-400">Compute:</strong> Las GPU hicieron viable entrenar modelos de más de 7B con video robótico. <strong class="text-emerald-400">Arquitectura:</strong> transformers y los modelos de difusión/flow dieron la forma adecuada de incorporar multimodalidad y generar acciones expresivas.</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Las tres curvas convergentes</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>~1M de trayectorias</strong> — según el artículo de Open X-Embodiment (2023), demostraciones antes dispersas.</li>
+<li><strong>22 encarnaciones</strong> — según el mismo artículo (2023); diversidad de cuerpos que hace viable la transferencia.</li>
+<li><strong>7B parámetros</strong> — escala de OpenVLA (jun/2024); en 2026 los modelos abiertos de 0,45B (SmolVLA) a 3B (GR00T N1.7) ya compiten.</li>
+</ul>
+</div>
+<div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 El momento Pareto</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Ninguna de las tres curvas por sí sola habría bastado. Es la intersección — datos unificados + cómputo accesible + arquitectura adecuada — la que pone a la robótica generalista en la frontera de 2026. En 2026 entró una cuarta curva: RL después de la imitación (Recap, nov/2025; RL Token, mar/2026). Es el mismo patrón que destrabó a los LLMs en 2020, con años de desfase por el costo de los datos físicos.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Open X-Embodiment</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Corpus unificado de robótica.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Escalado</p><p class="text-xs dark:text-gray-400 light-text-gray-600">El compute permite usar más de 7B en video.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Transformers/difusión</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Arquitecturas para lo multimodal + acción.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Momento Pareto</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Intersección de las tres curvas.</p></div>
+</div>
+</section>
+<!-- RESUMO -->
+<section class="mb-12">
+<div class="bg-gradient-to-br dark:from-emerald-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-8">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumen del módulo</h2>
+<div class="space-y-3 mb-8">
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">La pila cognitiva</strong><span class="dark:text-gray-400 light-text-gray-600"> — Los LLM viven en la capa de lenguaje; los VLA cierran el ciclo con percepción y acción.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Paradoja de Moravec</strong><span class="dark:text-gray-400 light-text-gray-600"> — la manipulación es el cuello de botella, no el razonamiento.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Foundation models</strong><span class="dark:text-gray-400 light-text-gray-600"> — un modelo, N tareas y cuerpos, con generalización entre objetos, escenas e instrucciones.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">RT-1→RT-2 y el ecosistema</strong><span class="dark:text-gray-400 light-text-gray-600"> — El co-fine-tuning del VLM generó emergencia semántica; los players y la convergencia de datos/compute/arquitectura explican el «por qué ahora».</span></div></div>
+</div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-emerald-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">1.2 — Anatomía VLA: abramos el modelo y veamos por dentro el vision encoder, el backbone y el action head.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Actualizado en oct/2026.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-start">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Volver a la ruta</a>
+<a class="text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition" href="modulo-1-2.html">Próximo módulo →</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos los derechos reservados.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

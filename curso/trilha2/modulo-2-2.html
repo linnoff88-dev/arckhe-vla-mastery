@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LeRobot: Framework End-to-End da Hugging Face — VLA Mastery</title>
+<meta content="LeRobot: LeRobotDataset (parquet+vídeo), políticas ACT/Diffusion/π0/VQ-BeT, SO-101, teleoperação e deploy no braço real." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha2/modulo-2-2.html" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha2/modulo-2-2.html" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha2/modulo-2-2.html" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="modulo-2-2.html" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">PT</a><a href="../../en/curso/trilha2/modulo-2-2.html" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="../../es/curso/trilha2/modulo-2-2.html" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors" href="../trilha1/">Trilha 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10 transition-colors" href="../trilha2/">Trilha 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors" href="../trilha3/">Trilha 3</a>
+<button aria-label="Alternar tema" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Alternar tema" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Mapa do curso</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Trilha 1 — Fundamentos</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Trilha 2 — Ferramentas</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Trilha 3 — Avançado</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-blue-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-blue-400 mb-4 inline-block" href="index.html">← Voltar à Trilha 2</a>
+<span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-4">MÓDULO 2.2</span>
+<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🤗 LeRobot: Framework End-to-End da Hugging Face</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">LeRobot reúne datasets, políticas, simulação e robôs reais num único repositório open. Aqui você entende o LeRobotDataset, treina ACT/Diffusion/π0 e fecha o ciclo gravar → treinar → avaliar → deploy num braço SO-101 de algumas centenas de dólares (preço varia por kit; ver M2.5).</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tópicos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">45</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">Inter.</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nível</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">Prática</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-10">Conteúdo detalhado</h2>
+<div class="rounded-2xl border border-blue-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-10">
+<svg aria-label="Arquitetura LeRobot: Hub de datasets, política e robô real" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 760 240">
+<defs>
+<filter id="m22-glow"><fegaussianblur stddeviation="1.8"></fegaussianblur></filter>
+<lineargradient id="m22-grad" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#3b82f6"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
+<pattern height="22" id="m22-dots" patternunits="userSpaceOnUse" width="22"><circle cx="1.5" cy="1.5" fill="#3b82f6" opacity="0.12" r="1.2"></circle></pattern>
+</defs>
+<rect fill="url(#m22-dots)" height="240" width="760" x="0" y="0"></rect>
+<text fill="#e5e7eb" font-size="16" font-weight="800" text-anchor="middle" x="380" y="34">Loop LeRobot: gravar ↔ treinar ↔ avaliar</text>
+<rect fill="#0b0f1a" height="80" rx="14" stroke="#38bdf8" stroke-width="2" width="170" x="40" y="90"></rect>
+<text fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle" x="125" y="122">🤗 Hub</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="125" y="142">LeRobotDataset</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="125" y="157">parquet + mp4</text>
+<rect fill="#0b0f1a" filter="url(#m22-glow)" height="80" rx="14" stroke="#3b82f6" stroke-width="2" width="170" x="300" y="90"></rect>
+<rect fill="none" height="80" rx="14" stroke="#3b82f6" stroke-width="2" width="170" x="300" y="90"></rect>
+<text fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle" x="385" y="122">Política</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="385" y="142">ACT · Diffusion</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="385" y="157">π0 · VQ-BeT</text>
+<rect fill="#0b0f1a" height="80" rx="14" stroke="#38bdf8" stroke-width="2" width="160" x="560" y="90"></rect>
+<text fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle" x="640" y="122">🦾 SO-101</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="640" y="142">leader→follower</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="640" y="157">teleop / deploy</text>
+<line stroke="url(#m22-grad)" stroke-width="2.5" x1="210" x2="298" y1="130" y2="130"></line><polygon fill="#38bdf8" points="298,130 290,126 290,134"></polygon>
+<line stroke="url(#m22-grad)" stroke-width="2.5" x1="470" x2="558" y1="130" y2="130"></line><polygon fill="#38bdf8" points="558,130 550,126 550,134"></polygon>
+<path d="M640 170 C640 215, 125 215, 125 172" fill="none" stroke="#38bdf8" stroke-dasharray="5 5" stroke-width="2"></path><polygon fill="#38bdf8" points="125,172 121,182 129,182"></polygon>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="385" y="208">novas demos gravadas voltam ao Hub</text>
+</svg>
+</div>
+<!-- TÓPICO 1 -->
+<section class="mb-16" id="topico-1">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">1</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 O que é LeRobot: a filosofia open end-to-end</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">LeRobot é o esforço da Hugging Face para fazer com a robótica o que o <code class="font-mono text-sm">transformers</code> fez com NLP: <strong class="text-blue-400">democratizar</strong>. Num só repo PyTorch você tem datasets padronizados, políticas SOTA reprodutíveis, ambientes de sim e drivers de hardware barato. O objetivo é eliminar a fragmentação que travava a área. Em out/2026 a versão atual é a <strong class="text-blue-400">v0.6.1</strong> (03/08/2026); o repositório tem 28,3 mil stars e o Hub, 81.292 datasets com a tag LeRobot (lidos em 19/10/2026).</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Os quatro pilares</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Datasets</strong> — formato único (<code class="font-mono text-xs">LeRobotDataset</code> v3) versionado no Hub.</li>
+<li><strong>Policies</strong> — IL (ACT, Diffusion, VQ-BeT, Multitask DiT), VLAs (Pi0, Pi0Fast, Pi0.5, SmolVLA, GR00T N1.7, XVLA, MolmoAct2, WALL-OSS, EO-1…), world models (VLA-JEPA, FastWAM, LingBot-VA), RL (HIL-SERL, TDMPC) e modelos de recompensa (README, out/2026).</li>
+<li><strong>Sim + envs</strong> — <code class="font-mono text-xs">lerobot-eval</code> com LIBERO, LIBERO-plus, Meta-World, RoboTwin 2.0, RoboCasa365, VLABench, IsaacLab Arena e outros; ambientes carregados do Hub pelo EnvHub.</li>
+<li><strong>Hardware</strong> — SO-100/SO-101, LeKiwi, Koch v1.1, HopeJR, OpenArm, Reachy 2, Unitree G1 e outros, com teleop e gravação.</li>
+</ul>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Tudo gira em torno do CLI/entrypoints (<code class="font-mono text-xs">lerobot-record</code>, <code class="font-mono text-xs">lerobot-train</code>, <code class="font-mono text-xs">lerobot-eval</code>) e, desde a v0.6 (07/2026), o <code class="font-mono text-xs">lerobot-rollout</code>, que implanta a política no robô (com correção humana estilo DAgger). Instale com <code class="font-mono text-xs">pip install "lerobot[training]"</code>: desde a 0.6 o <code class="font-mono text-xs">pip install lerobot</code> sozinho é enxuto e não treina. Quem prefere navegador tem o <strong>LeLab</strong> (calibrar, teleoperar, gravar, treinar e implantar sem CLI; em out/2026 só SO-ARM101).</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Open</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Código + pesos públicos.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">End-to-end</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Dado → policy → robô.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Hub</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Versionar dados e ckpt.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Acessível</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Hardware de baixo custo.</p></div>
+</div>
+</section>
+<!-- TÓPICO 2 -->
+<section class="mb-16" id="topico-2">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">2</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 LeRobotDataset: formato parquet + vídeo</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O <strong class="text-blue-400">LeRobotDataset</strong> separa o que é leve do que é pesado: estado, ações e timestamps vão em <strong class="text-blue-400">parquet</strong> (colunar, rápido), enquanto as imagens vivem em <strong class="text-blue-400">mp4</strong> codificado e são decodificadas sob demanda. Cada <em>episódio</em> é uma trajetória; <em>features</em> descrevem shape e dtype de cada chave. No formato <strong class="text-blue-400">v3.0</strong> (lerobot ≥ 0.4) são "poucos arquivos grandes": Parquet tabular, MP4 concatenado e fragmentado por câmera, metadados em JSON/Parquet, e a API continua por episódio. Há script de conversão v2.1 → v3.0, e a v0.6 acrescentou profundidade e colunas de linguagem.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># LeRobot 0.6.1 — pip install "lerobot[training]==0.6.1"
+from lerobot.datasets import LeRobotDataset
+
+ds = LeRobotDataset("lerobot/pusht")
+print(ds.num_episodes, ds.fps, ds.num_frames)   # 206 10 25650 (testado em 19/10/2026)
+print(ds.features.keys())
+# chave(s) de câmera, observation.state, action, timestamp, ...
+
+sample = ds[0]
+sample["action"].shape                    # (action_dim,)
+
+# delta_timestamps -&gt; janelas temporais (chunking) automáticas
+ds = LeRobotDataset(repo_id, delta_timestamps={"action": [t/ds.fps for t in range(16)]})</code></pre>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Anatomia de um episódio</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>observation.images.*</strong> — uma chave por câmera (top, wrist), em mp4.</li>
+<li><strong>observation.state</strong> — posições de junta / pose do gripper.</li>
+<li><strong>action</strong> — comando alvo do próximo passo.</li>
+<li><strong>episode_index / frame_index</strong> — fronteiras de trajetória.</li>
+</ul>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">parquet</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Estado/ação colunar.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">mp4</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Imagens decode lazy.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">features</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Schema shape+dtype.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">delta_timestamps</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Janelas temporais.</p></div>
+</div>
+</section>
+<!-- TÓPICO 3 -->
+<section class="mb-16" id="topico-3">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">3</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Políticas prontas: ACT, Diffusion, π0, VQ-BeT</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">LeRobot empacota políticas de classes distintas com a mesma interface. <strong class="text-blue-400">ACT</strong> (Action Chunking Transformer, do ALOHA) é o cavalo de batalha para manipulação com poucas demos; <strong class="text-blue-400">Diffusion Policy</strong> captura multimodalidade; <strong class="text-blue-400">π0</strong> traz flow matching generalista; <strong class="text-blue-400">VQ-BeT</strong> usa tokens vetoriais quantizados. Na v0.6 entraram também VLAs maiores (GR00T N1.7 com <code class="font-mono text-xs">--policy.type=groot</code>, MolmoAct2, EO-1, XVLA) e treino FSDP para modelos que não cabem numa GPU. Mudanças que quebram código da 0.5 → 0.6: <code class="font-mono text-xs">eval_freq</code> virou <code class="font-mono text-xs">env_eval_freq</code>, <code class="font-mono text-xs">sac</code> virou <code class="font-mono text-xs">gaussian_actor</code>, <code class="font-mono text-xs">--dataset.vcodec</code> virou <code class="font-mono text-xs">--dataset.rgb_encoder.vcodec</code> e o GR00T N1.5 deu lugar ao N1.7.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># treino curto de ACT no PushT (LeRobot 0.6.1, testado em 19/10/2026:
+# ~26 s numa GPU, ~5 min em CPU; checkpoint em outputs/train/.../checkpoints/last)
+lerobot-train \
+  --policy.type=act \
+  --dataset.repo_id=lerobot/pusht \
+  --steps=200 --save_freq=200 --batch_size=8 \
+  --policy.device=cuda \
+  --policy.push_to_hub=false --wandb.enable=false \
+  --output_dir=outputs/train/act_pusht_teste --job_name=act_pusht_teste
+
+# sem --policy.push_to_hub=false o treino para com "'repo_id' argument missing"
+# outras políticas: --policy.type=diffusion | smolvla | pi05 | groot</code></pre>
+</div>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Fazer</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Começar com ACT: poucos hparams, treina rápido, ótimo baseline.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Usar π0 pré-treinado quando precisar de generalização semântica.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Casar o chunk size da policy com a frequência do robô.</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Diffusion Policy com 10 demos e esperar convergência.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Trocar de policy sem re-conferir normalização de ações.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Treinar π0 do zero sem GPU robusta — parta do checkpoint.</span></li>
+</ul>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">ACT</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Chunking transformer + VAE.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Diffusion</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Denoising de trajetória.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">π0</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Flow matching generalista.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">VQ-BeT</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Tokens quantizados.</p></div>
+</div>
+</section>
+<!-- TÓPICO 4 -->
+<section class="mb-16" id="topico-4">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">4</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Hardware suportado: SO-101, Koch, ALOHA</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O <strong class="text-blue-400">SO-101</strong> (sucessor do SO-100, projeto The Robot Studio + Hugging Face) é o braço-referência: ~6 DOF, servos Feetech; em out/2026 continua o braço de entrada do LeRobot e o único suportado pelo LeLab. Preço: não há preço oficial confirmado; em DIY a estimativa é de ~US$ 100–200 por braço e o kit montado líder + seguidor sai por ~US$ 433, segundo a revenda OpenELAB (2026). A coleta usa esquema <strong class="text-blue-400">leader-follower</strong> — você move um braço "líder" e o "seguidor" replica, gravando estado+ação sincronizados com a câmera.</p>
+<div class="space-y-6 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Montar e calibrar</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Identificar portas dos motores e calibrar para mapear a faixa de cada junta (siga o passo de calibração da doc oficial do SO-101, ou faça pelo LeLab no navegador).</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Teleoperar</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Leader move, follower copia. Câmeras (top + wrist) registram a cena em tempo real.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Gravar episódios</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Comece com algumas dezenas de demos para ACT numa tarefa pick-and-place simples e meça o sucesso antes de gravar mais.</p>
+</div>
+</div>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Consistência &gt; quantidade. Demos limpas, mesma iluminação e variação proposital de posição do objeto ensinam generalização melhor do que 200 episódios bagunçados.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">SO-101</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Braço de entrada, 6 DOF.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Leader-follower</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Teleop por cópia.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Calibração</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mapear faixa das juntas.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">ALOHA</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Bimanual de referência.</p></div>
+</div>
+</section>
+<!-- TÓPICO 5 -->
+<section class="mb-16" id="topico-5">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">5</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Fluxo: gravar → treinar → avaliar → deploy</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O ciclo completo são três comandos e um loop de inferência. Você grava demos, treina uma policy, avalia no robô (ou em sim) e faz <em>deploy</em> rodando a policy em malha fechada a ~30 Hz.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># LeRobot 0.6.1. Passos 1 e 4: da doc oficial, não rodados aqui (precisam do braço).
+# 1) gravar demos no SO-101
+lerobot-record \
+  --robot.type=so101_follower --robot.port=&lt;porta do seguidor&gt; \
+  --teleop.type=so101_leader --teleop.port=&lt;porta do líder&gt; \
+  --dataset.repo_id=&lt;seu usuário&gt;/meu-dataset \
+  --dataset.num_episodes=5 \
+  --dataset.single_task="Pegue o cubo preto" \
+  --dataset.streaming_encoding=true --dataset.encoder_threads=2
+
+# 2) treinar (mesmas flags do tópico 3)
+lerobot-train --policy.type=act --dataset.repo_id=&lt;seu usuário&gt;/meu-dataset \
+  --policy.push_to_hub=false --wandb.enable=false
+
+# 3) avaliar em simulação (testado no PushT em 19/10/2026; precisa de lerobot[pusht])
+lerobot-eval --policy.path=outputs/train/act_pusht_teste/checkpoints/last/pretrained_model \
+  --env.type=pusht --eval.n_episodes=10 --eval.batch_size=10 \
+  --eval.use_async_envs=false --policy.device=cuda --output_dir=outputs/eval/act_200
+
+# 4) implantar no robô, com correção humana estilo DAgger
+lerobot-rollout --strategy.type=dagger \
+  --policy.path=&lt;seu usuário&gt;/minha_politica \
+  --robot.type=so101_follower --robot.port=/dev/ttyACM0 \
+  --teleop.type=so101_leader --teleop.port=/dev/ttyACM1 \
+  --dataset.repo_id=&lt;seu usuário&gt;/correcoes_dagger \
+  --dataset.single_task="Pegue o bloco"</code></pre>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Sinais de saúde do treino</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>loss caindo</strong> mas success rate parado → problema de normalização/câmera.</li>
+<li><strong>overfit</strong> a poucas demos → aumente diversidade, não só steps.</li>
+<li><strong>success em sim, falha real</strong> → gap sim-real (Trilha 3).</li>
+<li><strong>sucesso 0% com recompensa subindo</strong> → treino curto, não bug: no teste de 19/10/2026, ACT com 200 passos no PushT deu 0% de sucesso e avg_max_reward 0,082; com 5.000 passos, ainda 0% e 0,275.</li>
+</ul>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Avalie sempre com o robô <strong>na mesma configuração</strong> da gravação (iluminação, posição das câmeras, fundo). Mudar a cena entre treino e deploy é a causa nº 1 de uma policy que "funcionava ontem" falhar hoje — e não é bug, é distribution shift.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">record</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Coleta de demos.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">train</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Treina a policy.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">eval rollout</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mede success rate.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">deploy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Malha fechada 30 Hz.</p></div>
+</div>
+<div class="grid md:grid-cols-2 gap-6 mt-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Fazer</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Avaliar com rollouts no robô, não só a loss de treino.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Logar vídeo dos rollouts para diagnosticar falhas.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Versionar dataset + config + checkpoint juntos.</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Aumentar steps quando o problema é falta de diversidade.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Confiar só em loss caindo como sinal de sucesso.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Mudar a cena entre gravação e deploy.</span></li>
+</ul>
+</div>
+</div>
+</section>
+<!-- TÓPICO 6 -->
+<section class="mb-16" id="topico-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">6</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Comunidade e reprodutibilidade</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O valor de LeRobot escala com a comunidade: 81.292 datasets com a tag LeRobot (lido em 19/10/2026) e checkpoints públicos no <strong class="text-blue-400">Hub</strong>, cada um versionado e com card descritivo. Você reproduz um paper baixando o dataset exato e o config, e contribui publicando suas demos do SO-101 para outros treinarem.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># publicar: grave com --dataset.repo_id=&lt;seu usuário&gt;/minha_tarefa
+# estando logado na sua conta do Hub (veja a doc il_robots do LeRobot)
+
+# inspecionar: a página do dataset no Hub mostra prévias de episódio
+# com várias câmeras sincronizadas (09/2026, segundo techjacksolutions)
+# https://huggingface.co/datasets?other=LeRobot</code></pre>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Antes de gravar do zero, busque no Hub: pode existir um dataset SO-101 da sua tarefa. Co-treinar com dados públicos + suas demos melhora generalização — a deixa perfeita para o módulo de datasets (2.6).</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Hub</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Datasets + checkpoints.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Reprodutível</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mesmo dado + config.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">push_to_hub</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Contribuir demos.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">prévias</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Inspeção no Hub, no navegador.</p></div>
+</div>
+</section>
+<section class="mb-12">
+<div class="bg-gradient-to-br dark:from-blue-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-blue-500/30 p-8">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumo do módulo</h2>
+<div class="space-y-3 mb-8">
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">LeRobot unifica</strong><span class="dark:text-gray-400 light-text-gray-600"> — dados, políticas, sim e hardware num só repo open.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">LeRobotDataset</strong><span class="dark:text-gray-400 light-text-gray-600"> — parquet para estado/ação, mp4 para imagem, features tipadas.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">ACT como baseline</strong><span class="dark:text-gray-400 light-text-gray-600"> — depois Diffusion/π0/VQ-BeT conforme a tarefa.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Ciclo de 4 comandos</strong><span class="dark:text-gray-400 light-text-gray-600"> — record, train, eval e rollout (LeRobot 0.6.1, instalado com <code class="font-mono text-xs">lerobot[training]</code>).</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Hub = reprodutibilidade</strong><span class="dark:text-gray-400 light-text-gray-600"> — reuse e contribua datasets.</span></div></div>
+</div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">2.3 — Simuladores: MuJoCo/MJX, Isaac Sim/Lab e Habitat, onde geramos dados baratos e seguros em escala.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Atualizado em out/2026.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-start">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Voltar à trilha</a>
+<a class="text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-3.html">Próximo módulo →</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos os direitos reservados.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

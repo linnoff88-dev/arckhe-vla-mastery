@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Módulo 3.2 — Humanoides — VLA Mastery</title>
+<meta content="Humanoides y VLA: por qué la forma humana, NVIDIA GR00T N1.7/N2, Figure Helix 02/2.5 (System 0/1/2), Tesla Optimus, Unitree G1/H1/R1 y whole-body control (oct/2026)." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha3/modulo-3-2.html" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha3/modulo-3-2.html" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha3/modulo-3-2.html" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../../../curso/trilha3/modulo-3-2.html" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="../../../en/curso/trilha3/modulo-3-2.html" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="modulo-3-2.html" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors" href="../trilha1/">Ruta 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors" href="../trilha2/">Ruta 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10 transition-colors" href="../trilha3/">Ruta 3</a>
+<button aria-label="Cambiar tema" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Cambiar tema" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Mapa del curso</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Ruta 1 — Fundamentos</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Ruta 2 — Herramientas</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Ruta 3 — Avanzado</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-purple-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-purple-400 mb-4 inline-block" href="index.html">← Volver a la Ruta 3</a>
+<span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-full mb-4">MÓDULO 3.2</span>
+<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🤖 Humanoides: Figure, Tesla, Unitree, GR00T</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">La apuesta más audaz de la robótica en 2026: un cuerpo de propósito general, con forma humana, capaz de operar en el mundo que ya construimos para nosotros — y los foundation models que lo controlan.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Temas</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">~50</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">Avanzado</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nivel</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">Teoría</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-10">Contenido detallado</h2>
+<!-- SVG: dual-system -->
+<div class="rounded-2xl border border-purple-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-12">
+<svg aria-label="Arquitectura dual-system de un humanoide: el System 2 lento, que razona, envía un vector latente al System 1 rápido, que controla los actuadores" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 880 300">
+<defs>
+<lineargradient id="m32-grad" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#a855f7"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
+<filter height="200%" id="m32-glow" width="200%" x="-50%" y="-50%"><fegaussianblur stddeviation="1.6"></fegaussianblur></filter>
+</defs>
+<rect fill="#0b0f1a" height="300" opacity="0.35" rx="18" width="880" x="0" y="0"></rect>
+<!-- System 2 -->
+<g transform="translate(40,60)">
+<rect fill="#0b0f1a" height="180" rx="16" stroke="#a855f7" stroke-width="2" width="250" x="0" y="0"></rect>
+<text fill="#a855f7" font-size="16" font-weight="800" text-anchor="middle" x="125" y="34">SYSTEM 2</text>
+<text fill="#c4b5fd" font-size="12" text-anchor="middle" x="125" y="56">VLM lento · ~7-9 Hz</text>
+<rect fill="#a855f7" height="30" opacity="0.22" rx="8" width="190" x="30" y="78"></rect>
+<text fill="#e9d5ff" font-size="11" text-anchor="middle" x="125" y="98">razonamiento · lenguaje · plan</text>
+<rect fill="#a855f7" height="30" opacity="0.22" rx="8" width="190" x="30" y="118"></rect>
+<text fill="#e9d5ff" font-size="11" text-anchor="middle" x="125" y="138">visión semántica · objetivo</text>
+</g>
+<!-- latent vector arrow -->
+<g transform="translate(300,150)">
+<path d="M0 0 L260 0" marker-end="url(#m32-arrow)" stroke="url(#m32-grad)" stroke-width="3"></path>
+<rect fill="#0b0f1a" height="40" rx="10" stroke="#38bdf8" stroke-width="1.6" width="120" x="70" y="-20"></rect>
+<text fill="url(#m32-grad)" font-size="11" font-weight="700" text-anchor="middle" x="130" y="-1">vector latente</text>
+<text fill="#7dd3fc" font-size="10" text-anchor="middle" x="130" y="13">z (intención)</text>
+</g>
+<defs><marker id="m32-arrow" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0 0 L8 3 L0 6 Z" fill="#38bdf8"></path></marker></defs>
+<!-- System 1 -->
+<g transform="translate(590,60)">
+<rect fill="#0b0f1a" height="180" rx="16" stroke="#38bdf8" stroke-width="2" width="250" x="0" y="0"></rect>
+<text fill="#38bdf8" font-size="16" font-weight="800" text-anchor="middle" x="125" y="34">SYSTEM 1</text>
+<text fill="#7dd3fc" font-size="12" text-anchor="middle" x="125" y="56">política rápida · ~200 Hz</text>
+<circle cx="125" cy="118" fill="#38bdf8" filter="url(#m32-glow)" opacity="0.4" r="34"></circle>
+<text fill="#e0f2fe" font-size="11" text-anchor="middle" x="125" y="122">control motor</text>
+<text fill="#7dd3fc" font-size="10" text-anchor="middle" x="125" y="166">Helix 02 (ene/2026): + S0 a 1 kHz</text>
+</g>
+</svg>
+</div>
+<!-- TÓPICO 1 -->
+<section class="mb-16" id="topico-1">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">1</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🚶 Por qué los humanoides: un mundo hecho para humanos</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La tesis del humanoide es simple y poderosa: <strong class="text-purple-400">el mundo ya fue construido para la forma humana</strong>. Las perillas, las escaleras, las herramientas, las mesadas y los vehículos presuponen dos manos, dos pies y una altura humana. Un robot humanoide opera en este inventario mundial de infraestructura: <em>brownfield</em> — sin reformarlo, a diferencia de los brazos fijos que requieren celdas dedicadas.</p>
+<div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-purple-400 mb-3">💡 La apuesta de fondo</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Generalidad de <strong>forma</strong> (humanoide) × generalidad de <strong>cerebro</strong> (foundation model VLA) = un único producto que atiende incontables tareas. Es la convergencia que mueve rondas millonarias hacia el sector; por ejemplo, Figure fue valorada en US$ 39 mil millones en la Serie C (sep/2025) y Unitree salió a bolsa en Shanghái a ~US$ 9 mil millones (ago/2026, según CNBC). Detalles en el M3.5.</p>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por qué la forma humana es difícil — y vale la pena</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Decenas de DOF</strong> — un humanoide tiene muchos más grados de libertad que un brazo de 6–7 ejes (el Atlas eléctrico de producción, mostrado en CES en ene/2026, tiene 56), lo que exige whole-body control.</li>
+<li><strong>Equilibrio dinámico</strong> — un bípedo es inestable por naturaleza; manipular mientras camina es la prueba real de utilidad.</li>
+<li><strong>TAM gigantesco</strong> — el argumento económico es abordar el trabajo físico genérico, no una sola estación.</li>
+</ul>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Generalidad de forma</p><p class="text-xs dark:text-gray-400 light-text-gray-600">1 cuerpo, N entornos.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Brownfield</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Opera la infraestructura existente.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Dexterity</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Manos diestras de varios dedos.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">DOF</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Muchos grados de libertad.</p></div>
+</div>
+</section>
+<!-- TÓPICO 2 -->
+<section class="mb-16" id="topico-2">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">2</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🟢 NVIDIA GR00T (N1 → N1.7 → N2): foundation model dual</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">GR00T</strong> es el foundation model abierto de NVIDIA para humanoides. El <strong>N1</strong> (mar/2025) inauguró un modelo de fundación cross-embodiment con <strong>sistema dual</strong> — un módulo de razonamiento lento (System 2, basado en VLM) y un módulo de acción rápido (System 1, un DiT de acción). N1.5 y N1.6 (fines de 2025, DiT de 32 capas) vinieron después. En oct/2026 la versión actual es el <strong>GR00T N1.7</strong>: VLA de "razonamiento" con <strong>3B</strong> parámetros, arquitectura "Action Cascade" (S2 = Cosmos-Reason2-2B, S1 = DiT de 32 capas), en General Availability desde abr/2026, con código Apache-2.0 y pesos bajo la <strong>NVIDIA Open Model License</strong> (uso comercial permitido). Validado en Unitree G1, YAM y AGIBot Genie 1, e integrado a LeRobot (<code>--policy.type=groot</code>). O <strong>GR00T N2</strong> se mostró en vista previa en la GTC (mar/2026) como <em>World Action Model</em> (base DreamZero) y está previsto para fines de 2026: hasta oct/2026 no se había lanzado.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>GR00T — pilha de dados (pirâmide)
+  topo:  poucas demos reais (teleoperação)        ← fidelidade
+  meio:  dados sintéticos (Isaac/Cosmos)          ← escala física
+  base:  vídeo humano egocêntrico + neural traj.  ← semântica / amplitude
+=&gt; cross-embodiment: 1 modelo treinado para muitos corpos
+# N1.7 (abr/2026): "20,000+ hours of human egocentric video", segundo o blog NVIDIA/HF</code></pre>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Por qué importa estratégicamente</h3>
+<p class="dark:text-gray-300 light-text-gray-700">NVIDIA no fabrica humanoides: proporciona el <strong>cerebro + la fábrica de datos + el silicio</strong>: GR00T, Cosmos 3 (world model abierto, may/2026), Isaac Sim/Lab y Jetson Thor. En la GTC de mar/2026 anunció la integración de Isaac y GR00T con LeRobot de Hugging Face. Eso la posiciona como capa horizontal del ecosistema, análoga a lo que CUDA fue para el deep learning — pero los humanoides de punta (Figure, Tesla, 1X) siguen con cerebros propios y cerrados.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">GR00T N1.7</p><p class="text-xs dark:text-gray-400 light-text-gray-600">3B, pesos abiertos (abr/2026).</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Sistema dual</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Razonamiento + acción.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Cosmos / Isaac</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Datos sintéticos a gran escala.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Cross-embodiment</p><p class="text-xs dark:text-gray-400 light-text-gray-600">1 modelo, muchos cuerpos.</p></div>
+</div>
+</section>
+<!-- TÓPICO 3 -->
+<section class="mb-16" id="topico-3">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔵 Figure Helix: VLA jerárquico (System 0/1/2)</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">Helix</strong> (feb/2025), de Figure, es un VLA jerárquico que corre onboard en un humanoide. En la primera versión, el <strong>System 2</strong> (VLM abierto, ~7-9 Hz) entiende la escena y la instrucción y emite un <em>vector latente</em>; o <strong>System 1</strong> (política visuomotora, ~200 Hz) decodifica este latente en el control continuo del torso, la cabeza y <strong>manos hábiles</strong> — solo el torso superior. El <strong>Helix 02</strong> (ene/2026) pasó al <strong>cuerpo completo</strong> y ganó un <strong>System 0</strong>: un controlador aprendido a <strong>1 kHz</strong>, con 10M parámetros, entrenado con más de 1.000 h de movimiento humano retargeted y RL sim-to-real, que reemplaza 109.504 líneas de C++; el S1 pasó a emitir objetivos de articulación a 200 Hz. El <strong>Helix 2.5</strong> (sep/2026), preentrenado en el dataset de video humano <em>Index</em>, ordena la sala, dobla toallas y hace la cama <strong>zero-shot en 30 casas</strong> nunca vistas; solo el preentrenamiento en el Index lleva el éxito zero-shot de <strong>9% a 56%</strong> (números de Figure). Todo cerrado, corriendo en el <strong>Figure 03</strong> (oct/2025) — sin venta al consumidor ni precio público en oct/2026.</p>
+<div class="space-y-4 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">S2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">System 2 — pensar (lento)</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">El VLM generalista interpreta "guarda la vajilla"; produce una intención latente sin necesidad de ejecutarse a 200 Hz.</p></div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">S1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">System 1 — actuar (rápido)</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">El transformer visuomotor consume el latente y genera comandos de alta frecuencia para las manos y el torso.</p></div>
+</div>
+</div>
+<div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-purple-400 mb-3">💡 El conflicto que resuelve el sistema dual</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Un VLM grande es inteligente, pero lento; un controlador rápido es ágil, pero tonto. Separar ambos y conectarlos mediante un <strong>vector latente</strong> da lo mejor de ambos: razonamiento generalista + lazo de control de alta frecuencia. En 2026 la jerarquía ganó un tercer nivel (S0 a 1 kHz en Helix 02) y se volvió el estándar de los humanoides de punta: GR00T N1.7 llama a la suya "Action Cascade".</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Helix</p><p class="text-xs dark:text-gray-400 light-text-gray-600">VLA jerárquico de Figure.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">System 0/1/2</p><p class="text-xs dark:text-gray-400 light-text-gray-600">1 kHz · 200 Hz · lento (Helix 02).</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Vector latente</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Puente entre los sistemas.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Whole-body</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Cuerpo completo desde Helix 02.</p></div>
+</div>
+</section>
+<!-- TÓPICO 4 -->
+<section class="mb-16" id="topico-4">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">4</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔴 Tesla Optimus: integración con la pila de visión/FSD</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">Optimus</strong> es la apuesta de Tesla por un humanoide que reutiliza la infraestructura de IA del FSD: redes de visión end-to-end, cómputo propietario y una cultura de recopilación de datos a gran escala. La estrategia es empezar por la <strong>fabricación interna</strong> (mover piezas en las propias fábricas), generando datos verticalmente integrados antes de escalar hacia afuera. Según blogs secundarios (no hay fuente técnica primaria de Tesla), la red es única de punta a punta, derivada de la pila del FSD y entrenada principalmente con video humano en primera persona. <strong>Estado en oct/2026:</strong> el Optimus V3 tenía una presentación prometida para el 1.er trim/2026 y luego para "mediados de año", pero hasta ago/2026 no se había mostrado públicamente; Tesla mantiene, en un 8-K ante la SEC, el inicio de producción antes de fin de 2026 en Fremont y una capacidad objetivo de 1 millón/año.</p>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Ventajas de Tesla</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Reutilización de la pila de <strong>visión end-to-end</strong> y datos del FSD.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Escala de <strong>fabricación propia</strong> y actuadores diseñados internamente.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Demanda interna cautiva para cerrar el ciclo de datos.</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Desafíos pendientes</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Manipulación <strong>diestra</strong> robusta sigue siendo el cuello de botella (manos).</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Los cronogramas anunciados históricamente han sido demasiado optimistas.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>La generalización fuera de la fábrica aún debe demostrarse a escala.</span></li>
+</ul>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Optimus</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Humanoide de Tesla.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Reutilización de FSD</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Visión compartida de extremo a extremo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Escala industrial</p><p class="text-xs dark:text-gray-400 light-text-gray-600">La fábrica como primer cliente.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Actuadores propios</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Integración vertical de hardware.</p></div>
+</div>
+</section>
+<!-- TÓPICO 5 -->
+<section class="mb-16" id="topico-5">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">5</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🟠 Unitree y el open hardware: G1/H1/R1</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A <strong class="text-purple-400">Unitree</strong> cambió el juego de la investigación al lanzar humanoides de bajo costo: el <strong>H1</strong>/<strong>H2</strong> (full-size), el <strong>G1</strong> (~1,27 m) y el compacto <strong>R1</strong>. Los precios varían mucho según la versión y el revendedor: según revendedores (ago/2026), el R1 sale desde ~US$ 5.900 en el lanzamiento y el G1 desde ~US$ 21.600 (los ~US$ 16 mil citados antes son un precio antiguo); la tienda oficial no lista el precio de los más grandes. De repente, laboratorios sin presupuesto de millones pudieron correr políticas en hardware real. El resultado fue una explosión de papers de locomoción y loco-manipulación usando G1/H1 como plataforma estándar — y el G1 está soportado nativamente en LeRobot desde la v0.5 (mar/2026). En ago/2026 Unitree salió a bolsa en el STAR Market de Shanghái a ~US$ 9 mil millones; en 2025 los ingresos con humanoides (¥ 867,8 mi) ya superaron a los de cuadrúpedos (CNBC, citando el prospecto).</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por qué importa el costo</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Precio de entrada</strong> — decenas de miles de dólares en lugar de plataformas de investigación hechas a pedido; abre el hardware real a laboratorios más pequeños.</li>
+<li><strong>SDK abierto</strong>, ROS2 y LeRobot — baja barrera para integrar políticas VLA y RL de marcha.</li>
+<li><strong>Estandarización</strong> — la comparabilidad entre papers acelera todo el campo.</li>
+</ul>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo estratégico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">El hardware accesible desplaza el cuello de botella del campo de «tener un robot» a «tener datos y algoritmos». Quien domina la recopilación de datos y la arquitectura —no quien fabrica el brazo— captura más valor. Así fue como el hardware abierto aceleró la frontera.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Unitree G1/H1</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Humanoides de bajo costo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">~US$ 21,6 mil</p><p class="text-xs dark:text-gray-400 light-text-gray-600">G1, según revendedores (ago/2026).</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">SDK abierto</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Integración fácil.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Plataforma estándar</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Base de muchos papers.</p></div>
+</div>
+</section>
+<!-- TÓPICO 6 -->
+<section class="mb-16" id="topico-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">6</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⚖️ Locomoción + manipulación: control de cuerpo completo</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La frontera de los humanoides no es caminar ni agarrar objetos por separado: es <strong class="text-purple-400">hacer ambas cosas al mismo tiempo</strong>. O <strong>control de cuerpo completo</strong> coordina la marcha, el equilibrio y los brazos en un solo controlador, generalmente con <strong>RL</strong> para locomoción robusta en terreno variado y una política de manipulación acoplada. Manipular mientras se mantiene el equilibrio es lo que separa una demo viral de una utilidad económica real. Ejemplos con fuente: el LBM de Boston Dynamics + TRI controla todo el Atlas a 30 Hz con diffusion transformer y flow matching (ago/2025); el Atlas eléctrico se volvió producto en la CES (ene/2026), con el lote de 2026 ya comprometido con Hyundai y Google DeepMind, según la prensa; el Helix 02 y el Gemini Robotics 2 (jul/2026, "feet to fingertips") controlan el cuerpo completo. Estado del mercado, sin exagerar: el <strong>1X NEO</strong> está en preventa (US$ 20 mil o US$ 499/mes) con fábrica en producción desde abr/2026, pero sin entrega confirmada a clientes hasta jul/2026; el <strong>Agility Digit</strong> es el más comercial (GXO, Schaeffler, Mercado Libre, según la prensa), con el Digit v5 revelado en sep/2026.</p>
+<div class="space-y-4 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">RL de marcha en sim</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Política de locomoción robusta entrenada en miles de terrenos aleatorizados (sim-to-real de M3.1).</p></div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Equilibrio ante perturbaciones</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Controlar el centro de masa mientras los brazos aplican fuerza externa (empujar, cargar).</p></div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Loco-manipulation acoplada</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Caminar hasta un armario, abrirlo y guardar un objeto: habilidades encadenadas en un solo cuerpo.</p></div>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Control de todo el cuerpo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Coordinar todo el cuerpo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">RL de marcha</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Locomoción robusta.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Balance</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Centro de masa bajo fuerza.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Loco-manipulation</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Caminar + manipular al mismo tiempo.</p></div>
+</div>
+</section>
+<!-- RESUMO -->
+<section class="mb-12">
+<div class="bg-gradient-to-br dark:from-purple-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-8">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumen del módulo</h2>
+<div class="space-y-3 mb-8">
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Forma humana</strong><span class="dark:text-gray-400 light-text-gray-600"> — opera en el mundo brownfield existente; generalidad de forma × foundation model.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">GR00T</strong><span class="dark:text-gray-400 light-text-gray-600"> — NVIDIA aporta cerebro dual + fábrica de datos (Isaac/Cosmos) cross-embodiment; N1.7 (3B, pesos abiertos) hoy, N2 (World Action Model) anunciado.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Figure Helix</strong><span class="dark:text-gray-400 light-text-gray-600"> — de S1/S2 en el torso (2025) a S0/S1/S2 en el cuerpo completo (Helix 02) y zero-shot en 30 casas (Helix 2.5, sep/2026).</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Tesla &amp; Unitree</strong><span class="dark:text-gray-400 light-text-gray-600"> — integración industrial a escala frente a hardware abierto barato que democratiza la investigación.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Control de todo el cuerpo</strong><span class="dark:text-gray-400 light-text-gray-600"> — manipular mientras camina es la verdadera prueba de utilidad.</span></div></div>
+</div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-purple-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">3.3 — Arquitecturas híbridas: LLM Planner + VLA Executor. Cómo el sistema dual se generaliza para la planificación a largo plazo.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Actualizado en oct/2026.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-start">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Volver a la ruta</a>
+<a class="text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition" href="modulo-3-3.html">Próximo módulo →</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos los derechos reservados.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Módulo 1.5 — Diffusion Policy y Flow Matching — VLA Mastery</title>
+<meta content="Difusión para acciones, Diffusion Policy, score matching, flow matching y el costo de inferencia en políticas generativas." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha1/modulo-1-5.html" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha1/modulo-1-5.html" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha1/modulo-1-5.html" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../../../curso/trilha1/modulo-1-5.html" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="../../../en/curso/trilha1/modulo-1-5.html" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="modulo-1-5.html" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10 transition-colors" href="../trilha1/">Ruta 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors" href="../trilha2/">Ruta 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors" href="../trilha3/">Ruta 3</a>
+<button aria-label="Cambiar tema" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Cambiar tema" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Mapa del curso</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Ruta 1 — Fundamentos</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Ruta 2 — Herramientas</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Ruta 3 — Avanzado</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-emerald-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-emerald-400 mb-4 inline-block" href="index.html">← Ruta 1</a>
+<span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full mb-4">MÓDULO 1.5</span>
+<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🌫️ Diffusion Policy y Flow Matching</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Las matemáticas que generan acciones multimodales a partir del ruido. Diffusion Policy convirtió el denoising de trayectorias en el baseline de la manipulación fina; flow matching simplificó el entrenamiento y lleva a π0 a 50Hz. Aquí entiendes el proceso inverso, el conditioning y el costo de inferencia.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Temas</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">~50</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">Avanzado</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nivel</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">Teoría</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<nav class="text-sm dark:text-gray-500 light-text-gray-500 mb-10"><a class="hover:text-emerald-400" href="../">Curso</a> / <a class="hover:text-emerald-400" href="index.html">Ruta 1</a> / <span class="text-emerald-400">Módulo 1.5</span></nav>
+<h2 class="text-xl font-bold dark:text-white light-text-gray-900 mb-8 pb-3 border-b border-dark-600 light-border-gray-200">Contenido detallado</h2>
+<!-- SVG denoising -->
+<div class="rounded-2xl border border-emerald-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-12">
+<svg aria-label="Proceso de denoising: una trayectoria de acciones parte de ruido puro y, en etapas sucesivas, se refina hasta convertirse en una trayectoria limpia" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 820 260">
+<defs>
+<lineargradient id="m15-g" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#ef4444"></stop><stop offset="0.5" stop-color="#38bdf8"></stop><stop offset="1" stop-color="#10b981"></stop></lineargradient>
+<marker id="m15-arr" markerheight="9" markerwidth="9" orient="auto" refx="6" refy="3"><path d="M0,0 L6,3 L0,6 Z" fill="#38bdf8"></path></marker>
+</defs>
+<g>
+<rect fill="#0b0f1a" height="120" rx="12" stroke="#ef4444" stroke-width="2" width="150" x="20" y="60"></rect>
+<text fill="#ef4444" font-size="12" font-weight="700" text-anchor="middle" x="95" y="48">ruido puro</text>
+<path d="M35 130 L45 95 L52 160 L60 80 L70 150 L80 100 L92 165 L102 90 L115 145 L128 105 L140 155 L155 110" fill="none" opacity="0.8" stroke="#ef4444" stroke-width="1.5"></path>
+</g>
+<g>
+<rect fill="#0b0f1a" height="120" rx="12" stroke="#38bdf8" stroke-width="2" width="150" x="240" y="60"></rect>
+<text fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle" x="315" y="48">paso k</text>
+<path d="M255 140 Q 295 90, 330 120 T 375 105" fill="none" stroke="#38bdf8" stroke-width="2"></path>
+</g>
+<g>
+<rect fill="#0b0f1a" height="120" rx="12" stroke="#38bdf8" stroke-width="2" width="150" x="460" y="60"></rect>
+<text fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle" x="535" y="48">paso 1</text>
+<path d="M475 135 Q 520 100, 560 118 T 595 110" fill="none" stroke="#38bdf8" stroke-width="2.5"></path>
+</g>
+<g>
+<rect fill="#0b0f1a" height="120" rx="12" stroke="#10b981" stroke-width="2.5" width="120" x="680" y="60"></rect>
+<text fill="#10b981" font-size="12" font-weight="700" text-anchor="middle" x="740" y="48">acción limpia</text>
+<path d="M695 130 Q 730 108, 760 116 T 790 112" fill="none" stroke="#10b981" stroke-width="3"></path>
+</g>
+<path d="M170 120 L240 120 M390 120 L460 120 M610 120 L680 120" marker-end="url(#m15-arr)" stroke="url(#m15-g)" stroke-width="2.5"></path>
+<text fill="#64748b" font-size="12" text-anchor="middle" x="410" y="220">proceso inverso: cada paso predice y elimina un poco de ruido (condicionado a la observación)</text>
+</svg>
+<p class="text-xs dark:text-gray-500 light-text-gray-500 mt-3 text-center">Generar una acción mediante denoising: comienza con ruido gaussiano y lo refina hasta obtener una trayectoria ejecutable.</p>
+</div>
+<!-- TÓPICO 1 -->
+<section class="mb-16" id="topico-1">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">1</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🎲 Por qué usar difusión para la acción</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">En el Módulo 1.4 vimos que MSE colapsa modos. La difusión lo resuelve modelando la acción como una <strong class="text-emerald-400">muestreo de una distribución condicional</strong>: en vez de predecir un valor, aprende a transformar ruido gaussiano en una trayectoria válida mediante <strong class="text-emerald-400">denoising</strong>. Como muestra, captura de forma natural <strong class="text-emerald-400">distribuciones multimodales</strong> — elige un modo coherente en lugar del promedio. Y al generar toda la trayectoria (chunk), produce movimientos suaves y consistentes.</p>
+<div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 Tres ventajas de la difusión</h3>
+<p class="dark:text-gray-300 light-text-gray-700 mb-2"><strong class="text-emerald-400">Multimodal:</strong> representa «izquierda O derecha» sin mediar. <strong class="text-emerald-400">Trayectoria:</strong> genera secuencias fluidas de acciones futuras. <strong class="text-emerald-400">Estable en el entrenamiento:</strong> el objetivo de denoising está bien condicionado, sin la inestabilidad de las GAN.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Denoising</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Refinar el ruido para convertirlo en acción.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Multimodal</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Captura varios modos.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Trajectory gen</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Genera un chunk entero.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Muestreo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Acción como sample, no como promedio.</p></div>
+</div>
+</section>
+<!-- TÓPICO 2 -->
+<section class="mb-16" id="topico-2">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">2</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🌊 Diffusion Policy (2023)</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">Diffusion Policy</strong> (Chi et al., 2023) aplicó DDPM al control: una red (U-Net 1D o transformer) elimina el ruido de una <strong class="text-emerald-400">secuencia de acciones futuras</strong> condicionada por la observación. Combina <strong class="text-emerald-400">action chunking</strong> (predecir H pasos) con <strong class="text-emerald-400">horizonte móvil</strong> (ejecutar una parte, volver a predecir). Superó los baselines en manipulación fina y se convirtió en el estándar de oro para tareas de destreza, incluida la cabeza de acción de Octo.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Diffusion Policy — inferência (esboço)
+A = torch.randn(H, action_dim)          # ruído inicial
+for k in reversed(range(K)):            # K passos de denoising
+    eps = net(A, k, obs_cond)           # prevê o ruído
+    A = ddpm_step(A, eps, k)            # remove um pouco
+execute(A[:exec_horizon])               # receding horizon</code></pre>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por qué funcionó</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Multimodal</strong> — resuelve tareas con soluciones alternativas.</li>
+<li><strong>Estable</strong> — entrenamiento robusto a los hiperparámetros.</li>
+<li><strong>Chunking</strong> — trayectorias suaves, menos jitter.</li>
+</ul>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">DDPM</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Modelo de difusión con eliminación de ruido.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Horizonte móvil</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Ejecutar una parte y volver a predecir.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">U-Net 1D</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Backbone común del denoiser.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Estándar de oro</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Baseline de manipulación fina.</p></div>
+</div>
+</section>
+<!-- TÓPICO 3 -->
+<section class="mb-16" id="topico-3">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">3</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📐 Score matching y proceso inverso</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Por debajo, la difusión tiene un <strong class="text-emerald-400">proceso directo</strong> que agrega ruido gaussiano a la acción en K pasos hasta convertirlo en ruido puro, y un <strong class="text-emerald-400">proceso inverso</strong> aprendido que lo deshace. La red aprende el <strong class="text-emerald-400">score</strong> — el gradiente de la log-densidad ∇log p(a) — equivalente a predecir el ruido añadido. El <strong class="text-emerald-400">conditioning</strong> en la observación se integra mediante FiLM o cross-attention, haciendo que la generación dependa de lo que ve el robot.</p>
+<div class="space-y-6 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Forward: agregar ruido</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">La acción limpia se convierte en ruido gaussiano en K pasos (definidos por un schedule).</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Aprender el score</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">La red predice el ruido (≈ score) minimizando un simple error de regresión.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Inverso: muestrear</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Partiendo del ruido, aplica el score K veces condicionado por la observación.</p>
+</div>
+</div>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">El conditioning es lo que hace que la política sea <strong class="text-primary">reactiva</strong>: sin él, muestreas acciones plausibles pero desconectadas de la escena. FiLM es ligero; cross-attention es más expresivo. Elige según el presupuesto.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Función de puntuación</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Gradiente de la log-densidad.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Proceso inverso</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Eliminar el ruido paso a paso.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Conditioning</p><p class="text-xs dark:text-gray-400 light-text-gray-600">FiLM / cross-attention en la obs.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Noise schedule</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Cómo crece el ruido en K.</p></div>
+</div>
+</section>
+<!-- TÓPICO 4 -->
+<section class="mb-16" id="topico-4">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">4</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">➡️ Flow Matching y su uso en π0</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">Flow Matching</strong> generaliza la difusión: en lugar de un proceso estocástico de denoising, aprende un <strong class="text-emerald-400">campo vectorial</strong> que transforma ruido→acción mediante una <strong class="text-emerald-400">ODE continua</strong>. Con <strong class="text-emerald-400">conditional flow matching</strong>, el objetivo de entrenamiento es simplemente la velocidad a lo largo de un camino (frecuentemente recto) entre el ruido y los datos: un objetivo más simple y estable. El <strong class="text-emerald-400">π0</strong> usa exactamente eso en su action expert para generar acción continua fluida a 50Hz (según PI). En 2026 flow matching y DiT de acción son la base común: el LBM de Boston Dynamics + TRI (ago/2025) controla todo el Atlas a 30 Hz con diffusion transformer y flow matching; el S1 del GR00T N1.7 es un DiT de 32 capas; SmolVLA (450M) también genera acción por flow matching.</p>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Ventajas del flow matching</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Entrenamiento más simple y estable que DDPM.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Las rutas rectas permiten menos pasos de inferencia.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Acción continua de alta frecuencia (π0 a 50Hz, según PI).</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Precauciones</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Aún exige integrar la ODE (varios NFEs).</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Sensible a la parametrización de la trayectoria.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Requiere un experto en acciones bien condicionado.</span></li>
+</ul>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Flow matching</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Transporte de ruido a acción mediante ODE.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Vector field</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Velocidad aprendida en el camino.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">ODE</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Proceso determinista continuo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">π0 action expert</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Flow matching a 50Hz.</p></div>
+</div>
+</section>
+<!-- TÓPICO 5 -->
+<section class="mb-16" id="topico-5">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">5</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⚡ Costo de inferencia y destilación</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">El costo central de las políticas generativas es el <strong class="text-emerald-400">número de evaluaciones de función (NFE)</strong> — cada paso de denoising/integración es un forward pass. El DDPM clásico usa de decenas a cientos de pasos, inviable a 50Hz. Soluciones: <strong class="text-emerald-400">samplers rápidos (DDIM)</strong>, <strong class="text-emerald-400">consistency models</strong> (generan en 1-2 pasos) y <strong class="text-emerald-400">destilación</strong> de un modelo lento a uno rápido. El flow matching con trayectorias rectas ya reduce el NFE de forma natural.</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Presupuesto de pasos (orden de magnitud)</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>50-100 NFE</strong> — DDPM ingenuo; alta calidad, alta latencia.</li>
+<li><strong>~10 NFE</strong> — DDIM / flow con trayectoria recta; buen equilibrio.</li>
+<li><strong>1-2 NFE</strong> — consistency models destilados; tiempo real.</li>
+</ul>
+</div>
+<div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 Latencia vs. calidad</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Combina <strong class="text-emerald-400">pocos NFEs</strong> con <strong class="text-emerald-400">action chunking</strong>: genera un chunk de 5-10 pasos y ejecútalo mientras vuelves a muestrear. Así conservas la expresividad de la difusión dentro del presupuesto de tiempo real.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">NFE</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Evaluaciones por muestra.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Consistency model</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Genera en 1-2 pasos.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Destilación</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Lento → rápido.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">DDIM</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Sampler determinista rápido.</p></div>
+</div>
+</section>
+<!-- TÓPICO 6 -->
+<section class="mb-16" id="topico-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">6</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⚖️ Difusión vs. autorregresivo</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La gran decisión de diseño de la cabeza de acción: <strong class="text-emerald-400">generación por difusión/flow</strong> versus <strong class="text-emerald-400">tokens autorregresivos</strong>. La difusión es más expresiva (multimodal continua), pero exige varios pasos. El modelo autorregresivo (RT-2, OpenVLA, FAST) reutiliza el backbone LLM y tiene un entrenamiento simple, pero genera token a token y la discretización puede limitar la fidelidad. No hay un ganador universal: la disyuntiva es <strong class="text-emerald-400">expresividad × latencia × simplicidad de integración</strong>.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-xs sm:text-sm dark:text-gray-300 light-text-gray-700"><code>Eixo            Difusão/Flow        Autoregressivo (tokens)
+expressividade  alta (multimodal)   média (depende da disc.)
+latência        K passos por chunk  1 forward, N tokens
+integração      action expert extra reusa o backbone LLM
+exemplos        Diffusion Policy,π0 RT-2, OpenVLA, FAST</code></pre>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Tarea diestra y continua → difusión/flow. Integración sencilla sobre un VLM y entrenamiento autoregresivo unificado → tokens (y el Módulo 1.6 muestra cómo FAST hace que esto sea competitivo).</p>
+<p class="dark:text-gray-300 light-text-gray-700 mt-3">En 2026 la difusión también pasó a generar el <strong class="text-primary">mundo</strong>, no solo la acción: los <strong class="text-primary">World Action Models</strong> predicen video futuro y acciones juntos. DreamZero (NVIDIA, arXiv feb/2026) es un modelo de difusión de video autorregresivo de 14B que controla el robot en lazo cerrado a 7 Hz y, según los autores, generaliza más de 2× mejor que los VLAs de punta en tareas y entornos nuevos; el GR00T N2, anunciado para finales de 2026, sigue esa arquitectura. LeRobot 0.6 ya incluye políticas de este tipo (VLA-JEPA, FastWAM, LingBot-VA).</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Expresividad</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Capturar distribuciones ricas.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Latencia</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Pasos vs. tokens por acción.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">AR vs diffusion</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Dos paradigmas de cabeza.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Integración</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Reutilizar o no el backbone.</p></div>
+</div>
+</section>
+<!-- RESUMO -->
+<section class="mb-12">
+<div class="bg-gradient-to-br dark:from-emerald-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-8">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumen del módulo</h2>
+<div class="space-y-3 mb-8">
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Difusión para acciones</strong><span class="dark:text-gray-400 light-text-gray-600"> — el denoising captura una multimodalidad que el MSE pierde.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Diffusion Policy</strong><span class="dark:text-gray-400 light-text-gray-600"> — DDPM + chunking + receding horizon, el baseline afinado.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Flow matching</strong><span class="dark:text-gray-400 light-text-gray-600"> — ODE con trayectoria recta, entrenamiento estable, π0 a 50Hz.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Costo y trade-off</strong><span class="dark:text-gray-400 light-text-gray-600"> — NFE/destilación controlan la latencia; la difusión y AR no tienen un único ganador.</span></div></div>
+</div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-emerald-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">1.6 — Tokenización de acciones: discreta, continua y FAST; cerramos la Trilha 1.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Actualizado en oct/2026.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-start">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Volver a la ruta</a>
+<a class="text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition" href="modulo-1-6.html">Próximo módulo →</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos los derechos reservados.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

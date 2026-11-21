@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Python + PyTorch: The Dominant Stack for VLA — VLA Mastery</title>
+<meta content="PyTorch for VLA: tensors, bf16, FSDP, LoRA/PEFT, DataLoader, torch.compile, and inference at 10-50Hz." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+    /* Dark defaults */
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+
+    /* Topic expandable (índice de trilha) */
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    /* Light mode — base */
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+
+    /* Light mode — remove gradientes (fundo uniforme) */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    /* Light mode — cores de acento (as 3 trilhas presentes no nav) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+
+    /* Light mode — SVG futurista mais discreto */
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+
+    /* SVG glow só com motion habilitado */
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha2/modulo-2-1.html" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha2/modulo-2-1.html" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha2/modulo-2-1.html" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../../../curso/trilha2/modulo-2-1.html" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="modulo-2-1.html" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">EN</a><a href="../../../es/curso/trilha2/modulo-2-1.html" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors" href="../trilha1/">Track 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10 transition-colors" href="../trilha2/">Track 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors" href="../trilha3/">Track 3</a>
+<button aria-label="Switch theme" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Switch theme" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Course map</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Track 1 — Fundamentals</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Track 2 — Tools</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Track 3 — Advanced</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-blue-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-blue-400 mb-4 inline-block" href="index.html">← Back to Track 2</a>
+<span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-4">MODULE 2.1</span>
+<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🐍 Python + PyTorch: The Dominant Stack for VLA</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">PyTorch is the foundation every VLA grows on. Here, you master GPU tensors, bf16 mixed precision, PEFT/LoRA, data pipelines, FSDP distributed training, and the low-latency inference that closes the control loop.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Topics</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">40</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutes</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">Inter.</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Level</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">Practice</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Type</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-10">Detailed content</h2>
+<div class="rounded-2xl border border-blue-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-10">
+<svg aria-label="Training, checkpoint, and inference pipeline in PyTorch" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 760 220">
+<defs>
+<filter id="m21-glow"><fegaussianblur stddeviation="1.8"></fegaussianblur></filter>
+<lineargradient id="m21-grad" x1="0" x2="1" y1="0" y2="0">
+<stop offset="0" stop-color="#3b82f6"></stop><stop offset="1" stop-color="#38bdf8"></stop>
+</lineargradient>
+<pattern height="22" id="m21-dots" patternunits="userSpaceOnUse" width="22"><circle cx="1.5" cy="1.5" fill="#3b82f6" opacity="0.12" r="1.2"></circle></pattern>
+</defs>
+<rect fill="url(#m21-dots)" height="220" width="760" x="0" y="0"></rect>
+<g>
+<rect fill="#0b0f1a" height="60" rx="12" stroke="#3b82f6" stroke-width="2" width="130" x="24" y="80"></rect>
+<text fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle" x="89" y="108">Dataset</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="89" y="126">DataLoader</text>
+<rect fill="#0b0f1a" height="60" rx="12" stroke="#3b82f6" stroke-width="2" width="150" x="200" y="80"></rect>
+<text fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle" x="275" y="105">bf16 training</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="275" y="124">FSDP · autograd</text>
+<rect fill="#0b0f1a" height="60" rx="12" stroke="#38bdf8" stroke-width="2" width="150" x="396" y="80"></rect>
+<text fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle" x="471" y="105">Checkpoint</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="471" y="124">.safetensors</text>
+<rect fill="#0b0f1a" filter="url(#m21-glow)" height="60" rx="12" stroke="#38bdf8" stroke-width="2" width="150" x="592" y="80"></rect>
+<rect fill="none" height="60" rx="12" stroke="#38bdf8" stroke-width="2" width="150" x="592" y="80"></rect>
+<text fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle" x="667" y="105">Inference</text>
+<text fill="#94a3b8" font-size="11" text-anchor="middle" x="667" y="124">10–50 Hz</text>
+<line stroke="url(#m21-grad)" stroke-width="2.5" x1="154" x2="198" y1="110" y2="110"></line>
+<line stroke="url(#m21-grad)" stroke-width="2.5" x1="350" x2="394" y1="110" y2="110"></line>
+<line stroke="url(#m21-grad)" stroke-width="2.5" x1="546" x2="590" y1="110" y2="110"></line>
+<polygon fill="#38bdf8" points="198,110 190,106 190,114"></polygon>
+<polygon fill="#38bdf8" points="394,110 386,106 386,114"></polygon>
+<polygon fill="#38bdf8" points="590,110 582,106 582,114"></polygon>
+<text fill="#e5e7eb" font-size="16" font-weight="800" text-anchor="middle" x="380" y="40">Lifecycle of a VLA in PyTorch</text>
+</g>
+</svg>
+</div>
+<!-- TÓPICO 1 -->
+<section class="mb-16" id="topico-1">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">1</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Why PyTorch dominates robotics and research</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Almost every open VLA — <strong class="text-blue-400">OpenVLA, Octo, π0, ACT</strong> — is written in PyTorch. The reason is cultural and technical: execution <strong class="text-blue-400">eager</strong> (define-by-run) keeps the graph dynamic, so you inspect tensors in the middle of the forward pass, add <code class="font-mono text-sm">breakpoint()</code> inside the policy and iterates in minutes. For manipulation research, where the architecture changes every week, this is invaluable.</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Why the ecosystem won</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>autograd</strong> — reverse-mode automatic differentiation, the basis of any policy training.</li>
+<li><strong>Hugging Face + PEFT</strong> — Ready-to-use VLMs (PaliGemma, Qwen2-VL) with LoRA in a few lines.</li>
+<li><strong>torch.compile</strong> — kernel fusion via TorchInductor without rewriting code.</li>
+<li><strong>CUDA/ROCm/MPS</strong> — same code runs in a data center, on Jetson, and on Mac.</li>
+</ul>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Practical tip</h3>
+<p class="dark:text-gray-300 light-text-gray-700">JAX (with MJX/Flax) shines in massively parallel simulation and differentiable physics, but the <em>deploy</em> on real robots, and most VLA checkpoints live in PyTorch. Know both; start with PyTorch. Reference versions as of Oct/2026: LeRobot 0.6 requires Python 3.12 and PyTorch 2.7 or newer; openpi (π0/π0.5, born in JAX) also supports PyTorch.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Eager mode</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Define-by-run, native debugging.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">autograd</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Automatic backpropagation.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Ecosystem</p><p class="text-xs dark:text-gray-400 light-text-gray-600">HF, PEFT, timm, accelerate.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Portability</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Same code, multiple targets.</p></div>
+</div>
+</section>
+<!-- TÓPICO 2 -->
+<section class="mb-16" id="topico-2">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">2</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Tensors, GPU, and mixed precision in 7B models</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A 7B VLA in fp32 takes ~28 GB for weights alone. Train on <strong class="text-blue-400">bf16</strong> cuts it in half while also avoiding fp16 overflow (bf16 has the same exponent as fp32). The mental rule for memory: <em>weights + gradients + optimizer states + activations</em>. With Adam in fp32, the states alone cost ~8 bytes/parameter.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>import torch
+device = "cuda"
+model = model.to(device)
+
+# autocast: forward em bf16, mestre em fp32
+scaler = None  # bf16 dispensa GradScaler (fp16 precisa)
+for batch in loader:
+    obs = batch["observation.images.top"].to(device, non_blocking=True)
+    with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+        out = model(obs, batch["action"].to(device))
+        loss = out.loss
+    loss.backward()
+    optimizer.step(); optimizer.zero_grad(set_to_none=True)</code></pre>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Memory budget (7B model)</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>~14 GB</strong> — weights in bf16</li>
+<li><strong>~14 GB</strong> — gradients in bf16</li>
+<li><strong>~56 GB</strong> — Adam states in fp32 (m, v + master copy)</li>
+<li><strong>variable</strong> — activations, which can be reduced with gradient checkpointing</li>
+</ul>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">bf16</p><p class="text-xs dark:text-gray-400 light-text-gray-600">fp32 range, without GradScaler.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">autocast</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Selective casts per op.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">non_blocking</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Asynchronous H2D copy.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">VRAM budget</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Weights + gradient + activation optimization.</p></div>
+</div>
+</section>
+<!-- TÓPICO 3 -->
+<section class="mb-16" id="topico-3">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">3</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Transformers/HF: loading VLMs, LoRA, quantization</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">The backbone of almost every VLA is a pretrained VLM. With <strong class="text-blue-400">transformers + peft + bitsandbytes</strong> load the quantized model in 4-bit (NF4) and train only adapters <strong class="text-blue-400">LoRA</strong> — fine-tuning 7B on a single 24 GB GPU.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>pip install "transformers&gt;=4.45" peft bitsandbytes accelerate
+
+from transformers import AutoModelForVision2Seq, BitsAndBytesConfig
+from peft import LoraConfig, get_peft_model
+
+qcfg = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
+                          bnb_4bit_compute_dtype=torch.bfloat16)
+vlm = AutoModelForVision2Seq.from_pretrained(
+    "openvla/openvla-7b", quantization_config=qcfg, device_map="auto")
+
+lora = LoraConfig(r=32, lora_alpha=16, lora_dropout=0.05,
+                  target_modules=["q_proj","k_proj","v_proj","o_proj"])
+model = get_peft_model(vlm, lora)
+model.print_trainable_parameters()   # ~0.5% dos params treináveis</code></pre>
+</div>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Do</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Target the LLM’s q/k/v/o projections and MLP with LoRA r=16–64.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Keep the action head at full precision and trainable.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Save only the adapters; merge (<code class="font-mono text-xs">merge_and_unload</code>) in deployment.</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Avoid</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Quantize the vision encoder and expect spatial fidelity.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Small-r LoRA (r=4) on a complex manipulation task.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Forgetting to freeze/normalize action statistics.</span></li>
+</ul>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">LoRA</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Low-rank adapters.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">QLoRA / NF4</p><p class="text-xs dark:text-gray-400 light-text-gray-600">4-bit + bf16 adapters.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">PEFT</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Lightweight fine-tuning library.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">target_modules</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Where to inject the adapters.</p></div>
+</div>
+</section>
+<!-- TÓPICO 4 -->
+<section class="mb-16" id="topico-4">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">4</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Data pipeline: Dataset, DataLoader, normalization</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">The difference between a VLA that works and one that doesn't is often <strong class="text-blue-400">action normalization</strong>. Action heads learn poorly when dimensions have widely different scales (mm of Δpose vs. binary gripper state). Normalize by dimension (mean/standard deviation or 1–99% quantiles) and save the statistics with the checkpoint.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>from torch.utils.data import DataLoader
+
+loader = DataLoader(dataset, batch_size=64, shuffle=True,
+                    num_workers=8, pin_memory=True,
+                    persistent_workers=True, prefetch_factor=4)
+
+# normalização por dimensão (salvar stats com o ckpt!)
+mean, std = stats["action"]["mean"], stats["action"]["std"]
+def normalize(a): return (a - mean) / (std + 1e-6)
+def denormalize(a): return a * std + mean   # usado na inferência</code></pre>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Practical tip</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Image augmentations (color jitter, light random cropping) help visual robustness, but <strong>never</strong> apply flips/rotations that invert the action’s spatial semantics—left becomes right and the policy breaks. Decoded video is the bottleneck: pre-decode it or use a video backend (<code class="font-mono text-xs">torchcodec</code>).</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Normalization</p><p class="text-xs dark:text-gray-400 light-text-gray-600">By action dimension.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">num_workers</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Parallelize IO/decode.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">pin_memory</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Fast H2D transfer.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Augmentation</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Visual, yes; spatial, be careful.</p></div>
+</div>
+</section>
+<!-- TÓPICO 5 -->
+<section class="mb-16" id="topico-5">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">5</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Distributed training: DDP, FSDP, gradient checkpointing</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">When the model doesn't fit on a single GPU, you move from <strong class="text-blue-400">DDP</strong> (replicates everything, performs gradient all-reduce) for <strong class="text-blue-400">FSDP</strong> (Fully Sharded Data Parallel): weights, gradients, and optimizer states are <em>sliced</em> across GPUs and brought together only when the layer executes. That’s what makes it possible to train 7B+ VLAs on a few nodes.</p>
+<div class="space-y-6 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">DDP — fits on one GPU</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Full replica per device; only gradients are transferred (all-reduce). Simple and fast up to ~1–2B.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">FSDP — doesn't fit</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Shard of params/grad/optim; <code class="font-mono text-xs">all-gather</code> per layer in the forward pass, <code class="font-mono text-xs">reduce-scatter</code> in the backward pass.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Gradient checkpointing</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Trades memory for compute: recomputes activations during the backward pass. Crucial for a decent batch size on 7B.</p>
+</div>
+</div>
+</div>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># lançar treino com torchrun em 8 GPUs
+torchrun --nproc_per_node=8 train_vla.py --fsdp full_shard --bf16
+
+# no código:
+model.gradient_checkpointing_enable()
+# accelerate config / FSDP policy: transformer_auto_wrap_policy</code></pre>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">DDP</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Gradient all-reduce.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">FSDP</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Full state sharding.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Checkpointing</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Memory ↔ compute.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">torchrun</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Multi-GPU launcher.</p></div>
+</div>
+</section>
+<!-- TÓPICO 6 -->
+<section class="mb-16" id="topico-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">6</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Inference: torch.compile, export, serve at 10–50 Hz</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">On the robot, the budget changes: latency is king. A 30 Hz control loop gives you ~33 ms per step, from the camera frame to the command. <strong class="text-blue-400">torch.compile</strong> fuses kernels and reduces Python overhead; <strong class="text-blue-400">action chunking</strong> (predicting K steps at once) amortizes inference across several cycles.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>model.eval()
+policy = torch.compile(model, mode="reduce-overhead")  # CUDA graphs
+
+@torch.inference_mode()
+def act(obs):
+    with torch.autocast("cuda", dtype=torch.bfloat16):
+        chunk = policy(obs)            # prevê K ações de uma vez
+    return denormalize(chunk).cpu().numpy()
+
+# loop de controle a 30 Hz com action chunking (executa K antes de re-inferir)</code></pre>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Where the time goes (33 ms step)</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>capture + preprocessing</strong> — decode and resize RGB-D frames</li>
+<li><strong>model forward pass</strong> — optimization target (compile, quantization)</li>
+<li><strong>post-processing</strong> — denormalize, map to the arm frame</li>
+<li><strong>chunking</strong> — re-infer every K steps, not every step</li>
+</ul>
+</div>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Do</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Warm up the <code class="font-mono text-xs">torch.compile</code> with dummy forwards before the real loop.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Fix input shapes to avoid recompilations.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Measure p99 latency, not just the average.</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Avoid</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Leave autograd enabled during inference (without <code class="font-mono text-xs">inference_mode</code>).</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Re-infer at every step, wasting the predicted chunk.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Forgetting to denormalize the action before sending it to the robot.</span></li>
+</ul>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">torch.compile</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Fusion via Inductor.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">inference_mode</p><p class="text-xs dark:text-gray-400 light-text-gray-600">No autograd, faster.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Action chunking</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Amortizes latency.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Export</p><p class="text-xs dark:text-gray-400 light-text-gray-600">ONNX/TensorRT for the edge (GR00T N1.7 already exports to both).</p></div>
+</div>
+</section>
+<section class="mb-12">
+<div class="bg-gradient-to-br dark:from-blue-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-blue-500/30 p-8">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Module summary</h2>
+<div class="space-y-3 mb-8">
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">PyTorch eager</strong><span class="dark:text-gray-400 light-text-gray-600"> — debugging and rapid iteration make it the VLA research standard.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">bf16 + memory budget</strong><span class="dark:text-gray-400 light-text-gray-600"> — think about weights+grad+optim+activations before choosing a GPU.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">QLoRA</strong><span class="dark:text-gray-400 light-text-gray-600"> — fine-tune 7B on 24 GB; save adapters only.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Action normalization</strong><span class="dark:text-gray-400 light-text-gray-600"> — always save statistics with the checkpoint.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">FSDP + compile</strong><span class="dark:text-gray-400 light-text-gray-600"> — scale training and cut inference latency.</span></div></div>
+</div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Next module</h3><p class="dark:text-gray-300 light-text-gray-700">2.2 — LeRobot: Hugging Face’s end-to-end framework, where this entire stack becomes a record → train → deploy workflow.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Updated in Oct/2026.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-start">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Back to the track</a>
+<a class="text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-2.html">Next module →</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. All rights reserved.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    // Topic expandable (índice de trilha)
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    // Modal com iframe
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Track 3 — Advanced and Strategic — VLA Mastery</title>
+<meta content="VLA Mastery Track 3: sim-to-real, humanoids, hybrid architectures, applications, the 2026 market (rounds and IPOs), and the 2026-2030 frontier of Vision-Language-Action models." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+    /* Dark defaults */
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+
+    /* Topic expandable (índice de trilha) */
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    /* Light mode — base */
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+
+    /* Light mode — remove gradientes (fundo uniforme) */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    /* Light mode — cores de acento (as 3 trilhas presentes no nav) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+
+    /* Light mode — SVG futurista mais discreto */
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+
+    /* SVG glow só com motion habilitado */
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha3/" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha3/" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha3/" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../../../curso/trilha3/" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="./" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">EN</a><a href="../../../es/curso/trilha3/" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors" href="../trilha1/">Track 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors" href="../trilha2/">Track 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10 transition-colors" href="../trilha3/">Track 3</a>
+<button aria-label="Switch theme" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Switch theme" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Course map</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Track 1 — Fundamentals</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Track 2 — Tools</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Track 3 — Advanced</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<!-- HEADER -->
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-purple-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-purple-400 mb-4 inline-block" href="../">← Course map</a>
+<span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-full mb-4">TRACK 3</span>
+<h1 class="text-3xl sm:text-5xl font-extrabold dark:text-white light-text-gray-900 mb-4">🦾 Advanced and Strategic</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Where engineering meets strategy. Cross the reality gap with sim-to-real, master the humanoid race, build dual-system architectures, map the 2026 market (funding rounds and IPOs), and read the 2026-2030 frontier of generalist robotics.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Modules</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">36</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Topics</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">~4h</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Duration</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">Advanced</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Level</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<!-- HERO SVG -->
+<div class="rounded-2xl border border-purple-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-14">
+<svg aria-label="Track 3 map: from the simulator to the real world, covering humanoids, hybrid architectures, applications, the market, and the future frontier" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 960 360">
+<defs>
+<lineargradient id="t3-hero-grad" x1="0" x2="1" y1="0" y2="1">
+<stop offset="0" stop-color="#a855f7"></stop><stop offset="1" stop-color="#38bdf8"></stop>
+</lineargradient>
+<filter height="200%" id="t3-hero-glow" width="200%" x="-50%" y="-50%"><fegaussianblur stddeviation="2.4"></fegaussianblur></filter>
+<pattern height="26" id="t3-hero-dots" patternunits="userSpaceOnUse" width="26">
+<circle cx="1.4" cy="1.4" fill="#a855f7" opacity="0.16" r="1.4"></circle>
+</pattern>
+</defs>
+<rect fill="url(#t3-hero-dots)" height="360" rx="20" width="960" x="0" y="0"></rect>
+<!-- Sim -> Real arc -->
+<path d="M120 250 Q480 70 840 250" fill="none" opacity="0.85" stroke="url(#t3-hero-grad)" stroke-dasharray="7 7" stroke-width="2.5"></path>
+<!-- Sim node (mesh) -->
+<g transform="translate(70,210)">
+<rect fill="#0b0f1a" height="90" rx="14" stroke="#a855f7" stroke-width="2" width="120" x="0" y="0"></rect>
+<path d="M14 30 H106 M14 50 H106 M40 12 V78 M70 12 V78" opacity="0.7" stroke="#a855f7" stroke-width="1.4"></path>
+<text fill="#a855f7" font-size="14" font-weight="700" text-anchor="middle" x="60" y="-10">SIM</text>
+</g>
+<!-- Real node (solid) -->
+<g transform="translate(770,210)">
+<rect fill="#0b0f1a" height="90" rx="14" stroke="#38bdf8" stroke-width="2" width="120" x="0" y="0"></rect>
+<rect fill="#38bdf8" height="46" opacity="0.28" rx="8" width="76" x="22" y="22"></rect>
+<circle cx="60" cy="45" fill="#38bdf8" filter="url(#t3-hero-glow)" opacity="0.55" r="14"></circle>
+<text fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle" x="60" y="-10">REAL</text>
+</g>
+<!-- Bridge label -->
+<g transform="translate(480,86)">
+<rect fill="#0b0f1a" height="40" rx="12" stroke="#a855f7" stroke-width="1.6" width="236" x="-118" y="-22"></rect>
+<text fill="url(#t3-hero-grad)" font-size="15" font-weight="800" text-anchor="middle" x="0" y="4">DOMAIN RANDOMIZATION</text>
+</g>
+<!-- 6 milestone chips -->
+<g font-size="12" font-weight="600">
+<g transform="translate(300,300)"><rect fill="#0b0f1a" height="32" rx="16" stroke="#a855f7" stroke-width="1.5" width="104" x="-52" y="-16"></rect><text fill="#c4b5fd" text-anchor="middle" x="0" y="4">Humanoids</text></g>
+<g transform="translate(430,300)"><rect fill="#0b0f1a" height="32" rx="16" stroke="#38bdf8" stroke-width="1.5" width="92" x="-46" y="-16"></rect><text fill="#7dd3fc" text-anchor="middle" x="0" y="4">Hybrid</text></g>
+<g transform="translate(556,300)"><rect fill="#0b0f1a" height="32" rx="16" stroke="#a855f7" stroke-width="1.5" width="104" x="-52" y="-16"></rect><text fill="#c4b5fd" text-anchor="middle" x="0" y="4">Applications</text></g>
+<g transform="translate(672,300)"><rect fill="#0b0f1a" height="32" rx="16" stroke="#38bdf8" stroke-width="1.5" width="84" x="-42" y="-16"></rect><text fill="#7dd3fc" text-anchor="middle" x="0" y="4">IPOs 2026</text></g>
+</g>
+<!-- frontier curve up-right -->
+<path d="M860 250 L920 180" stroke="url(#t3-hero-grad)" stroke-linecap="round" stroke-width="2.5"></path>
+<text fill="#7dd3fc" font-size="12" font-weight="700" text-anchor="end" x="912" y="168">2030 →</text>
+</svg>
+</div>
+<!-- MAPA DA TRILHA -->
+<h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-6">Track map</h2>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-purple-500/50 transition-colors" href="#modulo-3-1">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-purple-400">3.1</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~45 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">🌉 Sim-to-Real</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Bridge the reality gap: randomize everything, calibrate the digital twin, and transfer for real.</p>
+</a>
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-purple-500/50 transition-colors" href="#modulo-3-2">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-purple-400">3.2</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~50 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">🤖 Humanoids</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">GR00T N1.7/N2, Helix 02/2.5, Optimus, Unitree: the race for the general-purpose body (Oct/2026).</p>
+</a>
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-purple-500/50 transition-colors" href="#modulo-3-3">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-purple-400">3.3</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~45 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">🧠 Hybrid Architectures</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">An LLM that thinks slowly, a VLA that acts quickly: the dual-system approach in practice.</p>
+</a>
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-purple-500/50 transition-colors" href="#modulo-3-4">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-purple-400">3.4</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~40 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">🏭 Applications</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Manufacturing, logistics, healthcare, and agriculture: where the ROI already makes sense—and where it doesn’t yet.</p>
+</a>
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-purple-500/50 transition-colors" href="#modulo-3-5">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-purple-400">3.5</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~35 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">💰 Market and Opportunities</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">2026 funding rounds and IPOs (Unitree, Skild, Agility, AgiBot), the value chain, Brazil, and where the jobs are.</p>
+</a>
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-purple-500/50 transition-colors" href="#modulo-3-6">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-purple-400">3.6</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~45 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">🚀 2026-2030 frontier</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Scaling laws, World Action Models, post-training RL, and certification: what to watch.</p>
+</a>
+</div>
+<!-- CONTEÚDO DETALHADO -->
+<h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-8">Detailed content</h2>
+<!-- ============ MÓDULO 3.1 ============ -->
+<div class="scroll-mt-24 dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-10" data-module-card="" id="modulo-3-1">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3.1</span>
+<div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">🌉 Sim-to-Real: Domain Randomization and Transfer</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Train on millions of simulated episodes and run on the physical robot.</p>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🕳️ The reality gap: physics, sensor, actuator, appearance</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> the systematic divergence between what the simulator models and what the physical world does — contact friction, actuator delay, camera noise, deformable objects.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> a policy that gets nearly everything right in sim can plummet on hardware — and the size of the drop can only be known by measuring. Without mapping the sources of the gap, you optimize for the wrong place.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> reality gap, contact dynamics, sensor noise, actuation delay, physics fidelity.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🎲 Domain Randomization: texture, lighting, mass, friction, delays</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> aggressively randomize sim parameters so the real world becomes “just another sample” from the training distribution.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> is the cheapest and most robust technique for zero-shot transfer; it was what enabled robots to go from simulation to real-world manipulation.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> visual DR, dynamics DR, automatic DR (ADR), difficulty curriculum.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🔀 Domain Adaptation: align sim/real features</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> instead of covering everything with noise, brings the feature distribution in sim and reality closer (GANs, adversarial, embedding alignment).</p>
+<p><strong class="text-purple-400">Why it matters:</strong> complements DR when the visual gap is too large to randomize.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> domain adaptation, feature alignment, RCAN, real-in-the-loop.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🪞 System identification and digital twins</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> measure the real robot to calibrate the simulator (masses, friction, latencies) and build a faithful digital twin.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> reduces the gap at its source; instead of covering uncertainty, you eliminate it where possible.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> sysID, digital twin, calibration, Isaac Sim/MuJoCo tuning.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🧪 Sim+real co-training and fine-tuning with few demos</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> mix cheap simulation data with a few expensive real demonstrations; simulation provides coverage, real data provides final fidelity.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> is the dominant practical recipe — mixing sim and real (ratio tuned by measuring) beats both alone.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> co-training, fine-tuning, sample efficiency, real-world adaptation.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📏 Honest evaluation: measure transfer, not overfitting to the sim</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> protocols that measure performance in the real world under variation, not in the sim where you trained.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> sim-score inflates expectations; only real A/B testing counts for deployment.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> real-world success rate, held-out, sim2real gap metric.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold text-sm hover:opacity-90 transition" onclick="openModal('modal-3-1')">View in Modal</button>
+<a class="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-semibold text-sm hover:bg-purple-500 transition" href="modulo-3-1.html">View Full →</a>
+</div>
+</div>
+<!-- ============ MÓDULO 3.2 ============ -->
+<div class="scroll-mt-24 dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-10" data-module-card="" id="modulo-3-2">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3.2</span>
+<div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">🤖 Humanoids: Figure, Tesla, Unitree, GR00T</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">The bet on a general-purpose body for a world built by humans.</p>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🚶 Why humanoids: a world built for humans</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> the thesis that the human form unlocks the world’s stock of tools, ladders, and environments without modifying them.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> morphological generality + foundation models = one body, infinite tasks.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> morphological generality, brownfield deployment, dexterity.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🟢 NVIDIA GR00T (N1 → N1.7 → N2): dual-system foundation model</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> open foundation model for humanoids with a dual system (reasoning + action) trained on real data, synthetic data and human video; as of Oct/2026 the current version is N1.7 (3B, weights under the NVIDIA Open Model License, Apr/2026) and N2 (World Action Model) is announced for late 2026.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> NVIDIA supplies the "brain + data pipeline (Isaac/Cosmos 3)" and integrated GR00T into LeRobot (Mar/2026).</p>
+<p><strong class="text-purple-400">Key concepts:</strong> GR00T N1.7, Action Cascade, GR00T N2, Isaac GR00T, synthetic data.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🔵 Figure Helix: hierarchical VLA (System 0/1/2)</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> Figure's architecture with System 2 (slow VLM, ~7-9Hz) that reasons and System 1 (fast policy, ~200Hz) that controls dexterous hands (Helix, Feb/2025); Helix 02 (Jan/2026) added a whole-body System 0 at 1 kHz and Helix 2.5 (Sep/2026) did zero-shot in 30 homes.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> resolves the generality × frequency conflict; a pioneer in full-torso control via VLA and, since 2026, whole-body control.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> Helix 02, Helix 2.5, System 0/1/2, latent vector, whole-body.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🔴 Tesla Optimus: integration with the vision/FSD stack</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> Tesla's humanoid, reusing end-to-end vision and compute from FSD, focused on internal manufacturing first; as of Aug/2026 the Optimus V3 had not been shown publicly.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> advantage of production scale and vertically integrated data (target of 1 million/year in an 8-K filing with the SEC).</p>
+<p><strong class="text-purple-400">Key concepts:</strong> Optimus V3, FSD reuse, industrial scale, in-house actuators.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🟠 Unitree and open hardware: G1/H1/R1</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> low-cost Chinese humanoids (G1 at ~US$ 21,600 and R1 at ~US$ 5,900, according to resellers, Aug/2026) that democratized research on real hardware.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> lowers the barrier to entry; became the standard platform for locomotion/manipulation papers.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> Unitree G1/H1/R1, cost, affordable hardware, open SDK, IPO (Aug/2026).</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">⚖️ Locomotion + manipulation: whole-body control</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> coordinate gait, balance, and arms in a single controller; RL for robust locomotion on terrain.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> manipulating while walking is what separates a demo from real-world utility.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> whole-body control, locomotion RL, balance, loco-manipulation.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold text-sm hover:opacity-90 transition" onclick="openModal('modal-3-2')">View in Modal</button>
+<a class="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-semibold text-sm hover:bg-purple-500 transition" href="modulo-3-2.html">View Full →</a>
+</div>
+</div>
+<!-- ============ MÓDULO 3.3 ============ -->
+<div class="scroll-mt-24 dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-10" data-module-card="" id="modulo-3-3">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3.3</span>
+<div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">🧠 Hybrid Architectures: LLM Planner + VLA Executor</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Think slowly and act quickly in the same robot.</p>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🏗️ Control hierarchy: symbolic × reactive</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> separate high-level planning (slow, abstract) from reactive control (fast, continuous).</p>
+<p><strong class="text-purple-400">Why it matters:</strong> no single network is good at both long-horizon reasoning and a 200Hz control loop.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> hierarchy, symbolic planning, reactive policy.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🐢🐇 System 1 / System 2 (Helix, GR00T)</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> A slow VLM "thinks" and emits a latent vector; a fast policy consumes it to generate high-frequency actions.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> is the convergent architecture of leading humanoids in 2026.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> dual-system, latent conditioning, async inference.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📋 LLM as planner: SayCan, Code-as-Policies</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> use an LLM to break a long instruction into executable subtasks, optionally as code.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> unlocks long-horizon tasks without training a giant monolithic policy.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> SayCan, Code-as-Policies, task decomposition, prompting.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🎯 Affordances and grounding</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> connect the planner’s language to skills the robot can actually execute in its current state.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> avoids beautiful but impossible plans; the "can" in SayCan.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> affordance, grounding, value function, feasibility.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🔁 Memory and feedback: replan after failure</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> close the loop — detect failure, update memory, and replan instead of blindly continuing.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> robustness comes from recovery, not perfect execution.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> closed-loop, inner monologue, replanning, memory.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">⏳ Long horizons: skill composition</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> chain dozens of skills for minutes while maintaining coherence and robustness.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> is the current bottleneck—long tasks still accumulate failures.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> long horizon, skill composition, robustness, drift.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold text-sm hover:opacity-90 transition" onclick="openModal('modal-3-3')">View in Modal</button>
+<a class="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-semibold text-sm hover:bg-purple-500 transition" href="modulo-3-3.html">View Full →</a>
+</div>
+</div>
+<!-- ============ MÓDULO 3.4 ============ -->
+<div class="scroll-mt-24 dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-10" data-module-card="" id="modulo-3-4">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3.4</span>
+<div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">🏭 Applications: Manufacturing, Logistics, Healthcare, Agriculture</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Where general-purpose robotics is already creating value—and where it still falls short.</p>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🔧 Manufacturing: assembly, inspection, cobots</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> flexible assembly, visual inspection, and collaborative cobots with ROI measured in payback cycles.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> is the most mature market; VLA reduces the cost of reprogramming for each SKU.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> cobot, payback, flexibility, inspection.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📦 Logistics: bin picking, packing (Covariant, Symbotic)</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> separation and packaging in warehouses, the most commercialized use case for AI-powered manipulation.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> high volume, a semi-structured environment, and clear ROI: today’s “killer app.”</p>
+<p><strong class="text-purple-400">Key concepts:</strong> bin picking, Covariant RFM, Symbotic, Amazon, fulfillment.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🩺 Health/assistance: delicate manipulation</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> assisted surgery, tissue manipulation and care, with extremely high safety requirements.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> high margins, but enormous regulatory and reliability barriers.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> assisted surgery, force control, regulation, assistance.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🌾 Agriculture: selective harvesting, phenotyping</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> harvest delicate fruit, map plants, and operate in a fully unstructured environment.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> labor shortages create demand; natural variability is the challenge.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> selective harvesting, phenotyping, outdoor, variability.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🏠 Services and household tasks: the open world</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> cooking, cleaning, and tidying the house — the most variable environment and the least tolerant of social errors.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> largest potential market, but the last to close technically.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> open-world, domestic, generalization, long tail.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🚧 Adoption barriers</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> safety, total cost, reliability, and integration with legacy systems.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> technology is rarely the bottleneck; integration and trust are.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> TCO, MTBF, safety, integration, change management.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold text-sm hover:opacity-90 transition" onclick="openModal('modal-3-4')">View in Modal</button>
+<a class="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-semibold text-sm hover:bg-purple-500 transition" href="modulo-3-4.html">View Full →</a>
+</div>
+</div>
+<!-- ============ MÓDULO 3.5 ============ -->
+<div class="scroll-mt-24 dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-10" data-module-card="" id="modulo-3-5">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3.5</span>
+<div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">💰 Market and Opportunities: 2026 funding rounds and IPOs</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Value chain, players, funding, and where the jobs are.</p>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📈 Size and projections: humanoids and AI robotics</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> market projections always with the bank and year (Goldman, Morgan Stanley Apr/2025, Citi, UBS), which are not comparable with each other; the module prefers 2026 facts.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> sizes the opportunity and grounds the hype in sources.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> TAM, CAGR, bank + year, scope of the projection.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🔗 Value chain: chips, actuators, models, data</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> the value layers—silicon, actuation, foundation models, integrators, and data.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> understanding where the margin accumulates determines where it’s worth starting a business or investing.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> value chain, layers, integrators, data moat.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">💸 Players and funding: 2026 funding rounds and IPOs</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> the 2026 capital map: Unitree IPO (~US$ 9 bn, Aug/2026), Skild (US$ 14 bn, Jan/2026), Apptronik, Agility SPAC, AgiBot IPO, Physical Intelligence and Figure.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> capital signals where the market is betting on the next wave.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> Unitree, Skild, Physical Intelligence, Figure, Agility, AgiBot, IPO/SPAC.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🏷️ Business models: RaaS, licensing, data</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> robot-as-a-service, model licensing, and monetization of operational data.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> RaaS reduces the customer's CapEx and aligns revenue with the value delivered.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> RaaS, licensing, data flywheel, recurring revenue.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">💼 Where the jobs/skills are</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> in-demand profiles — VLA research, robotics MLOps, integration, teleoperation data engineering.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> guides your career path in the sector.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> robot MLOps, data engineering, integration, research.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">⚠️ Risks: hype cycle, sim-to-real gap, regulation</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> the risks that could delay the curve — hype, residual technical gaps, regulation, and timing.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> reading risks is as strategic as reading opportunities.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> hype cycle, trough of disillusionment, timing, regulation.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold text-sm hover:opacity-90 transition" onclick="openModal('modal-3-5')">View in Modal</button>
+<a class="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-semibold text-sm hover:bg-purple-500 transition" href="modulo-3-5.html">View Full →</a>
+</div>
+</div>
+<!-- ============ MÓDULO 3.6 ============ -->
+<div class="scroll-mt-24 dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-10" data-module-card="" id="modulo-3-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3.6</span>
+<div>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">🚀 2026-2030 frontier: Scaling Laws, World Models, Certification</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">What is still uncertain — and which signals to watch (Oct/2026).</p>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">1</span>
+<span class="font-semibold dark:text-white light-text-gray-900">📐 Scaling laws for robotics</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> the billion-dollar question—is performance scaling predictably with data and compute, as it does for LLMs?</p>
+<p><strong class="text-purple-400">Why it matters:</strong> if yes, the race becomes one of data collection; if not, the architecture still matters.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> scaling laws, data×compute, uncertainty, embodiment.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">2</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🌍 World models and World Action Models: Genie 3, Cosmos 3, DreamZero</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> models that learn world dynamics to imagine futures, generate data and plan (Genie 3, Cosmos 3); in 2026 World Action Models emerged, which predict video and action together (DreamZero, GR00T N2, 1X World Model).</p>
+<p><strong class="text-purple-400">Why it matters:</strong> cheap neural simulation could break the data bottleneck.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> world model, WAM, Genie 3, Cosmos 3, DreamZero, planning.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">3</span>
+<span class="font-semibold dark:text-white light-text-gray-900">♻️ Self-improvement: robots generating data</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> robots collecting their own data via RL at scale and collection autonomy; in 2025–2026 post-training RL for VLAs became practice (Recap/π*0.6, RL Token).</p>
+<p><strong class="text-purple-400">Why it matters:</strong> the flywheel that can make continuous improvement inexpensive.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> self-improvement, RL at scale, autonomy, flywheel.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">4</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🚢 Multi-robot and transfer: fleet learning</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> one brain, many bodies — fleets that learn together and share improvements.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> each robot improves them all; compounding scaling advantage.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> fleet learning, cross-embodiment, transfer, OTA.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">5</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🛡️ Safety and certification: ISO, fail-safe</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> ensure certifiable learned robots — ISO 10218-1/-2:2025, ISO 25785-1 (draft), AI Act postponed by the Digital Omnibus, fail-safe; there is no standard specific to VLA.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> without certification, there is no large-scale deployment around humans.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> ISO 10218:2025, ISO 25785-1, AI Act, fail-safe, guarantees.</p>
+</div>
+</div>
+<div class="topic-item py-3">
+<button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold text-sm flex-shrink-0">6</span>
+<span class="font-semibold dark:text-white light-text-gray-900">🔮 2030 Scenarios: what to watch</span>
+</button>
+<div class="topic-explanation pl-11 pt-3 space-y-2 text-sm dark:text-gray-300 light-text-gray-700">
+<p><strong class="text-purple-400">What it is:</strong> hypotheses about the impact of generalist robotics and the concrete signals that indicate which scenario is playing out.</p>
+<p><strong class="text-purple-400">Why it matters:</strong> career and business decisions depend on which scenario you believe.</p>
+<p><strong class="text-purple-400">Key concepts:</strong> 2030 scenarios, productivity, displacement, transition.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-200 light-text-gray-700 rounded-lg font-semibold text-sm hover:opacity-90 transition" onclick="openModal('modal-3-6')">View in Modal</button>
+<a class="px-5 py-2.5 bg-purple-600 text-white rounded-lg font-semibold text-sm hover:bg-purple-500 transition" href="modulo-3-6.html">View Full →</a>
+</div>
+</div>
+<!-- NAVEGAÇÃO INTER-TRILHA -->
+<div class="flex flex-col sm:flex-row gap-4 justify-start mt-12">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="../trilha2/">← Track 2 — Tools</a>
+<a class="text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition" href="../">Return to the course map</a>
+</div>
+</main>
+<!-- MODAIS -->
+<div class="modal hidden fixed inset-0 z-[60] bg-black/70 p-4 sm:p-8" id="modal-3-1" onclick="if(event.target===this)closeModal()">
+<div class="max-w-5xl mx-auto h-full flex flex-col dark:bg-dark-900 light-bg-white rounded-2xl border border-purple-500/30 overflow-hidden">
+<div class="flex items-center justify-between px-5 py-3 border-b border-dark-600 light-border-gray-200"><span class="font-bold text-purple-400">Module 3.1 — Sim-to-Real</span><button class="text-gray-400 hover:text-white text-2xl leading-none" onclick="closeModal()">×</button></div>
+<iframe class="flex-1 w-full" src="modulo-3-1.html" title="Module 3.1"></iframe>
+</div>
+</div>
+<div class="modal hidden fixed inset-0 z-[60] bg-black/70 p-4 sm:p-8" id="modal-3-2" onclick="if(event.target===this)closeModal()">
+<div class="max-w-5xl mx-auto h-full flex flex-col dark:bg-dark-900 light-bg-white rounded-2xl border border-purple-500/30 overflow-hidden">
+<div class="flex items-center justify-between px-5 py-3 border-b border-dark-600 light-border-gray-200"><span class="font-bold text-purple-400">Module 3.2 — Humanoids</span><button class="text-gray-400 hover:text-white text-2xl leading-none" onclick="closeModal()">×</button></div>
+<iframe class="flex-1 w-full" src="modulo-3-2.html" title="Module 3.2"></iframe>
+</div>
+</div>
+<div class="modal hidden fixed inset-0 z-[60] bg-black/70 p-4 sm:p-8" id="modal-3-3" onclick="if(event.target===this)closeModal()">
+<div class="max-w-5xl mx-auto h-full flex flex-col dark:bg-dark-900 light-bg-white rounded-2xl border border-purple-500/30 overflow-hidden">
+<div class="flex items-center justify-between px-5 py-3 border-b border-dark-600 light-border-gray-200"><span class="font-bold text-purple-400">Module 3.3 — Hybrid Architectures</span><button class="text-gray-400 hover:text-white text-2xl leading-none" onclick="closeModal()">×</button></div>
+<iframe class="flex-1 w-full" src="modulo-3-3.html" title="Module 3.3"></iframe>
+</div>
+</div>
+<div class="modal hidden fixed inset-0 z-[60] bg-black/70 p-4 sm:p-8" id="modal-3-4" onclick="if(event.target===this)closeModal()">
+<div class="max-w-5xl mx-auto h-full flex flex-col dark:bg-dark-900 light-bg-white rounded-2xl border border-purple-500/30 overflow-hidden">
+<div class="flex items-center justify-between px-5 py-3 border-b border-dark-600 light-border-gray-200"><span class="font-bold text-purple-400">Module 3.4 — Applications</span><button class="text-gray-400 hover:text-white text-2xl leading-none" onclick="closeModal()">×</button></div>
+<iframe class="flex-1 w-full" src="modulo-3-4.html" title="Module 3.4"></iframe>
+</div>
+</div>
+<div class="modal hidden fixed inset-0 z-[60] bg-black/70 p-4 sm:p-8" id="modal-3-5" onclick="if(event.target===this)closeModal()">
+<div class="max-w-5xl mx-auto h-full flex flex-col dark:bg-dark-900 light-bg-white rounded-2xl border border-purple-500/30 overflow-hidden">
+<div class="flex items-center justify-between px-5 py-3 border-b border-dark-600 light-border-gray-200"><span class="font-bold text-purple-400">Module 3.5 — Market</span><button class="text-gray-400 hover:text-white text-2xl leading-none" onclick="closeModal()">×</button></div>
+<iframe class="flex-1 w-full" src="modulo-3-5.html" title="Module 3.5"></iframe>
+</div>
+</div>
+<div class="modal hidden fixed inset-0 z-[60] bg-black/70 p-4 sm:p-8" id="modal-3-6" onclick="if(event.target===this)closeModal()">
+<div class="max-w-5xl mx-auto h-full flex flex-col dark:bg-dark-900 light-bg-white rounded-2xl border border-purple-500/30 overflow-hidden">
+<div class="flex items-center justify-between px-5 py-3 border-b border-dark-600 light-border-gray-200"><span class="font-bold text-purple-400">Module 3.6 — Frontier</span><button class="text-gray-400 hover:text-white text-2xl leading-none" onclick="closeModal()">×</button></div>
+<iframe class="flex-1 w-full" src="modulo-3-6.html" title="Module 3.6"></iframe>
+</div>
+</div>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. All rights reserved.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    // Topic expandable (índice de trilha)
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    // Modal com iframe
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

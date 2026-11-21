@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Módulo 3.1 — Sim-to-Real — VLA Mastery</title>
+<meta content="Sim-to-real para VLA: reality gap, domain randomization, domain adaptation, system identification, digital twins, coentrenamiento sim+real y evaluación honesta de transfer." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha3/modulo-3-1.html" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha3/modulo-3-1.html" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha3/modulo-3-1.html" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../../../curso/trilha3/modulo-3-1.html" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="../../../en/curso/trilha3/modulo-3-1.html" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="modulo-3-1.html" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors" href="../trilha1/">Ruta 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors" href="../trilha2/">Ruta 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10 transition-colors" href="../trilha3/">Ruta 3</a>
+<button aria-label="Cambiar tema" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Cambiar tema" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Mapa del curso</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Ruta 1 — Fundamentos</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Ruta 2 — Herramientas</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Ruta 3 — Avanzado</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-purple-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-purple-400 mb-4 inline-block" href="index.html">← Volver a la Ruta 3</a>
+<span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-full mb-4">MÓDULO 3.1</span>
+<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🌉 Sim-to-Real: Domain Randomization y Transfer</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Cómo entrenar una política con millones de episodios simulados —baratos, seguros e infinitamente paralelizables— y aun así lograr que funcione en el robot físico, donde la fricción es real y la cámara tiene ruido.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Temas</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">~45</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">Avanzado</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nivel</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">Teoría</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-10">Contenido detallado</h2>
+<!-- SVG HERO MÓDULO -->
+<div class="rounded-2xl border border-purple-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-12">
+<svg aria-label="Puente sim-to-real: entorno simulado en malla a la izquierda, robot real a la derecha, con domain randomization como puente" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 880 300">
+<defs>
+<lineargradient id="m31-grad" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#a855f7"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
+<filter height="200%" id="m31-glow" width="200%" x="-50%" y="-50%"><fegaussianblur stddeviation="1.8"></fegaussianblur></filter>
+</defs>
+<rect fill="#0b0f1a" height="300" opacity="0.35" rx="18" width="880" x="0" y="0"></rect>
+<!-- sim mesh world -->
+<g transform="translate(40,70)">
+<rect fill="#0b0f1a" height="160" rx="14" stroke="#a855f7" stroke-width="2" width="240" x="0" y="0"></rect>
+<path d="M0 40 L240 40 M0 80 L240 80 M0 120 L240 120 M48 0 L48 160 M96 0 L96 160 M144 0 L144 160 M192 0 L192 160" opacity="0.4" stroke="#a855f7" stroke-width="0.8"></path>
+<rect fill="#a855f7" height="44" opacity="0.3" rx="6" width="48" x="80" y="58"></rect>
+<text fill="#a855f7" font-size="15" font-weight="800" text-anchor="middle" x="120" y="-12">SIMULACIÓN</text>
+<text fill="#c4b5fd" font-size="11" text-anchor="middle" x="120" y="184">N entornos paralelos · física aproximada</text>
+</g>
+<!-- bridge -->
+<g transform="translate(440,150)">
+<path d="M-130 0 L130 0" stroke="url(#m31-grad)" stroke-dasharray="8 6" stroke-width="3"></path>
+<rect fill="#0b0f1a" height="44" rx="12" stroke="#38bdf8" stroke-width="1.8" width="184" x="-92" y="-22"></rect>
+<text fill="url(#m31-grad)" font-size="12" font-weight="800" text-anchor="middle" x="0" y="-2">DOMAIN</text>
+<text fill="url(#m31-grad)" font-size="12" font-weight="800" text-anchor="middle" x="0" y="13">RANDOMIZATION</text>
+</g>
+<!-- real world -->
+<g transform="translate(600,70)">
+<rect fill="#0b0f1a" height="160" rx="14" stroke="#38bdf8" stroke-width="2" width="240" x="0" y="0"></rect>
+<rect fill="#38bdf8" height="84" opacity="0.18" rx="10" width="160" x="40" y="40"></rect>
+<circle cx="120" cy="82" fill="#38bdf8" filter="url(#m31-glow)" opacity="0.5" r="26"></circle>
+<rect fill="#7dd3fc" height="22" opacity="0.7" rx="4" width="40" x="100" y="118"></rect>
+<text fill="#38bdf8" font-size="15" font-weight="800" text-anchor="middle" x="120" y="-12">REAL</text>
+<text fill="#7dd3fc" font-size="11" text-anchor="middle" x="120" y="184">1 robot · física real · ruido real</text>
+</g>
+</svg>
+</div>
+<!-- TÓPICO 1 -->
+<section class="mb-16" id="topico-1">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">1</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🕳️ La brecha con la realidad: física, sensor, actuador, apariencia</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O <strong class="text-purple-400">brecha entre la simulación y la realidad</strong> es la divergencia sistemática entre el comportamiento del simulador y el del mundo físico. Una política que aprende a aprovechar las imperfecciones del simulador —fricción idealizada, contacto perfecto, sensores sin ruido— tiene un rendimiento brillante en simulación y falla en el hardware. Mapear las <strong>cuatro fuentes</strong> del gap es el primer paso para cerrarlo.</p>
+<div class="grid sm:grid-cols-2 gap-4 mb-6">
+<div class="dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-5">
+<h4 class="font-semibold text-purple-400 mb-2">🌐 Brecha de física</h4>
+<p class="text-sm dark:text-gray-300 light-text-gray-700">Modelos de contacto (Coulomb idealizado), fricción, restitución, cuerpos rígidos y deformables, cables y telas. Donde más sufre la manipulación fina.</p>
+</div>
+<div class="dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-5">
+<h4 class="font-semibold text-purple-400 mb-2">📷 Brecha de sensores</h4>
+<p class="text-sm dark:text-gray-300 light-text-gray-700">Renderizado vs. imagen real: iluminación, reflejos, desenfoque de movimiento, ruido de RGB-D, distorsión de lente. La visión es la mayor fuente de brecha en zero-shot.</p>
+</div>
+<div class="dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-5">
+<h4 class="font-semibold text-purple-400 mb-2">⚙️ Brecha del actuador</h4>
+<p class="text-sm dark:text-gray-300 light-text-gray-700">Retardo de comando, backlash, límites de torque, dinámica de motores y ganancias del controlador que el simulador simplifica o ignora.</p>
+</div>
+<div class="dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-5">
+<h4 class="font-semibold text-purple-400 mb-2">🎨 Brecha de apariencia</h4>
+<p class="text-sm dark:text-gray-300 light-text-gray-700">Texturas, colores y materiales que no coinciden con objetos reales; el dominio al que la aleatorización visual apunta directamente.</p>
+</div>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Qué observar (oct/2026)</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Caída sim → real</strong> — no existe un número "típico" confiable: el tamaño de la caída depende de la tarea, del robot y del simulador. Mide la tuya (tema 6).</li>
+<li><strong>Sim en lote en la GPU</strong> — MuJoCo Warp (MJWarp, oficial desde MuJoCo 3.5, feb/2026), Newton 1.0 (GTC, mar/2026) e Isaac Lab 3.0 EA (sep/2026, aún sin release final) existen para simular miles de entornos en paralelo. NVIDIA afirma mejoras de velocidad de Newton que no fueron verificadas de forma independiente.</li>
+<li><strong>La visión domina</strong> — en manipulación, la brecha visual suele superar la brecha dinámica como causa de fallas.</li>
+</ul>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Brecha de realidad</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Divergencia sim↔real.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Contact dynamics</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Física del tacto difícil de simular.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Sensor noise</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Falta ruido real en la simulación.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Actuation delay</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Latencia de comando→torque.</p></div>
+</div>
+</section>
+<!-- TÓPICO 2 -->
+<section class="mb-16" id="topico-2">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">2</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🎲 Domain Randomization: textura, luz, masa, fricción, delays</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A <strong class="text-purple-400">domain randomization (DR)</strong> invierte el problema: en vez de hacer que la simulación sea perfecta, la hace lo bastante variable para que el mundo real parezca solo otra muestra de la distribución de entrenamiento. Si la política vio 10.000 variaciones de fricción, luz y masa, la fricción real queda dentro de lo que ya domina. Es la técnica más robusta y económica para transfer <strong>zero-shot</strong>.</p>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Hacer</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Aleatorizar <strong>física</strong> (masa, fricción, damping) Y <strong>visión</strong> (texturas, luz, cámara) juntas.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Usar <strong>Automatic DR (ADR)</strong>: amplía los rangos solo cuando la política pueda manejarlos — currículo automático.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Aleatorizar <strong>retrasos del actuador</strong> y ruido de observación, no solo la apariencia.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Centrar los rangos en el valor real medido (sysID) y ampliarlos a su alrededor.</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Aleatorizar con tanta intensidad que la tarea se vuelve imposible y la política colapsa en una conducta conservadora inútil.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Solo DR visual y olvidar la dinámica: una política hermosa que se resbala en el mundo real.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Franjas centradas fuera de la realidad: cubres el lugar equivocado.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Creer que DR sustituye cualquier dato real: lo reduce, no lo elimina.</span></li>
+</ul>
+</div>
+</div>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Pseudo-DR por episódio (Isaac Lab / MuJoCo)
+def randomize(env):
+    env.friction   = U(0.4, 1.2)      # atrito
+    env.mass_scale = U(0.8, 1.2)      # massa do objeto
+    env.light_dir  = sample_sphere()  # direção de luz
+    env.texture    = random_texture() # aparência
+    env.act_delay  = randint(0, 3)    # atraso de atuador (steps)
+    env.obs_noise  = N(0, 0.01)       # ruído de sensor
+    return env  # o real vira "mais uma amostra" disso</code></pre>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Empieza con un alcance reducido y usa <strong>ADR</strong> para ampliar los rangos automáticamente a medida que mejora la política. Un DR fijo y demasiado amplio desde el inicio elimina la señal de aprendizaje; el DR adaptativo encuentra el límite de lo entrenable.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Visual DR</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Texturas, luz, cámara.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Aleatorización de dinámica</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Masa, fricción, retrasos.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">ADR</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Currículo automático de pistas.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Zero-shot</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Real sin fine-tuning.</p></div>
+</div>
+</section>
+<!-- TÓPICO 3 -->
+<section class="mb-16" id="topico-3">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔀 Domain Adaptation: alinear features sim/real</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Cuando la brecha visual es demasiado grande para cubrirla solo con ruido, la <strong class="text-purple-400">domain adaptation</strong> entra: en lugar de volver la política invariante a la fuerza bruta, se aproxima activamente la distribución de <em>funciones</em> de sim y realidad. Las técnicas adversariales alinean embeddings; modelos como <strong>RCAN</strong> traducen imágenes reales a un "canónico" de simulación antes de inferir.</p>
+<div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-purple-400 mb-3">💡 DR vs Adaptation: cuándo usar cada uno</h3>
+<p class="dark:text-gray-300 light-text-gray-700 mb-3"><strong>DR</strong> es proactiva y no necesita datos reales: cubre la incertidumbre a ciegas. <strong>Adaptation</strong> es reactiva y usa datos reales (etiquetados o no) para cerrar la brecha residual. En la práctica, la receta sólida es <strong>DR + un poco de adaptación/real-in-the-loop</strong>.</p>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Piensa en DR como "prepararse para cualquier clima" y en adaptation como "ajustar la ropa al clima de hoy".</p>
+</div>
+<div class="space-y-4 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">A</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Adversarial feature alignment</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Un discriminador intenta distinguir las características de sim de las de real; el encoder aprende a hacerlas indistinguibles.</p></div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">B</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Pixel-level translation (RCAN)</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Mapea imágenes reales → canónico de simulación, eliminando variaciones irrelevantes antes de la política.</p></div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">C</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Real en el ciclo</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Inyecta muestras reales (sin etiquetas de acción) en el entrenamiento para anclar el encoder al dominio físico.</p></div>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Adaptación de dominio</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Alinear distribuciones.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Alineación de características</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Embeddings indistinguibles.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">RCAN</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Real→canónico de simulación.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Real en el ciclo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Los datos reales anclan el encoder.</p></div>
+</div>
+</section>
+<!-- TÓPICO 4 -->
+<section class="mb-16" id="topico-4">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">4</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🪞 Identificación del sistema y gemelos digitales</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">DR cubre la incertidumbre; <strong class="text-purple-400">identificación del sistema (sysID)</strong> la reduce desde el origen. Al medir el robot real —masas, centros de inercia, fricción de las articulaciones, latencia de control— calibras el simulador para reproducir el hardware específico. El resultado es un <strong>gemelo digital</strong>: un gemelo digital fiel que sirve de campo de entrenamiento y de banco de pruebas seguro. Desde MuJoCo 3.5 (feb/2026) hay un toolbox Python oficial de identificación de sistemas, con modelado de retardos de actuador y de sensor — la versión actual es la 3.16 (oct/2026).</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Qué habilita un digital twin</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Entrenamiento seguro</strong> — explorar políticas arriesgadas sin romper hardware costoso.</li>
+<li><strong>Mejor DR</strong> — rangos centrados en el valor real medido, no estimados al azar.</li>
+<li><strong>Depuración</strong> — reproducir un fallo real en el twin y analizarlo cuadro por cuadro.</li>
+<li><strong>Predeploy</strong> — validar las actualizaciones de política antes de que lleguen al robot físico.</li>
+</ul>
+</div>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># sysID: ajustar parâmetros do sim ao real por otimização
+real_traj = record(robot, commands)          # dados do hardware
+def loss(theta):
+    sim_traj = simulate(commands, params=theta)
+    return mse(sim_traj, real_traj)           # quão próximo o twin está
+theta_star = minimize(loss, init=spec_sheet) # calibra massa/atrito/delay
+# theta_star = simulador que "vira" o robô real</code></pre>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">SysID</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Calibrar la simulación con el mundo real.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Gemelo digital</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Gemelo digital fiel.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Calibración</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Masa, fricción, latencia.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Predeploy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Validar primero en el twin.</p></div>
+</div>
+</section>
+<!-- TÓPICO 5 -->
+<section class="mb-16" id="topico-5">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">5</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🧪 Coentrenamiento sim+real y fine-tuning con pocas demos</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La receta práctica dominante en 2026 no es «sim O real»: es <strong class="text-purple-400">coentrenamiento</strong>. La simulación proporciona <em>cobertura</em> económica (millones de variaciones), y un puñado de demostraciones reales proporciona <em>fidelidad</em> final. Mezclar sim y real en el mismo batch (la proporción correcta se encuentra midiendo, no hay receta universal), o hacer un fine-tuning corto con datos reales, suele superar a cualquiera de los dos por separado. Ejemplo de 2026: el System 0 de Helix 02 de Figure (controlador de cuerpo completo a 1 kHz) se entrenó con más de 1.000 h de movimiento humano retargeted y RL sim-to-real, según Figure (ene/2026).</p>
+<div class="space-y-4 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Preentrenamiento en simulación con DR</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Política robusta ante una amplia variación; aprende una habilidad general a un costo casi nulo.</p></div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Coentrenamiento mixto</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Los batches combinan simulación y mundo real; el mundo real ancla el dominio sin perder la cobertura de la simulación.</p></div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Fine-tuning final real</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Unas pocas demos reales (LoRA/ajuste breve) calibran la política para el robot objetivo específico.</p></div>
+</div>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Las demostraciones reales son costosas: úsalas donde la simulación es más débil: contacto fino, materiales deformables, oclusiones. No desperdicies teleoperación reproduciendo lo que la simulación ya cubre bien (movimientos en espacio libre).</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Co-training</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mezcla simulación y mundo real.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Eficiencia de muestreo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Bastan pocas demos reales.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Fine-tuning</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Ajuste breve en el robot objetivo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Mezcla sim/real</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Proporción ajustada midiendo.</p></div>
+</div>
+</section>
+<!-- TÓPICO 6 -->
+<section class="mb-16" id="topico-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">6</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📏 Evaluación honesta: medir la transferencia, no el sobreajuste a la simulación</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">El error más común en sim-to-real es confundir <strong class="text-purple-400">sim-score</strong> con capacidad real. Una política que alcanza el 99% en simulación dice poco sobre el hardware. La única métrica que cuenta para el deploy es el <strong>tasa de éxito en el robot físico</strong>, medido con variaciones que la política no ha visto, mediante protocolos honestos.</p>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Hacer</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Reportar la tasa de éxito <strong>real</strong> en condiciones held-out (objetos/posiciones nuevos).</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Ejecuta suficientes trials de N y calcula el intervalo de confianza.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Comparar sim-score vs real-score para cuantificar <strong>gap</strong> restante.</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Anunciar capacidad basándose solo en el número del simulador.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Evalúa en el mismo escenario y seed del entrenamiento (overfit disfrazado).</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Ocultar la varianza: 3 trials afortunados no son evidencia.</span></li>
+</ul>
+</div>
+</div>
+<div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-purple-400 mb-3">💡 La métrica que importa</h3>
+<p class="dark:text-gray-300 light-text-gray-700">O <strong>sim2real gap</strong> = (puntuación en sim − puntuación en el mundo real). Reducirlo es el objetivo de todo el módulo. Una puntuación alta en sim con una brecha grande significa que optimizaste el entorno equivocado — y solo lo descubres al medir en el mundo real.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Tasa de éxito real</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Única métrica de deploy.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Held-out</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Variación no vista.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Sim2real gap</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Sim-score − real-score.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Varianza</p><p class="text-xs dark:text-gray-400 light-text-gray-600">IC sobre N trials.</p></div>
+</div>
+</section>
+<!-- RESUMO -->
+<section class="mb-12">
+<div class="bg-gradient-to-br dark:from-purple-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-8">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumen del módulo</h2>
+<div class="space-y-3 mb-8">
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">La brecha de realidad tiene 4 fuentes</strong><span class="dark:text-gray-400 light-text-gray-600"> — física, sensor, actuador, apariencia; mapearlas precede a mitigarlas.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Aleatorización de dominio</strong><span class="dark:text-gray-400 light-text-gray-600"> — convierte lo real en «una muestra más»; ADR encuentra el límite de lo entrenable.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Adaptation + sysID + digital twin</strong><span class="dark:text-gray-400 light-text-gray-600"> — reducen la brecha en origen en vez de solo cubrirla.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Coentrenamiento sim+real</strong><span class="dark:text-gray-400 light-text-gray-600"> — la cobertura económica + la fidelidad real superan a ambas por separado.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Evaluación honesta</strong><span class="dark:text-gray-400 light-text-gray-600"> — solo cuenta la tasa de éxito real en datos held-out; el sim-score engaña.</span></div></div>
+</div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-purple-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">3.2 — Humanoides: Figure, Tesla, Unitree, GR00T. Donde la transferencia de simulación a la realidad se encuentra con los cuerpos de propósito general.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Actualizado en oct/2026.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-start">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Volver a la ruta</a>
+<a class="text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition" href="modulo-3-2.html">Próximo módulo →</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos los derechos reservados.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

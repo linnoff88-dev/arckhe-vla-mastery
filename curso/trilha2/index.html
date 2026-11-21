@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trilha 2 — Ferramentas e Aplicação Técnica — VLA Mastery</title>
+<meta content="Trilha 2 do VLA Mastery: PyTorch, LeRobot, simuladores, ROS2, hardware e datasets. Da pesquisa ao braço real." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha2/" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha2/" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha2/" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="./" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">PT</a><a href="../../en/curso/trilha2/" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="../../es/curso/trilha2/" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors" href="../trilha1/">Trilha 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10 transition-colors" href="../trilha2/">Trilha 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors" href="../trilha3/">Trilha 3</a>
+<button aria-label="Alternar tema" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Alternar tema" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Mapa do curso</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Trilha 1 — Fundamentos</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Trilha 2 — Ferramentas</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Trilha 3 — Avançado</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-blue-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-blue-400 mb-4 inline-block" href="../">← Mapa do curso</a>
+<span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-4">TRILHA 2</span>
+<h1 class="text-3xl sm:text-5xl font-extrabold dark:text-white light-text-gray-900 mb-4">🛠️ Ferramentas e Aplicação Técnica</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">A ponte entre teoria e robô. PyTorch, LeRobot, simuladores, ROS2, hardware e datasets — a stack completa para levar um VLA da pesquisa ao braço que pega o objeto.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Módulos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">36</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tópicos</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">~4h</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Duração</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">Inter.</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nível</div></div>
+</div>
+<div class="rounded-2xl border border-blue-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mt-10">
+<svg aria-label="Stack de ferramentas VLA: do código ao robô real" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 820 240">
+<defs>
+<filter id="t2-glow"><fegaussianblur stddeviation="2.2"></fegaussianblur></filter>
+<lineargradient id="t2-grad" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#3b82f6"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
+<pattern height="24" id="t2-dots" patternunits="userSpaceOnUse" width="24"><circle cx="1.6" cy="1.6" fill="#3b82f6" opacity="0.12" r="1.3"></circle></pattern>
+</defs>
+<rect fill="url(#t2-dots)" height="240" width="820" x="0" y="0"></rect>
+<text fill="#e5e7eb" font-size="20" font-weight="800" text-anchor="middle" x="410" y="40">Do código ao robô real</text>
+<g>
+<rect fill="#0b0f1a" height="64" rx="14" stroke="#3b82f6" stroke-width="2" width="120" x="30" y="90"></rect><text fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle" x="90" y="118">PyTorch</text><text fill="#94a3b8" font-size="10" text-anchor="middle" x="90" y="137">treino</text>
+<rect fill="#0b0f1a" height="64" rx="14" stroke="#3b82f6" stroke-width="2" width="120" x="190" y="90"></rect><text fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle" x="250" y="118">LeRobot</text><text fill="#94a3b8" font-size="10" text-anchor="middle" x="250" y="137">framework</text>
+<rect fill="#0b0f1a" height="64" rx="14" stroke="#38bdf8" stroke-width="2" width="120" x="350" y="90"></rect><text fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle" x="410" y="118">Sim</text><text fill="#94a3b8" font-size="10" text-anchor="middle" x="410" y="137">MuJoCo/Isaac</text>
+<rect fill="#0b0f1a" filter="url(#t2-glow)" height="64" rx="14" stroke="#38bdf8" stroke-width="2" width="120" x="510" y="90"></rect>
+<rect fill="none" height="64" rx="14" stroke="#38bdf8" stroke-width="2" width="120" x="510" y="90"></rect><text fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle" x="570" y="118">ROS2</text><text fill="#94a3b8" font-size="10" text-anchor="middle" x="570" y="137">middleware</text>
+<rect fill="#0b0f1a" height="64" rx="14" stroke="#38bdf8" stroke-width="2" width="120" x="670" y="90"></rect><text fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle" x="730" y="118">🦾 Robô</text><text fill="#94a3b8" font-size="10" text-anchor="middle" x="730" y="137">SO-101</text>
+</g>
+<g stroke="url(#t2-grad)" stroke-width="2.5">
+<line x1="150" x2="188" y1="122" y2="122"></line><line x1="310" x2="348" y1="122" y2="122"></line><line x1="470" x2="508" y1="122" y2="122"></line><line x1="630" x2="668" y1="122" y2="122"></line>
+</g>
+<polygon fill="#38bdf8" points="188,122 180,118 180,126"></polygon><polygon fill="#38bdf8" points="348,122 340,118 340,126"></polygon><polygon fill="#38bdf8" points="508,122 500,118 500,126"></polygon><polygon fill="#38bdf8" points="668,122 660,118 660,126"></polygon>
+<text fill="#94a3b8" font-size="13" text-anchor="middle" x="410" y="195">datasets (Open X-Embodiment · DROID · LIBERO) alimentam toda a cadeia</text>
+</svg>
+</div>
+</div>
+</header>
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-8">Mapa da trilha</h2>
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-blue-500/50 transition" href="#modulo-2-1">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-blue-400">2.1</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~40 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">🐍 Python + PyTorch</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">A stack onde todo VLA nasce, treina e serve.</p>
+</a>
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-blue-500/50 transition" href="#modulo-2-2">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-blue-400">2.2</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~45 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">🤗 LeRobot</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Gravar, treinar e deployar num único repo open.</p>
+</a>
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-blue-500/50 transition" href="#modulo-2-3">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-blue-400">2.3</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~45 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">🌐 Simuladores</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Milhares de mundos por noite, sem quebrar nada.</p>
+</a>
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-blue-500/50 transition" href="#modulo-2-4">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-blue-400">2.4</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~40 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">🔗 ROS2</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">A cola entre policy e torque, em tempo real.</p>
+</a>
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-blue-500/50 transition" href="#modulo-2-5">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-blue-400">2.5</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~40 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">🦿 Hardware</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Braços, garras, sensores e Jetson no edge.</p>
+</a>
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-blue-500/50 transition" href="#modulo-2-6">
+<div class="flex items-center justify-between mb-3"><span class="text-sm font-bold text-blue-400">2.6</span><span class="text-xs dark:text-gray-500 light-text-gray-500">~40 min</span></div>
+<h3 class="text-lg font-bold dark:text-white light-text-gray-900 mb-2">📦 Datasets</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">OXE, DROID, LIBERO e o vídeo humano de 2026: o combustível do generalista.</p>
+</a>
+</div>
+<h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-8">Conteúdo detalhado</h2>
+<!-- ============ CARD 2.1 ============ -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8" data-module-card="" id="modulo-2-1">
+<div class="flex items-start justify-between gap-4 mb-6">
+<div>
+<span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-2">MÓDULO 2.1</span>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">🐍 Python + PyTorch: Stack Dominante para VLA</h3>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">1</span><span class="font-semibold dark:text-white light-text-gray-900">🐍 Por que PyTorch domina</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> execução eager, autograd e ecossistema HF.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> iteração rápida em arquiteturas que mudam toda semana.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> define-by-run, CUDA/MPS, portabilidade.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">2</span><span class="font-semibold dark:text-white light-text-gray-900">⚡ Tensores, GPU, mixed precision</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> bf16/fp16 e orçamento de memória de 7B.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> define qual GPU treina o modelo.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> autocast, Adam states, ativações.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">3</span><span class="font-semibold dark:text-white light-text-gray-900">🤗 Transformers/HF, LoRA, quantização</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> carregar VLMs e treinar adaptadores QLoRA.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> fine-tune de 7B em 24 GB.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> PEFT, NF4, target_modules.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">4</span><span class="font-semibold dark:text-white light-text-gray-900">📊 Pipeline de dados e normalização</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> Dataset/DataLoader e normalização de ações.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> normalização errada quebra a action head.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> stats com ckpt, augmentation, workers.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">5</span><span class="font-semibold dark:text-white light-text-gray-900">🧩 DDP, FSDP, gradient checkpointing</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> sharding de estado entre GPUs.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> viabiliza treinar VLA grande.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> all-gather, reduce-scatter, recompute.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">6</span><span class="font-semibold dark:text-white light-text-gray-900">🚀 Inferência a 10–50 Hz</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> torch.compile e action chunking.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> latência fecha o loop de controle.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> inference_mode, CUDA graphs, export.</p></div></div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-2-1')">Ver em Modal</button>
+<a class="text-center px-5 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-1.html">Ver Completo →</a>
+</div>
+</div>
+<!-- ============ CARD 2.2 ============ -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8" data-module-card="" id="modulo-2-2">
+<div class="flex items-start justify-between gap-4 mb-6">
+<div>
+<span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-2">MÓDULO 2.2</span>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">🤗 LeRobot: Framework End-to-End</h3>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">1</span><span class="font-semibold dark:text-white light-text-gray-900">🧱 Filosofia open end-to-end</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> datasets, políticas, sim e hardware num repo.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> democratiza a robótica como o transformers fez com NLP.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> v0.6.1 (08/2026), lerobot[training], record, train, eval, rollout; Hub.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">2</span><span class="font-semibold dark:text-white light-text-gray-900">📁 LeRobotDataset: parquet + vídeo</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> estado em parquet, imagens em mp4.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> formato único reproduzível.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> features, episode_index, delta_timestamps.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">3</span><span class="font-semibold dark:text-white light-text-gray-900">🧠 Políticas: ACT, Diffusion, π0, VQ-BeT</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> classes de policy com mesma interface.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> trocar de método com uma flag.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> chunking, flow matching, checkpoints.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">4</span><span class="font-semibold dark:text-white light-text-gray-900">🦾 Hardware: SO-101, Koch, ALOHA</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> braços baratos e teleop leader-follower.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> coletar demos com um braço de centenas de dólares.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> calibração, gravação, consistência.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">5</span><span class="font-semibold dark:text-white light-text-gray-900">🔁 Fluxo: gravar → treinar → deploy</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> record, train, eval e rollout (LeRobot 0.6).</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> ciclo completo num braço de mesa.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> eval rollout, success rate, malha fechada.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">6</span><span class="font-semibold dark:text-white light-text-gray-900">🌍 Comunidade e reprodutibilidade</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> datasets e checkpoints versionados no Hub.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> reproduz papers e contribui demos.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> dataset card, prévias no Hub, 81 mil datasets (out/2026).</p></div></div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-2-2')">Ver em Modal</button>
+<a class="text-center px-5 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-2.html">Ver Completo →</a>
+</div>
+</div>
+<!-- ============ CARD 2.3 ============ -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8" data-module-card="" id="modulo-2-3">
+<div class="flex items-start justify-between gap-4 mb-6">
+<div>
+<span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-2">MÓDULO 2.3</span>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">🌐 Simuladores: MuJoCo, Isaac, Habitat</h3>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">1</span><span class="font-semibold dark:text-white light-text-gray-900">💸 Por que simular</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> dados baratos, seguros, paralelos.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> RL precisa de muitas interações.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> reset infinito, ground-truth, randomização.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">2</span><span class="font-semibold dark:text-white light-text-gray-900">⚙️ MuJoCo / MJX</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> contato preciso, física diferenciável em JAX; MuJoCo 3.16 (10/2026) e MJWarp para lote na GPU.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> manipulação de contato fino.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> MJCF, vmap, menagerie.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">3</span><span class="font-semibold dark:text-white light-text-gray-900">🟢 Isaac Sim / Isaac Lab</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> GPU sim com RTX e RL massivo; Isaac Sim 6.1 e Isaac Lab 3.0 EA (09/2026), Newton.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> milhares de envs sem gargalo CPU.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> PhysX 5, OpenUSD, fotorrealismo.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">4</span><span class="font-semibold dark:text-white light-text-gray-900">🧭 Habitat e cia</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> navegação e embodied QA em cenas reais.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> percepção espacial e exploração.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> HM3D, EQA, SAPIEN/Genesis.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">5</span><span class="font-semibold dark:text-white light-text-gray-900">🕳️ O gap sim ≠ real</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> física, sensores e aparência divergem.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> sucesso alto em sim pode despencar no real.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> reality gap, deformáveis, eval honesto.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">6</span><span class="font-semibold dark:text-white light-text-gray-900">📏 Benchmarks: LIBERO, Meta-World</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> suites padronizadas de avaliação.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> comparar policies entre papers; LIBERO saturado (≥97% em 2026) pede RoboTwin 2.0, RoboCasa365 e lerobot-eval.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> success rate, RoboSuite, generalização.</p></div></div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-2-3')">Ver em Modal</button>
+<a class="text-center px-5 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-3.html">Ver Completo →</a>
+</div>
+</div>
+<!-- ============ CARD 2.4 ============ -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8" data-module-card="" id="modulo-2-4">
+<div class="flex items-start justify-between gap-4 mb-6">
+<div>
+<span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-2">MÓDULO 2.4</span>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">🔗 ROS2: Middleware para Robótica Real</h3>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">1</span><span class="font-semibold dark:text-white light-text-gray-900">📡 ROS2 vs ROS1: DDS e QoS</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> middleware descentralizado sobre DDS.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> tempo real e segurança; em out/2026, Lyrical Luth (LTS até mai/2031).</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> nós, tópicos, serviços, ações.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">2</span><span class="font-semibold dark:text-white light-text-gray-900">🧩 Anatomia de um sistema</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> percepção, planejamento e controle como nós.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> trocar a policy sem mexer no driver.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> rqt_graph, topic hz, modularidade.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">3</span><span class="font-semibold dark:text-white light-text-gray-900">🤖 Integrar um VLA: sync e QoS</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> nó rclpy que assina câmera+estado.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> obs do mesmo instante; QoS certa.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> message_filters, BEST_EFFORT, callback group.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">4</span><span class="font-semibold dark:text-white light-text-gray-900">🧭 tf2: pose → comando do braço</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> árvore de frames temporizada.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> converter frame da câmera ao base.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> mão-olho, REP-103, timestamp.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">5</span><span class="font-semibold dark:text-white light-text-gray-900">🦾 MoveIt2 e controladores</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> planejamento, colisão, IK/FK, limites.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> approach seguro e execução de trajetória.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> ros2_control, e-stop, time parameterization.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">6</span><span class="font-semibold dark:text-white light-text-gray-900">⏱️ Latência e tempo real</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> orçamento frame→torque e jitter.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> jitter desestabiliza o controle.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> PREEMPT_RT, watchdog, chunking.</p></div></div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-2-4')">Ver em Modal</button>
+<a class="text-center px-5 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-4.html">Ver Completo →</a>
+</div>
+</div>
+<!-- ============ CARD 2.5 ============ -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8" data-module-card="" id="modulo-2-5">
+<div class="flex items-start justify-between gap-4 mb-6">
+<div>
+<span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-2">MÓDULO 2.5</span>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">🦿 Hardware: Braços, Sensores, Edge</h3>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">1</span><span class="font-semibold dark:text-white light-text-gray-900">🦾 Braços: SO-101, Franka, UR, xArm</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> DOF, payload e repetibilidade.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> escolher o braço pela tarefa/verba.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> controle de força, cobot, SO-101 de entrada.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">2</span><span class="font-semibold dark:text-white light-text-gray-900">🤏 Garras e mãos, tátil</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> paralela, sucção, multi-dedo, GelSight.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> end-effector define o que se agarra.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> destreza, in-hand, feedback de contato.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">3</span><span class="font-semibold dark:text-white light-text-gray-900">📷 Sensores: RGB-D, wrist, IMU</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> RealSense/ZED, wrist cam, encoders.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> visão é a entrada dominante.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> anti-oclusão, observation.state, F/T.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">4</span><span class="font-semibold dark:text-white light-text-gray-900">🔌 Edge: Jetson Orin/Thor</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> compute on-board, throughput vs consumo; preços subiram em jul/2026 (Thor US$ 5.499, segundo cnx-software).</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> elimina latência de rede.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> TensorRT, INT8, envelope térmico.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">5</span><span class="font-semibold dark:text-white light-text-gray-900">🎮 Teleoperação</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> leader-follower, VR, luvas.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> dado bom começa em teleop boa.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> espaço de ação, retarget, ergonomia.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">6</span><span class="font-semibold dark:text-white light-text-gray-900">💰 Orçamento e montagem</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> do kit SO-101 + Jetson (preços de jul/2026) à célula de pesquisa.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> custo despencou; método importa mais.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> kit acessível, cloud + edge.</p></div></div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-2-5')">Ver em Modal</button>
+<a class="text-center px-5 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-5.html">Ver Completo →</a>
+</div>
+</div>
+<!-- ============ CARD 2.6 ============ -->
+<div class="dark:bg-dark-800 light-bg-white rounded-2xl border border-dark-600 light-border-gray-200 p-6 sm:p-8 mb-8" data-module-card="" id="modulo-2-6">
+<div class="flex items-start justify-between gap-4 mb-6">
+<div>
+<span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-2">MÓDULO 2.6</span>
+<h3 class="text-2xl font-bold dark:text-white light-text-gray-900">📦 Datasets: Open X-Embodiment, DROID</h3>
+</div>
+</div>
+<div class="divide-y divide-dark-600">
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">1</span><span class="font-semibold dark:text-white light-text-gray-900">🗂️ Open X-Embodiment</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> 1M+ trajetórias, 22 embodiments (artigo, 2023).</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> o "ImageNet da robótica".</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> 60+ datasets, generalistas, corpus unificado.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">2</span><span class="font-semibold dark:text-white light-text-gray-900">🔀 RT-X: cross-embodiment</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> co-treino em vários corpos.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> transferência positiva entre robôs.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> mixing weights, co-fine-tune.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">3</span><span class="font-semibold dark:text-white light-text-gray-900">🌎 DROID: in-the-wild</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> 76k demos, 564 cenas, Franka (artigo, 2024).</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> diversidade contra overfit.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> padronizado, 86 tarefas, ambientes reais.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">4</span><span class="font-semibold dark:text-white light-text-gray-900">📏 LIBERO: aprendizado contínuo</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> benchmark de transferência, 4 suites; saturado em 2026 (≥97%).</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> medir aprender sem esquecer.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> Spatial/Object/Goal/Long, composição.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">5</span><span class="font-semibold dark:text-white light-text-gray-900">🔧 RLDS e harmonização</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> formato comum + action spaces heterogêneos.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> sem normalizar, não há transferência.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> TFDS, LeRobotDataset v3, Δpose EEF, frequência.</p></div></div>
+<div class="topic-item py-3"><button class="w-full flex items-center gap-3 text-left" onclick="toggleTopic(this)"><span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 font-bold text-sm flex-shrink-0">6</span><span class="font-semibold dark:text-white light-text-gray-900">🧹 Curadoria, viés, licenças</span></button><div class="topic-explanation pl-11 pt-3 space-y-2 text-sm"><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">O que é:</strong> filtrar qualidade e balancear cobertura.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Por que importa:</strong> qualidade bate volume bruto.</p><p class="dark:text-gray-300 light-text-gray-700"><strong class="text-blue-400">Conceitos:</strong> viés de embodiment, licença, contribuir.</p></div></div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 mt-6">
+<button class="px-5 py-2.5 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" onclick="openModal('modal-2-6')">Ver em Modal</button>
+<a class="text-center px-5 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-6.html">Ver Completo →</a>
+</div>
+</div>
+<!-- Navegação Trilha 1 ↔ Trilha 3 -->
+<div class="grid sm:grid-cols-2 gap-5 mt-12">
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-emerald-500/50 transition" href="../trilha1/">
+<p class="text-xs dark:text-gray-500 light-text-gray-500 mb-1">← Trilha anterior</p>
+<h3 class="text-lg font-bold text-emerald-400 mb-1">Trilha 1 — Fundamentos</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">A base de IA incorporada: anatomia VLA, modelos e políticas.</p>
+</a>
+<a class="block dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-6 hover:border-purple-500/50 transition text-right" href="../trilha3/">
+<p class="text-xs dark:text-gray-500 light-text-gray-500 mb-1">Próxima trilha →</p>
+<h3 class="text-lg font-bold text-purple-400 mb-1">Trilha 3 — Avançado</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Sim-to-real, humanoides, arquiteturas híbridas e mercado.</p>
+</a>
+</div>
+</main>
+<!-- MODAIS -->
+<div class="modal hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70" id="modal-2-1">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-blue-500/30 overflow-hidden">
+<button aria-label="Fechar" class="absolute top-3 right-3 z-10 p-2 rounded-lg dark:bg-dark-800 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 hover:opacity-80" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-2-1.html" title="Módulo 2.1"></iframe>
+</div>
+</div>
+<div class="modal hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70" id="modal-2-2">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-blue-500/30 overflow-hidden">
+<button aria-label="Fechar" class="absolute top-3 right-3 z-10 p-2 rounded-lg dark:bg-dark-800 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 hover:opacity-80" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-2-2.html" title="Módulo 2.2"></iframe>
+</div>
+</div>
+<div class="modal hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70" id="modal-2-3">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-blue-500/30 overflow-hidden">
+<button aria-label="Fechar" class="absolute top-3 right-3 z-10 p-2 rounded-lg dark:bg-dark-800 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 hover:opacity-80" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-2-3.html" title="Módulo 2.3"></iframe>
+</div>
+</div>
+<div class="modal hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70" id="modal-2-4">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-blue-500/30 overflow-hidden">
+<button aria-label="Fechar" class="absolute top-3 right-3 z-10 p-2 rounded-lg dark:bg-dark-800 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 hover:opacity-80" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-2-4.html" title="Módulo 2.4"></iframe>
+</div>
+</div>
+<div class="modal hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70" id="modal-2-5">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-blue-500/30 overflow-hidden">
+<button aria-label="Fechar" class="absolute top-3 right-3 z-10 p-2 rounded-lg dark:bg-dark-800 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 hover:opacity-80" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-2-5.html" title="Módulo 2.5"></iframe>
+</div>
+</div>
+<div class="modal hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70" id="modal-2-6">
+<div class="relative w-full max-w-5xl h-[85vh] dark:bg-dark-900 light-bg-white rounded-2xl border border-blue-500/30 overflow-hidden">
+<button aria-label="Fechar" class="absolute top-3 right-3 z-10 p-2 rounded-lg dark:bg-dark-800 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 hover:opacity-80" onclick="closeModal()">✕</button>
+<iframe class="w-full h-full" src="modulo-2-6.html" title="Módulo 2.6"></iframe>
+</div>
+</div>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos os direitos reservados.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    // Topic expandable (índice de trilha)
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    // Modal com iframe
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

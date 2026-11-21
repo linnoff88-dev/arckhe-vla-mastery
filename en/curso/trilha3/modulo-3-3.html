@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Module 3.3 — Hybrid Architectures — VLA Mastery</title>
+<meta content="Hybrid architectures for robotics: control hierarchy, System 1/2, LLM planner (SayCan, Code-as-Policies), affordances, closed-loop control, and long horizons." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/curso/trilha3/modulo-3-3.html" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/curso/trilha3/modulo-3-3.html" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/curso/trilha3/modulo-3-3.html" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../../../curso/trilha3/modulo-3-3.html" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="modulo-3-3.html" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">EN</a><a href="../../../es/curso/trilha3/modulo-3-3.html" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">ES</a></div>
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2" href="../../">
+<span class="text-xl">🦾</span>
+<span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors" href="../trilha1/">Track 1</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors" href="../trilha2/">Track 2</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10 transition-colors" href="../trilha3/">Track 3</a>
+<button aria-label="Switch theme" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+</div>
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Switch theme" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+</div>
+</div>
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="../">← Course map</a>
+<a class="text-sm font-medium text-emerald-400" href="../trilha1/">Track 1 — Fundamentals</a>
+<a class="text-sm font-medium text-blue-400" href="../trilha2/">Track 2 — Tools</a>
+<a class="text-sm font-medium text-purple-400" href="../trilha3/">Track 3 — Advanced</a>
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+</div>
+</div>
+</nav>
+<header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-purple-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto">
+<a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-purple-400 mb-4 inline-block" href="index.html">← Back to Track 3</a>
+<span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-full mb-4">MODULE 3.3</span>
+<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🧠 Hybrid Architectures: LLM Planner + VLA Executor</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">No single network can reason over tasks that take minutes AND control actuators at 200 Hz. The solution is to split the work: a slow brain that thinks, a fast policy that acts—and the glue between them.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Topics</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">~45</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutes</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">Advanced</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Level</div></div>
+<div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">Theory</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Type</div></div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-10">Detailed content</h2>
+<!-- SVG: fluxo planner -> fila de skills -> VLA -->
+<div class="rounded-2xl border border-purple-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-12">
+<svg aria-label="Decision flow: an LLM planner breaks down the instruction into a queue of skills that the VLA executor consumes, with failure feedback triggering replanning" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 880 320">
+<defs>
+<lineargradient id="m33-grad" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#a855f7"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
+<marker id="m33-arrow" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0 0 L8 3 L0 6 Z" fill="#38bdf8"></path></marker>
+</defs>
+<rect fill="#0b0f1a" height="320" opacity="0.35" rx="18" width="880" x="0" y="0"></rect>
+<!-- LLM planner -->
+<g transform="translate(40,40)">
+<rect fill="#0b0f1a" height="120" rx="14" stroke="#a855f7" stroke-width="2" width="200" x="0" y="0"></rect>
+<text fill="#a855f7" font-size="15" font-weight="800" text-anchor="middle" x="100" y="34">LLM PLANNER</text>
+<text fill="#c4b5fd" font-size="11" text-anchor="middle" x="100" y="58">“clear the table”</text>
+<text fill="#e9d5ff" font-size="10" text-anchor="middle" x="100" y="82">decomposes a long task</text>
+<text fill="#e9d5ff" font-size="10" text-anchor="middle" x="100" y="100">into feasible subtasks</text>
+</g>
+<path d="M240 100 L300 100" marker-end="url(#m33-arrow)" stroke="url(#m33-grad)" stroke-width="2.5"></path>
+<!-- skill queue -->
+<g transform="translate(310,40)">
+<rect fill="#0b0f1a" height="120" rx="14" stroke="#38bdf8" stroke-width="2" width="200" x="0" y="0"></rect>
+<text fill="#38bdf8" font-size="14" font-weight="800" text-anchor="middle" x="100" y="28">SKILLS QUEUE</text>
+<rect fill="#38bdf8" height="20" opacity="0.25" rx="5" width="156" x="22" y="42"></rect><text fill="#e0f2fe" font-size="10" text-anchor="middle" x="100" y="57">1. pick up a cup</text>
+<rect fill="#38bdf8" height="20" opacity="0.25" rx="5" width="156" x="22" y="68"></rect><text fill="#e0f2fe" font-size="10" text-anchor="middle" x="100" y="83">2. put it in the sink</text>
+<rect fill="#38bdf8" height="20" opacity="0.25" rx="5" width="156" x="22" y="94"></rect><text fill="#e0f2fe" font-size="10" text-anchor="middle" x="100" y="109">3. clean the surface</text>
+</g>
+<path d="M510 100 L570 100" marker-end="url(#m33-arrow)" stroke="url(#m33-grad)" stroke-width="2.5"></path>
+<!-- VLA executor -->
+<g transform="translate(580,40)">
+<rect fill="#0b0f1a" height="120" rx="14" stroke="#a855f7" stroke-width="2" width="200" x="0" y="0"></rect>
+<text fill="#a855f7" font-size="15" font-weight="800" text-anchor="middle" x="100" y="34">VLA EXECUTOR</text>
+<text fill="#c4b5fd" font-size="11" text-anchor="middle" x="100" y="58">reactive policy ~200 Hz</text>
+<text fill="#e9d5ff" font-size="10" text-anchor="middle" x="100" y="82">run 1 skill at a time</text>
+<text fill="#e9d5ff" font-size="10" text-anchor="middle" x="100" y="100">continuous control</text>
+</g>
+<!-- feedback loop -->
+<path d="M680 160 Q680 260 140 260 Q120 260 120 180" fill="none" marker-end="url(#m33-arrow)" stroke="#38bdf8" stroke-dasharray="6 5" stroke-width="2"></path>
+<text fill="#7dd3fc" font-size="11" font-weight="600" text-anchor="middle" x="430" y="252">failure feedback → replan (closed-loop)</text>
+</svg>
+</div>
+<!-- TÓPICO 1 -->
+<section class="mb-16" id="topico-1">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">1</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🏗️ Control hierarchy: symbolic × reactive</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Classical robotics always separated <strong class="text-purple-400">planning</strong> (high-level, abstract, slow) of <strong>control</strong> (low-level, continuous, fast). Modern hybrid architectures bring this hierarchy back with learned components: a reasoning model on top, a reactive policy at the bottom. The reason is fundamental—the time scales are incompatible.</p>
+<div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-purple-400 mb-3">💡 The time-scale conflict</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Reasoning about "how to put away the dishes" takes seconds of inference in a large VLM. Controlling a finger requires decisions every ~5 ms. Forcing a single network to do both results in something too slow for the control loop or too dumb for the task. The hierarchy <strong>decouples</strong> the frequencies.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Hierarchy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Planning vs. control.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Symbolic planning</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Abstract, subtle.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Reactive policy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Continuous, fast.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Decoupling</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Separate frequencies.</p></div>
+</div>
+</section>
+<!-- TÓPICO 2 -->
+<section class="mb-16" id="topico-2">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">2</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🐢🐇 System 1 / System 2 (Helix, GR00T)</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">The top-level instance in the hierarchy is the <strong class="text-purple-400">dual-system</strong>, borrowing Kahneman's metaphor. The <strong>System 2</strong> (slow VLM) reasons and emits a <em>latent vector</em> of intent; the <strong>System 1</strong> (fast policy) is conditioned on this latent to generate high-frequency actions. Helix and GR00T converged on this design—and it runs <strong>asynchronous</strong>: S1 does not wait for S2 at every step. In 2026 the hierarchy got deeper: the <strong>Helix 02</strong> (Figure, Jan/2026) added a <strong>System 0</strong> whole-body at 1 kHz below S1 (200 Hz), and the <strong>GR00T N1.7</strong> (NVIDIA, Apr/2026) calls its S2→S1 (Cosmos-Reason2-2B → DiT) "Action Cascade".</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Inferência assíncrona dual-system
+latent = None
+loop_S2 (~8 Hz):   latent = VLM(image, instruction)   # raciocínio
+loop_S1 (~200 Hz): action = policy(obs, latent)       # controle
+                   robot.step(action)
+# S1 reusa o último latent enquanto S2 ainda pensa</code></pre>
+</div>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Why latent, not text?</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>Broadband</strong> — a continuous vector carries more nuance than a discrete skill string.</li>
+<li><strong>Differentiable</strong> — allows you to train S1 and S2 in a coupled manner when desired.</li>
+<li><strong>Fast</strong> — no language parsing in the control loop.</li>
+</ul>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Dual-system</p><p class="text-xs dark:text-gray-400 light-text-gray-600">S2 thinks, S1 acts.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Latent conditioning</p><p class="text-xs dark:text-gray-400 light-text-gray-600">S1 conditioned on z.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Async inference</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Independent loops.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Kahneman</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Slow thinking × fast action.</p></div>
+</div>
+</section>
+<!-- TÓPICO 3 -->
+<section class="mb-16" id="topico-3">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📋 LLM as planner: SayCan, Code-as-Policies</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Before continuous latents, the first wave of hybrids used the LLM as <strong class="text-purple-400">symbolic planner</strong>. <strong>SayCan</strong> (Google, 2022) combined the LLM's probability (“say”) with each skill's feasibility (“can”) to choose the next step. <strong>Code-as-Policies</strong> went further: the LLM writes <em>code</em> that calls perception and control APIs, gaining loops, conditionals and composition. In 2026 this idea became a product as <strong>agentic pattern</strong>: o <strong>Gemini Robotics-ER 2</strong> (Google DeepMind, Jul 30, 2026) is a "physical agent" that orchestrates VLAs and APIs such as <em>tools</em>, via the Gemini Live API with streaming, and is in preview in Google AI Studio (<code>gemini-robotics-er-2-preview</code>); the VLA 2 it calls remains partners-only. Earlier, ER 1.6 (Apr 2026) already used code to zoom in and read instruments (gauges, displays) on Spot.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Code-as-Policies — LLM gera o plano como programa
+# instrução: "empilhe os blocos por cor"
+for color in detect_colors():
+    blocks = get_objects(color=color)
+    base = blocks[0]
+    for b in blocks[1:]:
+        pick(b); place_on(base); base = b
+# loops + lógica que uma lista plana de skills não expressa</code></pre>
+</div>
+<div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-purple-400 mb-3">💡 SayCan in one sentence</h3>
+<p class="dark:text-gray-300 light-text-gray-700">score(skill) = <strong>P_LLM</strong>(skill is useful for the task) × <strong>P_affordance</strong>(robot can execute now). "Say" alone dreams up impossible plans; "can" anchors them in physical reality.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">SayCan</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Say × can.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Code-as-Policies</p><p class="text-xs dark:text-gray-400 light-text-gray-600">LLM writes code.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Task decomposition</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Break it into subtasks.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Prompting</p><p class="text-xs dark:text-gray-400 light-text-gray-600">No need to train a new policy.</p></div>
+</div>
+</section>
+<!-- TÓPICO 4 -->
+<section class="mb-16" id="topico-4">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">4</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🎯 Affordances and grounding</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A plan only matters if it can be executed. <strong class="text-purple-400">Affordance</strong> is an estimate of how feasible an action is in the current state; <strong>grounding</strong> is the link between the planner's language and the robot's real skills. Without it, the LLM produces eloquent but impossible plans—asking it to "pick up the cup" when no cup is in sight.</p>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+<div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+<h4 class="font-bold text-emerald-400 mb-4">✓ Do</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Use one <strong>value function</strong> or detector as a feasibility filter.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Perceptual grounding: offer only skills whose objects exist in the scene.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Restrict the skills vocabulary to what the executor can handle.</span></li>
+</ul>
+</div>
+<div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+<h4 class="font-bold text-red-400 mb-4">✗ Avoid</h4>
+<ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Relying on the pure LLM to judge physical feasibility.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Open-ended plans without grounding in real objects/state.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Skills in the plan that the executor was never trained to perform.</span></li>
+</ul>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Affordance</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Action feasibility.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Grounding</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Language → actual skill.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Value function</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Feasibility filter.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Feasibility</p><p class="text-xs dark:text-gray-400 light-text-gray-600">The “can” in SayCan.</p></div>
+</div>
+</section>
+<!-- TÓPICO 5 -->
+<section class="mb-16" id="topico-5">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">5</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔁 Memory and feedback: replan after failure</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Blind execution breaks at the first unexpected event. Robust systems close the loop: detect failure, update the <strong class="text-purple-400">memory</strong> e <strong>replan</strong>. Techniques such as <em>inner monologue</em> feed textual observations (“the cup slipped”) back to the planner, which adjusts the plan. Robustness comes from recovery, not perfect execution.</p>
+<div class="space-y-4 mb-6">
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">1</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Detect</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Success/failure based on perception (object in hand? surface clean?) or a learned success detector.</p></div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">2</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Feed back (inner monologue)</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Convert the result into feedback that the planner consumes in the next step.</p></div>
+</div>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">3</div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Replan</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Rewrite the skills queue based on the new state instead of following the dead original plan.</p></div>
+</div>
+</div>
+<div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-primary mb-3">⚡ Practical tip</h3>
+<p class="dark:text-gray-300 light-text-gray-700">Don't replan every frame (expensive and unstable). Replan in <strong>events</strong>: end of skill, detected failure, or major scene change. The rest of the time, let the reactive policy handle small disturbances on its own.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Closed-loop</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Closed loop with feedback.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Inner monologue</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Text feedback to the planner.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Replanning</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Rewrite the plan.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Memory</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Accumulated task state.</p></div>
+</div>
+</section>
+<!-- TÓPICO 6 -->
+<section class="mb-16" id="topico-6">
+<div class="flex items-center gap-4 mb-6">
+<span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">6</span>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⏳ Long horizons: skill composition</h2>
+</div>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">The current bottleneck in general-purpose robotics is <strong class="text-purple-400">long horizon</strong>: tasks lasting minutes that chain dozens of skills. Even with 95% success per skill, 20 skills in series give ~36% total success — the compounding error we saw in Track 1 reappears at task scale. The hybrid approach attacks this with replanning and recovery, but end-to-end robustness is still an open frontier. Two 2026 references: the <strong>MEM</strong> from Physical Intelligence (Mar/2026) gives a VLA short- and long-term memory (on top of π0.6) and handles tasks lasting more than 10 minutes, such as cleaning an entire kitchen; the <strong>BEHAVIOR Challenge 2026</strong> (Stanford) measures 100 complete household tasks, with 20,000 demos and 1,950 h of teleoperation, scoring partial credit.</p>
+<div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 The math of compounding error in tasks</h3>
+<ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+<li><strong>0.95<sup>20</sup> ≈ 36%</strong> — task success with 20 skills at 95% each, with no recovery.</li>
+<li><strong>0.99<sup>20</sup> ≈ 82%</strong> — why every success-rate point per skill matters so much.</li>
+<li><strong>Recovery</strong> changes the equation: replanning turns failure into a retry, not the end of the task.</li>
+</ul>
+</div>
+<div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
+<h3 class="text-lg font-semibold text-purple-400 mb-3">💡 Why the hybrid approach is the right bet here</h3>
+<p class="dark:text-gray-300 light-text-gray-700">A monolithic VLA tends to accumulate <em>drift</em> over a long horizon. The hierarchy reinjects structure: the planner maintains the global objective while the executor handles the local one, and the closed loop corrects deviations before they compound.</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Long-horizon</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Tasks that take minutes.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Skill composition</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Chain skills.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Compound error</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Failures compound.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Drift</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Accumulated drift.</p></div>
+</div>
+</section>
+<!-- RESUMO -->
+<section class="mb-12">
+<div class="bg-gradient-to-br dark:from-purple-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-8">
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Module summary</h2>
+<div class="space-y-3 mb-8">
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Control hierarchy</strong><span class="dark:text-gray-400 light-text-gray-600"> — planning and control operate on incompatible timescales; decouple them.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Dual-system</strong><span class="dark:text-gray-400 light-text-gray-600"> — slow S2 emits a latent, fast S1 executes, asynchronous (Helix, GR00T); in 2026 it gained S0 at 1 kHz (Helix 02) and an agentic planner that calls the VLA as a tool (Gemini Robotics-ER 2).</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">LLM planner</strong><span class="dark:text-gray-400 light-text-gray-600"> — SayCan and Code-as-Policies decompose long-horizon tasks without training a new policy.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Affordances + closed-loop</strong><span class="dark:text-gray-400 light-text-gray-600"> — Ground plans in reality and replan when failures occur.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Long horizon</strong><span class="dark:text-gray-400 light-text-gray-600"> — compounded error is the bottleneck; recovery is what beats the math.</span></div></div>
+</div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-purple-400 mb-1">Next module</h3><p class="dark:text-gray-300 light-text-gray-700">3.4 — Applications: Manufacturing, Logistics, Healthcare, Agriculture. Where these architectures create market value.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Updated in Oct/2026.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-start">
+<a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Back to the track</a>
+<a class="text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition" href="modulo-3-4.html">Next module →</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<a class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors" href="../../">🦾 VLA Mastery</a>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. All rights reserved.</p>
+</div>
+</footer>
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VLA Mastery — Vision-Language-Action: Da Teoria aos Robos que Agem</title>
+<meta content="Curso completo sobre modelos Vision-Language-Action e IA Incorporada para Robotica. 3 trilhas, 18 modulos, 108 topicos. Atualizado em out/2026." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            dark: {
+              600: '#374151',
+              700: '#1f2937',
+              800: '#1a1f2e',
+              900: '#111827',
+              950: '#0b0f1a',
+            },
+          },
+        },
+      },
+    };
+  </script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+
+    /* Dark mode defaults */
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+
+    /* Light mode overrides */
+    html:not(.dark) body { background-color: #f9fafb; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+
+    /* Trail accent colors - Emerald (Trilha 1) */
+    .trail-emerald { --accent: #10b981; --accent-light: #34d399; --accent-dark: #059669; --accent-bg: rgba(16, 185, 129, 0.1); --accent-border: rgba(16, 185, 129, 0.3); }
+    html:not(.dark) .trail-emerald { --accent-bg: rgba(16, 185, 129, 0.08); --accent-border: rgba(16, 185, 129, 0.25); }
+
+    /* Trail accent colors - Blue (Trilha 2) */
+    .trail-blue { --accent: #3b82f6; --accent-light: #60a5fa; --accent-dark: #2563eb; --accent-bg: rgba(59, 130, 246, 0.1); --accent-border: rgba(59, 130, 246, 0.3); }
+    html:not(.dark) .trail-blue { --accent-bg: rgba(59, 130, 246, 0.08); --accent-border: rgba(59, 130, 246, 0.25); }
+
+    /* Trail accent colors - Purple (Trilha 3) */
+    .trail-purple { --accent: #a855f7; --accent-light: #c084fc; --accent-dark: #9333ea; --accent-bg: rgba(168, 85, 247, 0.1); --accent-border: rgba(168, 85, 247, 0.3); }
+    html:not(.dark) .trail-purple { --accent-bg: rgba(168, 85, 247, 0.08); --accent-border: rgba(168, 85, 247, 0.25); }
+
+    .trail-card {
+      background: var(--accent-bg);
+      border: 1px solid var(--accent-border);
+      transition: all 0.2s ease;
+    }
+    .trail-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    .trail-accent { color: var(--accent); }
+    .trail-accent-light { color: var(--accent-light); }
+    .trail-badge {
+      background: var(--accent-bg);
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+    }
+
+    /* Stat card */
+    .stat-card {
+      transition: all 0.2s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* Nav blur */
+    .nav-blur {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+<link href="https://inematds.github.io/vla-mastery/" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/en/" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/vla-mastery/es/" hreflang="es" rel="alternate"/></head>
+<body class="min-h-screen"><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="./" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">PT</a><a href="en/" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">EN</a><a href="es/" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">ES</a></div>
+<!-- Navigation -->
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<!-- Logo -->
+<a class="flex items-center gap-2" href="/">
+<span class="text-xl font-bold dark:text-white light-text-gray-900">VLA Mastery</span>
+</a>
+<!-- Nav links -->
+<div class="hidden md:flex items-center gap-6">
+<a class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 transition-colors" href="curso/trilha1/">Trilha 1</a>
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600 hover:text-blue-400 transition-colors" href="curso/trilha2/">Trilha 2</a>
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600 hover:text-purple-400 transition-colors" href="curso/trilha3/">Trilha 3</a>
+<!-- Theme toggle -->
+<button aria-label="Alternar tema" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" id="theme-toggle">
+<!-- Sun icon (shown in dark mode) -->
+<svg class="w-5 h-5 hidden dark:block" fill="none" id="icon-sun" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="5"></circle>
+<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+</svg>
+<!-- Moon icon (shown in light mode) -->
+<svg class="w-5 h-5 block dark:hidden" fill="none" id="icon-moon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+</svg>
+</button>
+</div>
+<!-- Mobile menu button -->
+<div class="flex items-center gap-2 md:hidden">
+<button aria-label="Alternar tema" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="theme-toggle-mobile">
+<svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="5"></circle>
+<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+</svg>
+<svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+</svg>
+</button>
+<button class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" id="mobile-menu-btn">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 6h16M4 12h16M4 18h16"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Mobile menu -->
+<div class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4" id="mobile-menu">
+<div class="flex flex-col gap-3">
+<a class="text-sm font-medium text-sky-400" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="curso/trilha1/">Trilha 1 - Fundamentos</a>
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="curso/trilha2/">Trilha 2 - Ferramentas</a>
+<a class="text-sm font-medium dark:text-gray-300 light-text-gray-600" href="curso/trilha3/">Trilha 3 - Avancado</a>
+</div>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+<div class="max-w-4xl mx-auto text-center">
+<p class="text-sm font-semibold tracking-widest uppercase text-emerald-400 mb-4">INEMA.CLUB</p>
+<h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold dark:text-white light-text-gray-900 mb-6 leading-tight">
+        VLA Mastery
+      </h1>
+<p class="text-xl sm:text-2xl dark:text-gray-400 light-text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+        Vision-Language-Action: Da Teoria aos Robos que Agem
+      </p>
+<!-- Stats row -->
+<div class="flex flex-wrap justify-center gap-6 sm:gap-10 mb-12">
+<div class="text-center">
+<p class="text-3xl sm:text-4xl font-bold text-emerald-400">3</p>
+<p class="text-sm dark:text-gray-500 light-text-gray-500 mt-1">Trilhas</p>
+</div>
+<div class="text-center">
+<p class="text-3xl sm:text-4xl font-bold text-blue-400">18</p>
+<p class="text-sm dark:text-gray-500 light-text-gray-500 mt-1">Modulos</p>
+</div>
+<div class="text-center">
+<p class="text-3xl sm:text-4xl font-bold text-purple-400">108</p>
+<p class="text-sm dark:text-gray-500 light-text-gray-500 mt-1">Topicos</p>
+</div>
+</div>
+<!-- CTA -->
+<a class="inline-block px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg transition-colors text-lg" href="curso/">
+        Acessar o Curso
+      </a>
+</div>
+</section>
+<!-- Trail Cards Section -->
+<section class="py-20 px-4 sm:px-6 lg:px-8 dark:bg-dark-800 light-bg-gray-100">
+<div class="max-w-6xl mx-auto">
+<h2 class="text-3xl sm:text-4xl font-bold dark:text-white light-text-gray-900 text-center mb-4">As 3 Trilhas</h2>
+<p class="text-center dark:text-gray-400 light-text-gray-600 mb-12 max-w-2xl mx-auto">
+        Do fundamento teorico a aplicacao pratica e visao estrategica. Cada trilha constroi sobre a anterior.
+      </p>
+<div class="grid md:grid-cols-3 gap-6">
+<!-- Trilha 1 - Emerald -->
+<a class="trail-emerald" href="curso/trilha1/">
+<div class="trail-card rounded-xl p-6 h-full">
+<div class="flex items-center gap-3 mb-4">
+<span class="trail-badge text-xs font-bold px-2.5 py-1 rounded-full">T1</span>
+<span class="text-sm font-medium trail-accent">6 modulos</span>
+</div>
+<h3 class="text-xl font-bold dark:text-white light-text-gray-900 mb-3">Fundamentos da IA Incorporada</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 leading-relaxed">
+              De LLMs a robos que agem. Anatomia VLA, evolucao dos modelos (RT-1 a pi0.7, GR00T N1.7 e Gemini Robotics 2), aprendizado por imitacao, diffusion policy e tokenizacao de acoes.
+            </p>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="text-xs dark:text-gray-500 light-text-gray-500 dark:bg-dark-700 light-bg-gray-100 px-2 py-1 rounded">VLA</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500 dark:bg-dark-700 light-bg-gray-100 px-2 py-1 rounded">Behavior Cloning</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500 dark:bg-dark-700 light-bg-gray-100 px-2 py-1 rounded">Diffusion Policy</span>
+</div>
+</div>
+</a>
+<!-- Trilha 2 - Blue -->
+<a class="trail-blue" href="curso/trilha2/">
+<div class="trail-card rounded-xl p-6 h-full">
+<div class="flex items-center gap-3 mb-4">
+<span class="trail-badge text-xs font-bold px-2.5 py-1 rounded-full">T2</span>
+<span class="text-sm font-medium trail-accent">6 modulos</span>
+</div>
+<h3 class="text-xl font-bold dark:text-white light-text-gray-900 mb-3">Ferramentas e Aplicacao Tecnica</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 leading-relaxed">
+              Stack Python/PyTorch, LeRobot 0.6 (Hugging Face), simuladores (MuJoCo, Isaac Sim/Lab), ROS 2 Lyrical, hardware para robotica e datasets abertos.
+            </p>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="text-xs dark:text-gray-500 light-text-gray-500 dark:bg-dark-700 light-bg-gray-100 px-2 py-1 rounded">LeRobot</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500 dark:bg-dark-700 light-bg-gray-100 px-2 py-1 rounded">MuJoCo</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500 dark:bg-dark-700 light-bg-gray-100 px-2 py-1 rounded">ROS2</span>
+</div>
+</div>
+</a>
+<!-- Trilha 3 - Purple -->
+<a class="trail-purple" href="curso/trilha3/">
+<div class="trail-card rounded-xl p-6 h-full">
+<div class="flex items-center gap-3 mb-4">
+<span class="trail-badge text-xs font-bold px-2.5 py-1 rounded-full">T3</span>
+<span class="text-sm font-medium trail-accent">6 modulos</span>
+</div>
+<h3 class="text-xl font-bold dark:text-white light-text-gray-900 mb-3">Avancado e Estrategico</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 leading-relaxed">
+              Sim-to-real transfer, humanoides (Figure, Tesla, GR00T), arquiteturas hibridas, aplicacoes industriais, mercado de 2026 e fronteira 2026-2030 (world action models, RL pos-treino, normas).
+            </p>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="text-xs dark:text-gray-500 light-text-gray-500 dark:bg-dark-700 light-bg-gray-100 px-2 py-1 rounded">Sim-to-Real</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500 dark:bg-dark-700 light-bg-gray-100 px-2 py-1 rounded">Humanoides</span>
+<span class="text-xs dark:text-gray-500 light-text-gray-500 dark:bg-dark-700 light-bg-gray-100 px-2 py-1 rounded">Mercado 2026</span>
+</div>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- Context / Stats Section -->
+<section class="py-20 px-4 sm:px-6 lg:px-8">
+<div class="max-w-6xl mx-auto">
+<h2 class="text-3xl sm:text-4xl font-bold dark:text-white light-text-gray-900 text-center mb-4">Por que VLA agora?</h2>
+<p class="text-center dark:text-gray-400 light-text-gray-600 mb-12 max-w-2xl mx-auto">
+        O campo de modelos Vision-Language-Action esta em plena expansao. Numeros com fonte, atualizados em out/2026.
+      </p>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="stat-card dark:bg-dark-800 light-bg-white border border-dark-600 light-border-gray-200 rounded-xl p-6 text-center">
+<p class="text-3xl font-bold text-emerald-400 mb-2">US$ 9 bi</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Avaliacao do IPO da Unitree no STAR Market de Xangai (ago/2026, segundo a CNBC)</p>
+</div>
+<div class="stat-card dark:bg-dark-800 light-bg-white border border-dark-600 light-border-gray-200 rounded-xl p-6 text-center">
+<p class="text-3xl font-bold text-blue-400 mb-2">81 mil</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Datasets com a tag LeRobot no Hugging Face Hub (out/2026)</p>
+</div>
+<div class="stat-card dark:bg-dark-800 light-bg-white border border-dark-600 light-border-gray-200 rounded-xl p-6 text-center">
+<p class="text-3xl font-bold text-purple-400 mb-2">9% → 56%</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Sucesso zero-shot do Helix 2.5 com pre-treino em video humano, em 30 casas novas (Figure, set/2026)</p>
+</div>
+<div class="stat-card dark:bg-dark-800 light-bg-white border border-dark-600 light-border-gray-200 rounded-xl p-6 text-center">
+<p class="text-3xl font-bold text-sky-400 mb-2">&lt; 200</p>
+<p class="text-sm dark:text-gray-400 light-text-gray-600">Exemplos, em geral, para o Gemini Robotics 2 se adaptar a um corpo bimanual novo (DeepMind, jul/2026)</p>
+</div>
+</div>
+<div class="mt-12 grid sm:grid-cols-2 gap-6">
+<div class="dark:bg-dark-800 light-bg-white border border-dark-600 light-border-gray-200 rounded-xl p-6">
+<h3 class="text-lg font-semibold dark:text-white light-text-gray-900 mb-3">O que sao modelos VLA?</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 leading-relaxed">
+            Vision-Language-Action models combinam percepcao visual, compreensao de linguagem natural e geracao de acoes motoras em uma unica rede neural. Eles permitem que robos interpretem instrucoes em linguagem natural, observem o ambiente pela camera e executem manipulacoes fisicas -- tudo end-to-end.
+          </p>
+</div>
+<div class="dark:bg-dark-800 light-bg-white border border-dark-600 light-border-gray-200 rounded-xl p-6">
+<h3 class="text-lg font-semibold dark:text-white light-text-gray-900 mb-3">Para quem e este curso?</h3>
+<p class="text-sm dark:text-gray-400 light-text-gray-600 leading-relaxed">
+            Engenheiros de ML/AI que querem entrar em robotica, engenheiros de robotica que querem adotar foundation models, pesquisadores acompanhando a fronteira VLA, e profissionais de produto/estrategia que precisam entender o impacto desta tecnologia nos proximos 5 anos.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+<div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<span class="font-bold dark:text-white light-text-gray-900">VLA Mastery</span>
+<span class="dark:text-gray-600 light-text-gray-400">|</span>
+<a class="text-sm text-sky-400 hover:text-sky-300 transition-colors" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a>
+</div>
+<p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos os direitos reservados.</p>
+</div>
+</footer>
+<!-- Theme Toggle Script -->
+<script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+
+      function getStoredTheme() {
+        try { return localStorage.getItem(storageKey); } catch { return null; }
+      }
+
+      function setTheme(mode) {
+        if (mode === 'light') {
+          html.classList.remove('dark');
+        } else {
+          html.classList.add('dark');
+        }
+        try { localStorage.setItem(storageKey, mode); } catch {}
+      }
+
+      // Initialize: respect stored preference, default to dark
+      const stored = getStoredTheme();
+      if (stored === 'light') {
+        setTheme('light');
+      } else {
+        setTheme('dark');
+      }
+
+      function toggleTheme() {
+        const isDark = html.classList.contains('dark');
+        setTheme(isDark ? 'light' : 'dark');
+      }
+
+      document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+      document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
+
+      // Mobile menu toggle
+      document.getElementById('mobile-menu-btn').addEventListener('click', function () {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+      });
+    })();
+  </script>
+</body>
+</html>
