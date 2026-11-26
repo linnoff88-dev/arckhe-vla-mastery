@@ -13,7 +13,7 @@ Curso completo e avanêÂ§ado sobre modelos **Vision-Language-Action (VLA)** 
 - Trilha 2 ê¢â¬â Ferramentas e AplicaêÂ§êÂ£o TêÂ©cnica (PyTorch, LeRobot 0.6, MuJoCo/Isaac, ROS 2 Lyrical, hardware, datasets)
 - Trilha 3 ê¢â¬â AvanêÂ§ado e EstratêÂ©gico (sim-to-real, humanoides/GR00T/Helix, arquiteturas hêÂ­bridas, mercado de 2026, fronteira 2026-2030)
 
-Site: https://inematds.github.io/vla-mastery/ êÂ· Parte do [INEMA.CLUB](https://inema.club).
+Site: https://linnoff88-dev.github.io/arckhe-/ êÂ· Parte do [ARCKHÉ AI](https://ARCKHÉ AI).
 
 ---
 
