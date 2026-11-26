@@ -215,7 +215,7 @@
 </div>
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">How do vision and text enter the same context? In <strong class="text-emerald-400">early fusion</strong> (OpenVLA, π0), visual and text tokens are simply <strong class="text-emerald-400">concatenated</strong> in the LLM input sequence, which mixes them via self-attention — simple and effective, but the number of visual tokens increases the cost. In <strong class="text-emerald-400">cross-attention</strong> (Flamingo, some VLAs), the text queries the image through dedicated cross-attention layers, keeping the language backbone leaner. The central trade-off is <strong class="text-emerald-400">token budget</strong> versus fine-grained grounding capability.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Early fusion (concatenação)
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Early fusion (concatenaçêo)
 seq = [img_tok_1 ... img_tok_256, txt_tok_1 ... txt_tok_K]
 latent = LLM(seq)            # self-attention mistura tudo
 

@@ -220,7 +220,7 @@
 def randomize(env):
     env.friction   = U(0.4, 1.2)      # atrito
     env.mass_scale = U(0.8, 1.2)      # massa do objeto
-    env.light_dir  = sample_sphere()  # direção de luz
+    env.light_dir  = sample_sphere()  # direçêo de luz
     env.texture    = random_texture() # aparência
     env.act_delay  = randint(0, 3)    # atraso de atuador (steps)
     env.obs_noise  = N(0, 0.01)       # ruído de sensor
@@ -287,11 +287,11 @@ def randomize(env):
 </ul>
 </div>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># sysID: ajustar parâmetros do sim ao real por otimização
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># sysID: ajustar parâmetros do sim ao real por otimizaçêo
 real_traj = record(robot, commands)          # dados do hardware
 def loss(theta):
     sim_traj = simulate(commands, params=theta)
-    return mse(sim_traj, real_traj)           # quão próximo o twin está
+    return mse(sim_traj, real_traj)           # quêo próximo o twin está
 theta_star = minimize(loss, init=spec_sheet) # calibra massa/atrito/delay
 # theta_star = simulador que "vira" o robô real</code></pre>
 </div>

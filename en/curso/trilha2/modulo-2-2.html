@@ -302,7 +302,7 @@ lerobot-train \
 </div>
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">The full cycle takes three commands and an inference loop. You record demos, train a policy, evaluate it on the robot (or in simulation), and <em>deploy</em> running the policy in a closed loop at ~30 Hz.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># LeRobot 0.6.1. Passos 1 e 4: da doc oficial, não rodados aqui (precisam do braço).
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># LeRobot 0.6.1. Passos 1 e 4: da doc oficial, nêo rodados aqui (precisam do braço).
 # 1) gravar demos no SO-101
 lerobot-record \
   --robot.type=so101_follower --robot.port=&lt;porta do seguidor&gt; \
@@ -316,12 +316,12 @@ lerobot-record \
 lerobot-train --policy.type=act --dataset.repo_id=&lt;seu usuário&gt;/meu-dataset \
   --policy.push_to_hub=false --wandb.enable=false
 
-# 3) avaliar em simulação (testado no PushT em 19/10/2026; precisa de lerobot[pusht])
+# 3) avaliar em simulaçêo (testado no PushT em 19/10/2026; precisa de lerobot[pusht])
 lerobot-eval --policy.path=outputs/train/act_pusht_teste/checkpoints/last/pretrained_model \
   --env.type=pusht --eval.n_episodes=10 --eval.batch_size=10 \
   --eval.use_async_envs=false --policy.device=cuda --output_dir=outputs/eval/act_200
 
-# 4) implantar no robô, com correção humana estilo DAgger
+# 4) implantar no robô, com correçêo humana estilo DAgger
 lerobot-rollout --strategy.type=dagger \
   --policy.path=&lt;seu usuário&gt;/minha_politica \
   --robot.type=so101_follower --robot.port=/dev/ttyACM0 \

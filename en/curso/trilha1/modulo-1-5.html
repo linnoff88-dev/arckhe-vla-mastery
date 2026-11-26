@@ -302,10 +302,10 @@ execute(A[:exec_horizon])               # receding horizon</code></pre>
 </div>
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">The key design choice for the action head: <strong class="text-emerald-400">diffusion/flow generation</strong> versus <strong class="text-emerald-400">autoregressive tokens</strong>. Diffusion is more expressive (continuous multimodal output) but requires multiple steps. Autoregressive methods (RT-2, OpenVLA, FAST) reuse the LLM backbone and are simple to train, but generate one token at a time, and discretization can limit fidelity. There is no universal winner—the trade-off is <strong class="text-emerald-400">expressiveness × latency × ease of integration</strong>.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-xs sm:text-sm dark:text-gray-300 light-text-gray-700"><code>Eixo            Difusão/Flow        Autoregressivo (tokens)
+<pre class="font-mono text-xs sm:text-sm dark:text-gray-300 light-text-gray-700"><code>Eixo            Difusêo/Flow        Autoregressivo (tokens)
 expressividade  alta (multimodal)   média (depende da disc.)
 latência        K passos por chunk  1 forward, N tokens
-integração      action expert extra reusa o backbone LLM
+integraçêo      action expert extra reusa o backbone LLM
 exemplos        Diffusion Policy,π0 RT-2, OpenVLA, FAST</code></pre>
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">

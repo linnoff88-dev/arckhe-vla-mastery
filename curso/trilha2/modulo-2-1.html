@@ -168,13 +168,13 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">1</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Por que PyTorch domina robótica e pesquisa</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Praticamente todo VLA aberto — <strong class="text-blue-400">OpenVLA, Octo, π0, ACT</strong> — é escrito em PyTorch. A razão é cultural e técnica: execução <strong class="text-blue-400">eager</strong> (define-by-run) deixa o grafo dinâmico, então você inspeciona tensores no meio do forward, coloca <code class="font-mono text-sm">breakpoint()</code> dentro da policy e itera em minutos. Para pesquisa em manipulação, onde a arquitetura muda toda semana, isso vale ouro.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Praticamente todo VLA aberto — <strong class="text-blue-400">OpenVLA, Octo, π0, ACT</strong> — é escrito em PyTorch. A razêo é cultural e técnica: execuçêo <strong class="text-blue-400">eager</strong> (define-by-run) deixa o grafo dinâmico, entêo você inspeciona tensores no meio do forward, coloca <code class="font-mono text-sm">breakpoint()</code> dentro da policy e itera em minutos. Para pesquisa em manipulaçêo, onde a arquitetura muda toda semana, isso vale ouro.</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por que o ecossistema venceu</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
-<li><strong>autograd</strong> — diferenciação automática reversa, base de qualquer treino de policy.</li>
+<li><strong>autograd</strong> — diferenciaçêo automática reversa, base de qualquer treino de policy.</li>
 <li><strong>Hugging Face + PEFT</strong> — VLMs prontos (PaliGemma, Qwen2-VL) com LoRA em poucas linhas.</li>
-<li><strong>torch.compile</strong> — fusão de kernels via TorchInductor sem reescrever código.</li>
+<li><strong>torch.compile</strong> — fusêo de kernels via TorchInductor sem reescrever código.</li>
 <li><strong>CUDA/ROCm/MPS</strong> — mesmo código roda em data center, Jetson e Mac.</li>
 </ul>
 </div>
@@ -195,7 +195,7 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">2</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Tensores, GPU e mixed precision em modelos 7B</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Um VLA de 7B em fp32 são ~28 GB só de pesos. Treinar em <strong class="text-blue-400">bf16</strong> corta pela metade e ainda evita o overflow do fp16 (bf16 tem o mesmo expoente do fp32). A regra mental de memória: <em>pesos + gradientes + estados do otimizador + ativações</em>. Com Adam em fp32, os estados sozinhos custam ~8 bytes/parâmetro.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Um VLA de 7B em fp32 sêo ~28 GB só de pesos. Treinar em <strong class="text-blue-400">bf16</strong> corta pela metade e ainda evita o overflow do fp16 (bf16 tem o mesmo expoente do fp32). A regra mental de memória: <em>pesos + gradientes + estados do otimizador + ativações</em>. Com Adam em fp32, os estados sozinhos custam ~8 bytes/parâmetro.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>import torch
 device = "cuda"
@@ -231,7 +231,7 @@ for batch in loader:
 <section class="mb-16" id="topico-3">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">3</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Transformers/HF: carregar VLMs, LoRA, quantização</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Transformers/HF: carregar VLMs, LoRA, quantizaçêo</h2>
 </div>
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O backbone de quase todo VLA é um VLM pré-treinado. Com <strong class="text-blue-400">transformers + peft + bitsandbytes</strong> você carrega o modelo quantizado em 4-bit (NF4) e treina só adaptadores <strong class="text-blue-400">LoRA</strong> — fine-tuning de 7B em uma única GPU de 24 GB.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
@@ -255,16 +255,16 @@ model.print_trainable_parameters()   # ~0.5% dos params treináveis</code></pre>
 <h4 class="font-bold text-emerald-400 mb-4">✓ Fazer</h4>
 <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Mirar q/k/v/o proj e MLP do LLM com LoRA r=16–64.</span></li>
-<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Manter a action head em precisão cheia, treinável.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Manter a action head em precisêo cheia, treinável.</span></li>
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Salvar só os adaptadores; mesclar (<code class="font-mono text-xs">merge_and_unload</code>) no deploy.</span></li>
 </ul>
 </div>
 <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
 <h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
 <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
-<li class="flex gap-2"><span class="text-red-400">✗</span><span>Quantizar o encoder de visão e esperar fidelidade espacial.</span></li>
-<li class="flex gap-2"><span class="text-red-400">✗</span><span>LoRA r minúsculo (r=4) numa tarefa de manipulação complexa.</span></li>
-<li class="flex gap-2"><span class="text-red-400">✗</span><span>Esquecer de congelar/normalizar estatísticas de ação.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Quantizar o encoder de visêo e esperar fidelidade espacial.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>LoRA r minúsculo (r=4) numa tarefa de manipulaçêo complexa.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Esquecer de congelar/normalizar estatísticas de açêo.</span></li>
 </ul>
 </div>
 </div>
@@ -279,9 +279,9 @@ model.print_trainable_parameters()   # ~0.5% dos params treináveis</code></pre>
 <section class="mb-16" id="topico-4">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">4</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Pipeline de dados: Dataset, DataLoader, normalização</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Pipeline de dados: Dataset, DataLoader, normalizaçêo</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A diferença entre um VLA que funciona e um que não é frequentemente <strong class="text-blue-400">normalização de ações</strong>. Action heads aprendem mal quando dimensões têm escalas díspares (mm de Δpose vs estado binário do gripper). Padronize por dimensão (média/desvio ou quantis 1–99%) e guarde as estatísticas junto do checkpoint.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A diferença entre um VLA que funciona e um que nêo é frequentemente <strong class="text-blue-400">normalizaçêo de ações</strong>. Action heads aprendem mal quando dimensões têm escalas díspares (mm de Δpose vs estado binário do gripper). Padronize por dimensêo (média/desvio ou quantis 1–99%) e guarde as estatísticas junto do checkpoint.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>from torch.utils.data import DataLoader
 
@@ -289,17 +289,17 @@ loader = DataLoader(dataset, batch_size=64, shuffle=True,
                     num_workers=8, pin_memory=True,
                     persistent_workers=True, prefetch_factor=4)
 
-# normalização por dimensão (salvar stats com o ckpt!)
+# normalizaçêo por dimensêo (salvar stats com o ckpt!)
 mean, std = stats["action"]["mean"], stats["action"]["std"]
 def normalize(a): return (a - mean) / (std + 1e-6)
 def denormalize(a): return a * std + mean   # usado na inferência</code></pre>
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
-<p class="dark:text-gray-300 light-text-gray-700">Augmentations de imagem (color jitter, random crop leve) ajudam a robustez visual, mas <strong>nunca</strong> aplique flips/rotations que invertam a semântica espacial da ação — esquerda vira direita e a policy quebra. Vídeo decodificado é o gargalo: pré-decodifique ou use backend de vídeo (<code class="font-mono text-xs">torchcodec</code>).</p>
+<p class="dark:text-gray-300 light-text-gray-700">Augmentations de imagem (color jitter, random crop leve) ajudam a robustez visual, mas <strong>nunca</strong> aplique flips/rotations que invertam a semântica espacial da açêo — esquerda vira direita e a policy quebra. Vídeo decodificado é o gargalo: pré-decodifique ou use backend de vídeo (<code class="font-mono text-xs">torchcodec</code>).</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Normalização</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Por dimensão de ação.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Normalizaçêo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Por dimensêo de açêo.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">num_workers</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Paralelizar IO/decode.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">pin_memory</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Transferência H2D rápida.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Augmentation</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Visual sim, espacial cuidado.</p></div>
@@ -311,7 +311,7 @@ def denormalize(a): return a * std + mean   # usado na inferência</code></pre>
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">5</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Treino distribuído: DDP, FSDP, gradient checkpointing</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Quando o modelo não cabe numa GPU, você sai de <strong class="text-blue-400">DDP</strong> (replica tudo, faz all-reduce de gradientes) para <strong class="text-blue-400">FSDP</strong> (Fully Sharded Data Parallel): pesos, gradientes e estados do otimizador são <em>fatiados</em> entre GPUs e reunidos só quando a camada executa. É o que viabiliza treinar VLA 7B+ em poucos nós.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Quando o modelo nêo cabe numa GPU, você sai de <strong class="text-blue-400">DDP</strong> (replica tudo, faz all-reduce de gradientes) para <strong class="text-blue-400">FSDP</strong> (Fully Sharded Data Parallel): pesos, gradientes e estados do otimizador sêo <em>fatiados</em> entre GPUs e reunidos só quando a camada executa. É o que viabiliza treinar VLA 7B+ em poucos nós.</p>
 <div class="space-y-6 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">1</div>
@@ -323,7 +323,7 @@ def denormalize(a): return a * std + mean   # usado na inferência</code></pre>
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">2</div>
 <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
-<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">FSDP — não cabe</h4>
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">FSDP — nêo cabe</h4>
 <p class="dark:text-gray-400 light-text-gray-600 text-sm">Shard de params/grad/optim; <code class="font-mono text-xs">all-gather</code> por camada no forward, <code class="font-mono text-xs">reduce-scatter</code> no backward.</p>
 </div>
 </div>
@@ -354,7 +354,7 @@ model.gradient_checkpointing_enable()
 <section class="mb-16" id="topico-6">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">6</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Inferência: torch.compile, exportação, servir a 10–50 Hz</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Inferência: torch.compile, exportaçêo, servir a 10–50 Hz</h2>
 </div>
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">No robô, o orçamento muda: latência é rei. Um loop de controle a 30 Hz dá ~33 ms por passo, do frame da câmera ao comando. <strong class="text-blue-400">torch.compile</strong> funde kernels e reduz overhead Python; <strong class="text-blue-400">action chunking</strong> (prever K passos de uma vez) amortiza a inferência sobre vários ciclos.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
@@ -373,9 +373,9 @@ def act(obs):
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Onde o tempo vai (passo de 33 ms)</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
 <li><strong>captura + pré-proc</strong> — decodificar e redimensionar frames RGB-D</li>
-<li><strong>forward do modelo</strong> — alvo de otimização (compile, quantização)</li>
+<li><strong>forward do modelo</strong> — alvo de otimizaçêo (compile, quantizaçêo)</li>
 <li><strong>pós-proc</strong> — denormalizar, mapear para frame do braço</li>
-<li><strong>chunking</strong> — re-inferir a cada K passos, não a cada passo</li>
+<li><strong>chunking</strong> — re-inferir a cada K passos, nêo a cada passo</li>
 </ul>
 </div>
 <div class="grid md:grid-cols-2 gap-6 mb-6">
@@ -384,7 +384,7 @@ def act(obs):
 <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Aquecer o <code class="font-mono text-xs">torch.compile</code> com forwards dummy antes do loop real.</span></li>
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Fixar shapes de entrada para evitar recompilações.</span></li>
-<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Medir latência p99, não só a média.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Medir latência p99, nêo só a média.</span></li>
 </ul>
 </div>
 <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
@@ -392,12 +392,12 @@ def act(obs):
 <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
 <li class="flex gap-2"><span class="text-red-400">✗</span><span>Deixar autograd ligado na inferência (sem <code class="font-mono text-xs">inference_mode</code>).</span></li>
 <li class="flex gap-2"><span class="text-red-400">✗</span><span>Re-inferir a cada passo desperdiçando o chunk previsto.</span></li>
-<li class="flex gap-2"><span class="text-red-400">✗</span><span>Esquecer de denormalizar a ação antes de enviar ao robô.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Esquecer de denormalizar a açêo antes de enviar ao robô.</span></li>
 </ul>
 </div>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">torch.compile</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Fusão via Inductor.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">torch.compile</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Fusêo via Inductor.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">inference_mode</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Sem autograd, mais rápido.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Action chunking</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Amortiza latência.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Export</p><p class="text-xs dark:text-gray-400 light-text-gray-600">ONNX/TensorRT p/ edge (o GR00T N1.7 já exporta para os dois).</p></div>
@@ -407,10 +407,10 @@ def act(obs):
 <div class="bg-gradient-to-br dark:from-blue-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-blue-500/30 p-8">
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumo do módulo</h2>
 <div class="space-y-3 mb-8">
-<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">PyTorch eager</strong><span class="dark:text-gray-400 light-text-gray-600"> — debug e iteração rápida fazem dele o padrão de pesquisa VLA.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">PyTorch eager</strong><span class="dark:text-gray-400 light-text-gray-600"> — debug e iteraçêo rápida fazem dele o padrêo de pesquisa VLA.</span></div></div>
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">bf16 + orçamento de memória</strong><span class="dark:text-gray-400 light-text-gray-600"> — pense em pesos+grad+otim+ativações antes de escolher GPU.</span></div></div>
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">QLoRA</strong><span class="dark:text-gray-400 light-text-gray-600"> — fine-tune 7B em 24 GB; salve só adaptadores.</span></div></div>
-<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Normalização de ações</strong><span class="dark:text-gray-400 light-text-gray-600"> — guarde estatísticas com o checkpoint, sempre.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Normalizaçêo de ações</strong><span class="dark:text-gray-400 light-text-gray-600"> — guarde estatísticas com o checkpoint, sempre.</span></div></div>
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">FSDP + compile</strong><span class="dark:text-gray-400 light-text-gray-600"> — escalar treino e cortar latência de inferência.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">2.2 — LeRobot: framework end-to-end da Hugging Face, onde toda essa stack vira fluxo de gravar → treinar → deploy.</p></div>

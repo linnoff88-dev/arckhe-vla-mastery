@@ -289,7 +289,7 @@ loader = DataLoader(dataset, batch_size=64, shuffle=True,
                     num_workers=8, pin_memory=True,
                     persistent_workers=True, prefetch_factor=4)
 
-# normalização por dimensão (salvar stats com o ckpt!)
+# normalizaçêo por dimensêo (salvar stats com o ckpt!)
 mean, std = stats["action"]["mean"], stats["action"]["std"]
 def normalize(a): return (a - mean) / (std + 1e-6)
 def denormalize(a): return a * std + mean   # usado na inferência</code></pre>

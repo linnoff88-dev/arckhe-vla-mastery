@@ -257,10 +257,10 @@ sources = ["fractal20220817_data", "bridge", "kuka", "taco_play"]  # subset OXE<
 </ul>
 </div>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># suites do LIBERO (cada uma isola uma variação)
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># suites do LIBERO (cada uma isola uma variaçêo)
 libero_spatial   # mesma tarefa, layout espacial diferente
 libero_object    # mesmo layout, objetos diferentes
-libero_goal      # mesma cena, objetivo/instrução diferente
+libero_goal      # mesma cena, objetivo/instruçêo diferente
 libero_long      # tarefas de horizonte longo (10 subtarefas)
 # métrica: success rate por suite -&gt; robustez de transferência</code></pre>
 </div>
@@ -291,8 +291,8 @@ for ep in ds.take(1):
     for step in ep["steps"]:
         step["observation"]["image"]      # frame
         step["action"]                    # action space do robô-fonte
-        step["language_instruction"]      # instrução textual
-# harmonizar: normalizar ações p/ representação comum (ex: EEF Δpose 7D)</code></pre>
+        step["language_instruction"]      # instruçêo textual
+# harmonizar: normalizar ações p/ representaçêo comum (ex: EEF Δpose 7D)</code></pre>
 </div>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Ejes de heterogeneidad</h3>

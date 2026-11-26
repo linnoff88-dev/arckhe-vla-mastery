@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Módulo 3.1 — Sim-to-Real — VLA Mastery</title>
-<meta content="Sim-to-real para VLA: reality gap, domain randomization, domain adaptation, system identification, digital twins, co-treino sim+real e avaliação honesta de transfer." name="description"/>
+<meta content="Sim-to-real para VLA: reality gap, domain randomization, domain adaptation, system identification, digital twins, co-treino sim+real e avaliaçêo honesta de transfer." name="description"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -127,7 +127,7 @@
 <rect fill="#0b0f1a" height="160" rx="14" stroke="#a855f7" stroke-width="2" width="240" x="0" y="0"></rect>
 <path d="M0 40 L240 40 M0 80 L240 80 M0 120 L240 120 M48 0 L48 160 M96 0 L96 160 M144 0 L144 160 M192 0 L192 160" opacity="0.4" stroke="#a855f7" stroke-width="0.8"></path>
 <rect fill="#a855f7" height="44" opacity="0.3" rx="6" width="48" x="80" y="58"></rect>
-<text fill="#a855f7" font-size="15" font-weight="800" text-anchor="middle" x="120" y="-12">SIMULAÇÃO</text>
+<text fill="#a855f7" font-size="15" font-weight="800" text-anchor="middle" x="120" y="-12">SIMULAÇêO</text>
 <text fill="#c4b5fd" font-size="11" text-anchor="middle" x="120" y="184">N ambientes paralelos · física aproximada</text>
 </g>
 <!-- bridge -->
@@ -158,11 +158,11 @@
 <div class="grid sm:grid-cols-2 gap-4 mb-6">
 <div class="dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-5">
 <h4 class="font-semibold text-purple-400 mb-2">🌐 Gap de física</h4>
-<p class="text-sm dark:text-gray-300 light-text-gray-700">Modelos de contato (Coulomb idealizado), atrito, restituição, corpos rígidos vs deformáveis, cabos e tecidos. Onde a manipulação fina mais sofre.</p>
+<p class="text-sm dark:text-gray-300 light-text-gray-700">Modelos de contato (Coulomb idealizado), atrito, restituiçêo, corpos rígidos vs deformáveis, cabos e tecidos. Onde a manipulaçêo fina mais sofre.</p>
 </div>
 <div class="dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-5">
 <h4 class="font-semibold text-purple-400 mb-2">📷 Gap de sensor</h4>
-<p class="text-sm dark:text-gray-300 light-text-gray-700">Renderização vs imagem real: iluminação, reflexos, motion blur, ruído de RGB-D, distorção de lente. A visão é a maior fonte de gap zero-shot.</p>
+<p class="text-sm dark:text-gray-300 light-text-gray-700">Renderizaçêo vs imagem real: iluminaçêo, reflexos, motion blur, ruído de RGB-D, distorçêo de lente. A visêo é a maior fonte de gap zero-shot.</p>
 </div>
 <div class="dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-5">
 <h4 class="font-semibold text-purple-400 mb-2">⚙️ Gap de atuador</h4>
@@ -170,15 +170,15 @@
 </div>
 <div class="dark:bg-dark-800 light-bg-white rounded-xl border border-dark-600 light-border-gray-200 p-5">
 <h4 class="font-semibold text-purple-400 mb-2">🎨 Gap de aparência</h4>
-<p class="text-sm dark:text-gray-300 light-text-gray-700">Texturas, cores e materiais que não batem com objetos reais; o domínio onde randomização visual ataca diretamente.</p>
+<p class="text-sm dark:text-gray-300 light-text-gray-700">Texturas, cores e materiais que nêo batem com objetos reais; o domínio onde randomizaçêo visual ataca diretamente.</p>
 </div>
 </div>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 O que observar (out/2026)</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
-<li><strong>Queda sim → real</strong> — não existe um número "típico" confiável: o tamanho da queda depende da tarefa, do robô e do simulador. Meça a sua (tópico 6).</li>
-<li><strong>Sim em lote na GPU</strong> — MuJoCo Warp (MJWarp, oficial desde o MuJoCo 3.5, fev/2026), Newton 1.0 (GTC, mar/2026) e Isaac Lab 3.0 EA (set/2026, ainda sem release final) existem para simular milhares de ambientes em paralelo. A NVIDIA alega ganhos de velocidade do Newton que não foram verificados de forma independente.</li>
-<li><strong>Visão domina</strong> — em manipulação, o gap visual costuma exceder o gap dinâmico como causa de falha.</li>
+<li><strong>Queda sim → real</strong> — nêo existe um número "típico" confiável: o tamanho da queda depende da tarefa, do robô e do simulador. Meça a sua (tópico 6).</li>
+<li><strong>Sim em lote na GPU</strong> — MuJoCo Warp (MJWarp, oficial desde o MuJoCo 3.5, fev/2026), Newton 1.0 (GTC, mar/2026) e Isaac Lab 3.0 EA (set/2026, ainda sem release final) existem para simular milhares de ambientes em paralelo. A NVIDIA alega ganhos de velocidade do Newton que nêo foram verificados de forma independente.</li>
+<li><strong>Visêo domina</strong> — em manipulaçêo, o gap visual costuma exceder o gap dinâmico como causa de falha.</li>
 </ul>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
@@ -194,24 +194,24 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">2</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🎲 Domain Randomization: textura, luz, massa, atrito, delays</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A <strong class="text-purple-400">domain randomization (DR)</strong> inverte o problema: em vez de tornar o sim perfeito, torna-o variável o bastante para que o mundo real pareça apenas mais uma amostra da distribuição de treino. Se a política viu 10.000 variações de atrito, luz e massa, o atrito real cai dentro do que ela já domina. É a técnica mais robusta e barata para transfer <strong>zero-shot</strong>.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A <strong class="text-purple-400">domain randomization (DR)</strong> inverte o problema: em vez de tornar o sim perfeito, torna-o variável o bastante para que o mundo real pareça apenas mais uma amostra da distribuiçêo de treino. Se a política viu 10.000 variações de atrito, luz e massa, o atrito real cai dentro do que ela já domina. É a técnica mais robusta e barata para transfer <strong>zero-shot</strong>.</p>
 <div class="grid md:grid-cols-2 gap-6 mb-6">
 <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
 <h4 class="font-bold text-emerald-400 mb-4">✓ Fazer</h4>
 <ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
-<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Randomizar <strong>física</strong> (massa, atrito, damping) E <strong>visão</strong> (texturas, luz, câmera) juntas.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Randomizar <strong>física</strong> (massa, atrito, damping) E <strong>visêo</strong> (texturas, luz, câmera) juntas.</span></li>
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Usar <strong>Automatic DR (ADR)</strong>: ampliar faixas só quando a política dá conta — currículo automático.</span></li>
-<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Randomizar <strong>delays de atuador</strong> e ruído de observação, não só aparência.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Randomizar <strong>delays de atuador</strong> e ruído de observaçêo, nêo só aparência.</span></li>
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Centrar as faixas no valor real medido (sysID) e abrir em torno dele.</span></li>
 </ul>
 </div>
 <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
 <h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
 <ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
-<li class="flex gap-2"><span class="text-red-400">✗</span><span>Randomizar tão forte que a tarefa fica impossível e a política colapsa numa conduta conservadora inútil.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Randomizar têo forte que a tarefa fica impossível e a política colapsa numa conduta conservadora inútil.</span></li>
 <li class="flex gap-2"><span class="text-red-400">✗</span><span>Só DR visual e esquecer dinâmica — política linda que escorrega no real.</span></li>
 <li class="flex gap-2"><span class="text-red-400">✗</span><span>Faixas centradas fora do real: você cobre o lugar errado.</span></li>
-<li class="flex gap-2"><span class="text-red-400">✗</span><span>Achar que DR substitui qualquer dado real — ele reduz, não elimina.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Achar que DR substitui qualquer dado real — ele reduz, nêo elimina.</span></li>
 </ul>
 </div>
 </div>
@@ -220,7 +220,7 @@
 def randomize(env):
     env.friction   = U(0.4, 1.2)      # atrito
     env.mass_scale = U(0.8, 1.2)      # massa do objeto
-    env.light_dir  = sample_sphere()  # direção de luz
+    env.light_dir  = sample_sphere()  # direçêo de luz
     env.texture    = random_texture() # aparência
     env.act_delay  = randint(0, 3)    # atraso de atuador (steps)
     env.obs_noise  = N(0, 0.01)       # ruído de sensor
@@ -243,10 +243,10 @@ def randomize(env):
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔀 Domain Adaptation: alinhar features sim/real</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Quando o gap visual é grande demais para cobrir só com ruído, a <strong class="text-purple-400">domain adaptation</strong> entra: em vez de tornar a política invariante por força bruta, aproxima-se ativamente a distribuição de <em>features</em> de sim e real. Técnicas adversariais alinham embeddings; modelos como <strong>RCAN</strong> traduzem imagens reais para um "canônico" de sim antes de inferir.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Quando o gap visual é grande demais para cobrir só com ruído, a <strong class="text-purple-400">domain adaptation</strong> entra: em vez de tornar a política invariante por força bruta, aproxima-se ativamente a distribuiçêo de <em>features</em> de sim e real. Técnicas adversariais alinham embeddings; modelos como <strong>RCAN</strong> traduzem imagens reais para um "canônico" de sim antes de inferir.</p>
 <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 DR vs Adaptation — quando usar cada um</h3>
-<p class="dark:text-gray-300 light-text-gray-700 mb-3"><strong>DR</strong> é proativa e não precisa de dados reais: cobre incerteza às cegas. <strong>Adaptation</strong> é reativa e usa dados reais (rotulados ou não) para fechar o gap residual. Na prática, a receita forte é <strong>DR + um pouco de adaptation/real-in-the-loop</strong>.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-3"><strong>DR</strong> é proativa e nêo precisa de dados reais: cobre incerteza às cegas. <strong>Adaptation</strong> é reativa e usa dados reais (rotulados ou nêo) para fechar o gap residual. Na prática, a receita forte é <strong>DR + um pouco de adaptation/real-in-the-loop</strong>.</p>
 <p class="dark:text-gray-400 light-text-gray-600 text-sm">Pense em DR como "preparar para todo clima" e adaptation como "ajustar a roupa ao clima de hoje".</p>
 </div>
 <div class="space-y-4 mb-6">
@@ -256,11 +256,11 @@ def randomize(env):
 </div>
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">B</div>
-<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Pixel-level translation (RCAN)</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Mapeia imagens reais → canônico sim, removendo variação irrelevante antes da política.</p></div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Pixel-level translation (RCAN)</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Mapeia imagens reais → canônico sim, removendo variaçêo irrelevante antes da política.</p></div>
 </div>
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">C</div>
-<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Real-in-the-loop</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Injeta amostras reais (sem rótulo de ação) no treino para ancorar o encoder no domínio físico.</p></div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Real-in-the-loop</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Injeta amostras reais (sem rótulo de açêo) no treino para ancorar o encoder no domínio físico.</p></div>
 </div>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
@@ -276,29 +276,29 @@ def randomize(env):
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">4</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🪞 System identification e digital twins</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">DR cobre incerteza; <strong class="text-purple-400">system identification (sysID)</strong> a reduz na origem. Medindo o robô real — massas, centros de inércia, atrito de juntas, latência de controle — você calibra o simulador para reproduzir o hardware específico. O resultado é um <strong>digital twin</strong>: um gêmeo digital fiel que serve de campo de treino e de banco de testes seguro. Desde o MuJoCo 3.5 (fev/2026) há um toolbox Python oficial de identificação de sistema, com modelagem de atrasos de atuador e de sensor — a versão atual é a 3.16 (out/2026).</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">DR cobre incerteza; <strong class="text-purple-400">system identification (sysID)</strong> a reduz na origem. Medindo o robô real — massas, centros de inércia, atrito de juntas, latência de controle — você calibra o simulador para reproduzir o hardware específico. O resultado é um <strong>digital twin</strong>: um gêmeo digital fiel que serve de campo de treino e de banco de testes seguro. Desde o MuJoCo 3.5 (fev/2026) há um toolbox Python oficial de identificaçêo de sistema, com modelagem de atrasos de atuador e de sensor — a versêo atual é a 3.16 (out/2026).</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 O que um digital twin destrava</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
 <li><strong>Treino seguro</strong> — explorar políticas arriscadas sem quebrar hardware caro.</li>
-<li><strong>DR melhor</strong> — faixas centradas no valor real medido, não chutadas.</li>
+<li><strong>DR melhor</strong> — faixas centradas no valor real medido, nêo chutadas.</li>
 <li><strong>Debug</strong> — reproduzir uma falha real no twin e dissecá-la quadro a quadro.</li>
 <li><strong>Pré-deploy</strong> — validar updates de política antes de irem ao robô físico.</li>
 </ul>
 </div>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># sysID: ajustar parâmetros do sim ao real por otimização
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># sysID: ajustar parâmetros do sim ao real por otimizaçêo
 real_traj = record(robot, commands)          # dados do hardware
 def loss(theta):
     sim_traj = simulate(commands, params=theta)
-    return mse(sim_traj, real_traj)           # quão próximo o twin está
+    return mse(sim_traj, real_traj)           # quêo próximo o twin está
 theta_star = minimize(loss, init=spec_sheet) # calibra massa/atrito/delay
 # theta_star = simulador que "vira" o robô real</code></pre>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">SysID</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Calibrar sim ao real.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Digital twin</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Gêmeo digital fiel.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Calibração</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Massa, atrito, latência.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Calibraçêo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Massa, atrito, latência.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Pré-deploy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Validar no twin antes.</p></div>
 </div>
 </section>
@@ -308,11 +308,11 @@ theta_star = minimize(loss, init=spec_sheet) # calibra massa/atrito/delay
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">5</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🧪 Co-treino sim+real e fine-tuning com poucas demos</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A receita prática dominante em 2026 não é "sim OU real" — é <strong class="text-purple-400">co-treino</strong>. O sim fornece <em>cobertura</em> barata (milhões de variações), e um punhado de demonstrações reais fornece <em>fidelidade</em> final. Misturar sim e real no mesmo batch (a proporção certa se acha medindo, não há receita universal), ou fazer um fine-tuning curto no real, costuma superar qualquer dos dois isolados. Exemplo de 2026: o System 0 do Helix 02 da Figure (controlador de corpo inteiro a 1 kHz) foi treinado com mais de 1.000 h de movimento humano retargeted e RL sim-to-real, segundo a Figure (jan/2026).</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A receita prática dominante em 2026 nêo é "sim OU real" — é <strong class="text-purple-400">co-treino</strong>. O sim fornece <em>cobertura</em> barata (milhões de variações), e um punhado de demonstrações reais fornece <em>fidelidade</em> final. Misturar sim e real no mesmo batch (a proporçêo certa se acha medindo, nêo há receita universal), ou fazer um fine-tuning curto no real, costuma superar qualquer dos dois isolados. Exemplo de 2026: o System 0 do Helix 02 da Figure (controlador de corpo inteiro a 1 kHz) foi treinado com mais de 1.000 h de movimento humano retargeted e RL sim-to-real, segundo a Figure (jan/2026).</p>
 <div class="space-y-4 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">1</div>
-<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Pré-treino em sim com DR</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Política robusta a variação ampla; aprende habilidade geral a custo quase zero.</p></div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Pré-treino em sim com DR</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Política robusta a variaçêo ampla; aprende habilidade geral a custo quase zero.</p></div>
 </div>
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">2</div>
@@ -325,22 +325,22 @@ theta_star = minimize(loss, init=spec_sheet) # calibra massa/atrito/delay
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
-<p class="dark:text-gray-300 light-text-gray-700">Demos reais são caras — gaste-as onde o sim é mais fraco: contato fino, materiais deformáveis, oclusões. Não desperdice teleoperação reproduzindo o que o sim já cobre bem (movimentos em espaço livre).</p>
+<p class="dark:text-gray-300 light-text-gray-700">Demos reais sêo caras — gaste-as onde o sim é mais fraco: contato fino, materiais deformáveis, oclusões. Nêo desperdice teleoperaçêo reproduzindo o que o sim já cobre bem (movimentos em espaço livre).</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Co-training</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mistura sim+real.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Sample efficiency</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Poucas demos reais bastam.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Fine-tuning</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Ajuste curto no robô-alvo.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Mix sim/real</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Proporção ajustada medindo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Mix sim/real</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Proporçêo ajustada medindo.</p></div>
 </div>
 </section>
 <!-- TÓPICO 6 -->
 <section class="mb-16" id="topico-6">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">6</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📏 Avaliação honesta: medir transfer, não overfit ao sim</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📏 Avaliaçêo honesta: medir transfer, nêo overfit ao sim</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O erro mais comum em sim-to-real é confundir <strong class="text-purple-400">sim-score</strong> com capacidade real. Uma política que sobe a 99% em sim diz pouco sobre o hardware. A única métrica que conta para deploy é o <strong>success rate no robô físico</strong>, medido sob variação que a política não viu, com protocolos honestos.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O erro mais comum em sim-to-real é confundir <strong class="text-purple-400">sim-score</strong> com capacidade real. Uma política que sobe a 99% em sim diz pouco sobre o hardware. A única métrica que conta para deploy é o <strong>success rate no robô físico</strong>, medido sob variaçêo que a política nêo viu, com protocolos honestos.</p>
 <div class="grid md:grid-cols-2 gap-6 mb-6">
 <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
 <h4 class="font-bold text-emerald-400 mb-4">✓ Fazer</h4>
@@ -355,7 +355,7 @@ theta_star = minimize(loss, init=spec_sheet) # calibra massa/atrito/delay
 <ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
 <li class="flex gap-2"><span class="text-red-400">✗</span><span>Anunciar capacidade com base só no número do simulador.</span></li>
 <li class="flex gap-2"><span class="text-red-400">✗</span><span>Avaliar no mesmo cenário e seed do treino (overfit disfarçado).</span></li>
-<li class="flex gap-2"><span class="text-red-400">✗</span><span>Esconder a variância: 3 trials de sorte não são evidência.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Esconder a variância: 3 trials de sorte nêo sêo evidência.</span></li>
 </ul>
 </div>
 </div>
@@ -365,7 +365,7 @@ theta_star = minimize(loss, init=spec_sheet) # calibra massa/atrito/delay
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Real success rate</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Única métrica de deploy.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Held-out</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Variação não vista.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Held-out</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Variaçêo nêo vista.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Sim2real gap</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Sim-score − real-score.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Variância</p><p class="text-xs dark:text-gray-400 light-text-gray-600">IC sobre N trials.</p></div>
 </div>
@@ -379,7 +379,7 @@ theta_star = minimize(loss, init=spec_sheet) # calibra massa/atrito/delay
 <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Domain randomization</strong><span class="dark:text-gray-400 light-text-gray-600"> — torna o real "só mais uma amostra"; ADR encontra a borda do treinável.</span></div></div>
 <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Adaptation + sysID + digital twin</strong><span class="dark:text-gray-400 light-text-gray-600"> — reduzem o gap na origem em vez de só cobri-lo.</span></div></div>
 <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Co-treino sim+real</strong><span class="dark:text-gray-400 light-text-gray-600"> — cobertura barata + fidelidade real bate ambos isolados.</span></div></div>
-<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Avaliação honesta</strong><span class="dark:text-gray-400 light-text-gray-600"> — só success rate real held-out conta; sim-score engana.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Avaliaçêo honesta</strong><span class="dark:text-gray-400 light-text-gray-600"> — só success rate real held-out conta; sim-score engana.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-purple-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">3.2 — Humanoides: Figure, Tesla, Unitree, GR00T. Onde o sim-to-real encontra os corpos de propósito geral.</p></div>
 <p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Atualizado em out/2026.</p>

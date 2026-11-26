@@ -215,7 +215,7 @@
 </div>
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">¿Cómo entran la visión y el texto en el mismo contexto? En <strong class="text-emerald-400">early fusion</strong> (OpenVLA, π0), los tokens visuales y de texto simplemente se <strong class="text-emerald-400">concatenados</strong> en la secuencia de entrada del LLM, que los mezcla mediante self-attention — simple y eficaz, pero el número de tokens visuales aumenta el costo. En <strong class="text-emerald-400">cross-attention</strong> (Flamingo, algunos VLA), el texto consulta la imagen mediante capas dedicadas de atención cruzada, manteniendo más ligero el backbone de lenguaje. La principal contrapartida es <strong class="text-emerald-400">presupuesto de tokens</strong> versus capacidad de grounding fino.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Early fusion (concatenação)
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Early fusion (concatenaçêo)
 seq = [img_tok_1 ... img_tok_256, txt_tok_1 ... txt_tok_K]
 latent = LLM(seq)            # self-attention mistura tudo
 

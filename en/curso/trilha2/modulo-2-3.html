@@ -264,7 +264,7 @@ def step(state, ctrl):
 cfg = habitat_sim.SimulatorConfiguration()
 cfg.scene_id = "data/scene_datasets/hm3d/00800-TEEsavR23oF.glb"
 sim = habitat_sim.Simulator(habitat_sim.Configuration(cfg, [agent_cfg]))
-obs = sim.step("move_forward")   # navegação em cena escaneada real
+obs = sim.step("move_forward")   # navegaçêo em cena escaneada real
 obs["rgb"], obs["depth"]         # sensores sintéticos</code></pre>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
@@ -345,7 +345,7 @@ obs["rgb"], obs["depth"]         # sensores sintéticos</code></pre>
 <p class="dark:text-gray-300 light-text-gray-700">Report the benchmark <strong>complete</strong>, not just the suite where your model shines. Cherry-picking a single LIBERO suite is robotics' "p-hacking"—reviewers and the community expect all four suites plus the average.</p>
 </div>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># avaliar em simulação com o lerobot-eval (LeRobot 0.6.1, testado em 19/10/2026 no PushT)
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># avaliar em simulaçêo com o lerobot-eval (LeRobot 0.6.1, testado em 19/10/2026 no PushT)
 pip install "lerobot[pusht]==0.6.1"
 # o checkpoint é o ACT treinado no módulo 2.2
 lerobot-eval \
@@ -354,8 +354,8 @@ lerobot-eval \
   --eval.use_async_envs=false --policy.device=cuda \
   --output_dir=outputs/eval/act_200
 # sai pc_success (taxa de sucesso) + vídeos mp4 dos episódios
-# sem --eval.use_async_envs=false os subprocessos não acham o gym_pusht
-# LIBERO e os outros benchmarks também estão no lerobot-eval (não testados aqui: instalação pesada)</code></pre>
+# sem --eval.use_async_envs=false os subprocessos nêo acham o gym_pusht
+# LIBERO e os outros benchmarks também estêo no lerobot-eval (nêo testados aqui: instalaçêo pesada)</code></pre>
 </div>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 What each one measures</h3>

@@ -225,7 +225,7 @@ class VLANode(Node):
 
     def on_obs(self, img, state):
         action = self.policy(preprocess(img), state.position)  # forward VLA
-        self.pub.publish(to_cmd(action))                       # ação chunked
+        self.pub.publish(to_cmd(action))                       # açêo chunked
 
 rclpy.init(); rclpy.spin(VLANode())</code></pre>
 </div>
@@ -330,7 +330,7 @@ pose_base = buf.transform(pose_cam, "base_link", timeout=Duration(seconds=0.1))
 </div>
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La cadena <em>cámara → inferencia → tf2 → controlador → torque</em> tiene un presupuesto de latencia. Peor que una latencia alta es el <strong class="text-blue-400">jitter</strong> (varianza): un bucle irregular desestabiliza el control. Usa el kernel <strong class="text-blue-400">PREEMPT_RT</strong>, prioridad de tiempo real y <strong class="text-blue-400">watchdogs</strong> que detienen el brazo si el comando se retrasa.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># watchdog: se não chegar comando em 100ms, freia
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># watchdog: se nêo chegar comando em 100ms, freia
 self.create_timer(0.1, self.watchdog)
 def watchdog(self):
     if (self.now() - self.last_cmd) &gt; 0.1:

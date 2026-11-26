@@ -126,7 +126,7 @@
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Behavior Cloning — objetivo
 #   maximizar  Σ log π(a_t | s_t)   sobre demos do expert
 for (obs, action) in demo_loader:
-    pred = policy(obs)               # estado → ação
+    pred = policy(obs)               # estado → açêo
     loss = criterion(pred, action)   # ex: cross-entropy ou flow
     loss.backward(); opt.step()</code></pre>
 </div>
@@ -224,7 +224,7 @@ for (obs, action) in demo_loader:
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
 <p class="dark:text-gray-300 light-text-gray-700">DAgger puro es costoso (necesita al experto en el loop). En la práctica, muchos equipos inyectan <strong class="text-primary">perturbaciones en las demos</strong> (ruido en la pose) y graban recuperaciones intencionales — DAgger "barato" que mejora la robustez sin etiquetado online. Desde la v0.6.0 (jul/2026) LeRobot tiene el <code>lerobot-rollout</code> con estrategia DAgger: la política corre en el robot y el humano toma el control con el brazo líder cuando ella se equivoca, grabando las correcciones en un dataset.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mt-4 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># LeRobot 0.6.1 — da doc oficial; não rodado aqui (precisa do braço SO-101)
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># LeRobot 0.6.1 — da doc oficial; nêo rodado aqui (precisa do braço SO-101)
 lerobot-rollout \
   --strategy.type=dagger \
   --policy.path=&lt;seu usuário&gt;/minha_politica \
@@ -309,7 +309,7 @@ lerobot-rollout \
 </div>
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La métrica soberana es el <strong class="text-emerald-400">tasa de éxito</strong> — fracción de intentos que completan la tarea. Pero una cifra alta en escenas de entrenamiento puede engañar. La prueba honesta mide <strong class="text-emerald-400">generalización en tres ejes</strong>: objetos nuevos, posiciones/escenas nuevas e instrucciones reformuladas. Evalúa siempre con <strong class="text-emerald-400">N intentos suficientes</strong> y protocolos OOD (out-of-distribution), reportando intervalo de confianza. En simulación, el <code>lerobot-eval</code> de LeRobot 0.6 corre LIBERO, Meta-World, RoboTwin 2.0, RoboCasa365 y otros; pero LIBERO está saturado en 2026 (OpenVLA-OFT 97,1%, X-VLA 98,1%, MolmoAct 2 97,2%), así que ya no separa a los modelos de punta.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Protocolo de avaliação honesto
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Protocolo de avaliaçêo honesto
 seen      = eval(policy, scenes_treino)      # baseline
 ood_obj   = eval(policy, objetos_novos)      # generaliza objeto?
 ood_pos   = eval(policy, posicoes_novas)     # generaliza cena?

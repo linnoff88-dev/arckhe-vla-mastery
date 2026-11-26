@@ -205,8 +205,8 @@
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Classical robotics trained <strong class="text-emerald-400">one policy per task per robot</strong> — N×M fragile models. The foundation model thesis inverts this: train <strong class="text-emerald-400">one large model across many tasks and many bodies</strong> and harvest generalization. The bet is that diverse data induces shared representations — just as an LLM learns the syntax of one language and transfers it to another, a VLA learns to "grasp" with one arm and transfers that skill to another.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Paradigma antigo            # Paradigma foundation
-politica_pegar_braçoA()       modelo_vla(obs, instrução)
-politica_empurrar_braçoA()      → ação  # qualquer tarefa
+politica_pegar_braçoA()       modelo_vla(obs, instruçêo)
+politica_empurrar_braçoA()      → açêo  # qualquer tarefa
 politica_pegar_braçoB()         # qualquer corpo
 ...  # N×M políticas frágeis   # 1 modelo, generaliza</code></pre>
 </div>

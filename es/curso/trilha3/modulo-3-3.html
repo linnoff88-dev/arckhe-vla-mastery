@@ -210,13 +210,13 @@ loop_S1 (~200 Hz): action = policy(obs, latent)       # controle
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Antes del latente continuo, la primera ola de modelos híbridos usó el LLM como <strong class="text-purple-400">planificador simbólico</strong>. <strong>SayCan</strong> (Google, 2022) combinó la probabilidad del LLM ("say") con la viabilidad de cada skill ("can") para elegir el siguiente paso. <strong>Code-as-Policies</strong> fue más allá: el LLM escribe <em>código</em> que llama a APIs de percepción y control, ganando loops, condicionales y composición. En 2026 esa idea se volvió producto como <strong>patrón agéntico</strong>: o <strong>Gemini Robotics-ER 2</strong> (Google DeepMind, 30/07/2026) es un "agente físico" que orquesta VLAs y APIs como <em>herramientas</em>, vía Gemini Live API con streaming, y está en avance en Google AI Studio (<code>gemini-robotics-er-2-preview</code>); el VLA 2 que él menciona sigue solo para socios. Antes, el ER 1.6 (abr/2026) ya usaba código para hacer zoom y leer instrumentos (manómetros, displays) en el Spot.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Code-as-Policies — LLM gera o plano como programa
-# instrução: "empilhe os blocos por cor"
+# instruçêo: "empilhe os blocos por cor"
 for color in detect_colors():
     blocks = get_objects(color=color)
     base = blocks[0]
     for b in blocks[1:]:
         pick(b); place_on(base); base = b
-# loops + lógica que uma lista plana de skills não expressa</code></pre>
+# loops + lógica que uma lista plana de skills nêo expressa</code></pre>
 </div>
 <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 SayCan en una frase</h3>

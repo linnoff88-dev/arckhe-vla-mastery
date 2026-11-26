@@ -4,8 +4,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Módulo 1.6 — Tokenização de Ações — VLA Mastery</title>
-<meta content="Representações de ação: contínua, binning discreto, o problema da alta frequência e FAST (DCT+BPE) da Physical Intelligence." name="description"/>
+<title>Módulo 1.6 — Tokenizaçêo de Ações — VLA Mastery</title>
+<meta content="Representações de açêo: contínua, binning discreto, o problema da alta frequência e FAST (DCT+BPE) da Physical Intelligence." name="description"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -102,8 +102,8 @@
 <div class="max-w-6xl mx-auto">
 <a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-emerald-400 mb-4 inline-block" href="index.html">← Trilha 1</a>
 <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full mb-4">MÓDULO 1.6</span>
-<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🔢 Tokenização de Ações: Discreto vs Contínuo vs FAST</h1>
-<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Como representar ações para o modelo é tão importante quanto a arquitetura. Da regressão contínua ao binning discreto do RT-2, ao problema das sequências longas em alta frequência, até o FAST — tokenização por DCT+BPE que comprime no domínio da frequência. O fecho técnico da Trilha 1.</p>
+<h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🔢 Tokenizaçêo de Ações: Discreto vs Contínuo vs FAST</h1>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Como representar ações para o modelo é têo importante quanto a arquitetura. Da regressêo contínua ao binning discreto do RT-2, ao problema das sequências longas em alta frequência, até o FAST — tokenizaçêo por DCT+BPE que comprime no domínio da frequência. O fecho técnico da Trilha 1.</p>
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
 <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tópicos</div></div>
 <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">~45</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
@@ -115,15 +115,15 @@
 <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 <nav class="text-sm dark:text-gray-500 light-text-gray-500 mb-10"><a class="hover:text-emerald-400" href="../">Curso</a> / <a class="hover:text-emerald-400" href="index.html">Trilha 1</a> / <span class="text-emerald-400">Módulo 1.6</span></nav>
 <h2 class="text-xl font-bold dark:text-white light-text-gray-900 mb-8 pb-3 border-b border-dark-600 light-border-gray-200">Conteúdo detalhado</h2>
-<!-- SVG comparação 3 vias -->
+<!-- SVG comparaçêo 3 vias -->
 <div class="rounded-2xl border border-emerald-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-12">
-<svg aria-label="Comparação de três tokenizações de ação: contínuo emite floats, binning emite tokens por timestep redundantes, FAST comprime no domínio da frequência em poucos tokens" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 820 280">
+<svg aria-label="Comparaçêo de três tokenizações de açêo: contínuo emite floats, binning emite tokens por timestep redundantes, FAST comprime no domínio da frequência em poucos tokens" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 820 280">
 <defs>
 <lineargradient id="m16-g" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#10b981"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
 </defs>
 <!-- signal -->
 <path d="M30 70 Q 70 30, 110 70 T 190 70 T 270 70" fill="none" stroke="#94a3b8" stroke-width="2"></path>
-<text fill="#64748b" font-size="11" x="20" y="40">sinal de ação</text>
+<text fill="#64748b" font-size="11" x="20" y="40">sinal de açêo</text>
 <!-- continuo -->
 <rect fill="#0b0f1a" height="46" rx="10" stroke="#10b981" stroke-width="2" width="240" x="30" y="100"></rect>
 <text fill="#10b981" font-size="12" font-weight="700" text-anchor="middle" x="150" y="120">Contínuo · floats</text>
@@ -152,22 +152,22 @@
 <section class="mb-16" id="topico-1">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">1</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📈 Ação contínua: regressão direta</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📈 Açêo contínua: regressêo direta</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A representação mais natural: a cabeça emite <strong class="text-emerald-400">floats diretamente</strong> para cada dimensão de ação (Δx, Δy, Δz, rotação, gripper). É simples, preserva resolução total e não desperdiça nada com discretização. O problema, visto no Módulo 1.4, é que treinada com <strong class="text-emerald-400">MSE/L1</strong> ela é <strong class="text-emerald-400">unimodal</strong> — colapsa modos. Por isso a regressão contínua só brilha quando combinada com uma cabeça expressiva (difusão/flow), e não como simples MLP+MSE.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A representaçêo mais natural: a cabeça emite <strong class="text-emerald-400">floats diretamente</strong> para cada dimensêo de açêo (Δx, Δy, Δz, rotaçêo, gripper). É simples, preserva resoluçêo total e nêo desperdiça nada com discretizaçêo. O problema, visto no Módulo 1.4, é que treinada com <strong class="text-emerald-400">MSE/L1</strong> ela é <strong class="text-emerald-400">unimodal</strong> — colapsa modos. Por isso a regressêo contínua só brilha quando combinada com uma cabeça expressiva (difusêo/flow), e nêo como simples MLP+MSE.</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Quando contínuo puro serve</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
-<li><strong>Tarefas unimodais</strong> — uma única solução clara por estado.</li>
+<li><strong>Tarefas unimodais</strong> — uma única soluçêo clara por estado.</li>
 <li><strong>Latência mínima</strong> — um forward pass, sem passos de denoising.</li>
 <li><strong>Baseline</strong> — ponto de partida para medir ganhos das outras opções.</li>
 </ul>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Regressão</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Emitir floats por dimensão.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">L1/L2</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Perdas de regressão comuns.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Unimodalidade</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Limitação da média.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Resolução total</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Sem perda por bins.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Regressêo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Emitir floats por dimensêo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">L1/L2</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Perdas de regressêo comuns.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Unimodalidade</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Limitaçêo da média.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Resoluçêo total</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Sem perda por bins.</p></div>
 </div>
 </section>
 <!-- TÓPICO 2 -->
@@ -176,7 +176,7 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">2</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔲 Binning discreto (RT-1/RT-2)</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">RT-1, RT-2 e OpenVLA discretizam cada dimensão em <strong class="text-emerald-400">bins uniformes</strong> (RT-1 usa 256) e tratam a predição como <strong class="text-emerald-400">classificação</strong> via cross-entropy. A vantagem: vira um problema de tokens, integrando-se perfeitamente ao vocabulário do LLM e capturando multimodalidade (distribuição categórica). As desvantagens: <strong class="text-emerald-400">perda de resolução</strong> (quantização) e perda de <strong class="text-emerald-400">correlação entre dimensões</strong>, já que cada uma é tokenizada independentemente.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">RT-1, RT-2 e OpenVLA discretizam cada dimensêo em <strong class="text-emerald-400">bins uniformes</strong> (RT-1 usa 256) e tratam a prediçêo como <strong class="text-emerald-400">classificaçêo</strong> via cross-entropy. A vantagem: vira um problema de tokens, integrando-se perfeitamente ao vocabulário do LLM e capturando multimodalidade (distribuiçêo categórica). As desvantagens: <strong class="text-emerald-400">perda de resoluçêo</strong> (quantizaçêo) e perda de <strong class="text-emerald-400">correlaçêo entre dimensões</strong>, já que cada uma é tokenizada independentemente.</p>
 <div class="grid md:grid-cols-2 gap-6 mb-6">
 <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
 <h4 class="font-bold text-emerald-400 mb-4">✓ Vantagens do binning</h4>
@@ -189,16 +189,16 @@
 <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
 <h4 class="font-bold text-red-400 mb-4">✗ Desvantagens</h4>
 <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
-<li class="flex gap-2"><span class="text-red-400">✗</span><span>Resolução limitada pelo número de bins.</span></li>
-<li class="flex gap-2"><span class="text-red-400">✗</span><span>Ignora correlação entre dimensões.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Resoluçêo limitada pelo número de bins.</span></li>
+<li class="flex gap-2"><span class="text-red-400">✗</span><span>Ignora correlaçêo entre dimensões.</span></li>
 <li class="flex gap-2"><span class="text-red-400">✗</span><span>Sequências longas em alta frequência (próximo tópico).</span></li>
 </ul>
 </div>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Uniform binning</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Dividir intervalo em bins.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Quantização</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Perda de resolução.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Cross-entropy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Ação como classificação.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Quantizaçêo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Perda de resoluçêo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Cross-entropy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Açêo como classificaçêo.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Independência</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Dimensões tokenizadas à parte.</p></div>
 </div>
 </section>
@@ -208,7 +208,7 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">3</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🌊 O problema da frequência alta</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Aqui mora a dor que motivou o FAST. A 50Hz, ações em timesteps consecutivos são <strong class="text-emerald-400">quase idênticas</strong> — o braço move pouco em 20ms. Tokenizar cada timestep gera <strong class="text-emerald-400">tokens redundantes</strong> e sequências enormes: um chunk de 1 segundo a 50Hz com 7 dimensões são 350 tokens, a maioria repetida. Sequências longas explodem o custo de treino autoregressivo e degradam o aprendizado. Binning ingênuo simplesmente não escala para controle dinâmico de alta frequência.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Aqui mora a dor que motivou o FAST. A 50Hz, ações em timesteps consecutivos sêo <strong class="text-emerald-400">quase idênticas</strong> — o braço move pouco em 20ms. Tokenizar cada timestep gera <strong class="text-emerald-400">tokens redundantes</strong> e sequências enormes: um chunk de 1 segundo a 50Hz com 7 dimensões sêo 350 tokens, a maioria repetida. Sequências longas explodem o custo de treino autoregressivo e degradam o aprendizado. Binning ingênuo simplesmente nêo escala para controle dinâmico de alta frequência.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Custo de binning por timestep a 50Hz
 chunk = 1s · 50Hz = 50 timesteps
@@ -231,9 +231,9 @@ tokens = 50 × 7 = 350  ← maioria redundante
 <section class="mb-16" id="topico-4">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">4</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⚡ FAST: tokenização por DCT + BPE</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⚡ FAST: tokenizaçêo por DCT + BPE</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">FAST</strong> (Frequency-space Action Sequence Tokenization, Physical Intelligence, 2025) inverte a lógica: em vez de tokenizar no tempo, transforma a trajetória para o <strong class="text-emerald-400">domínio da frequência via DCT</strong> (a mesma transformada do JPEG), quantiza os coeficientes e os comprime com <strong class="text-emerald-400">BPE</strong>. Como sinais suaves concentram energia em poucas frequências baixas, o resultado são <strong class="text-emerald-400">poucos tokens de alta fidelidade</strong>. Segundo a PI, FAST torna VLAs autoregressivos competitivos com difusão em controle de alta frequência e treina "5 vezes mais rápido" — RT-2/OpenVLA-style, mas dexterosos. O checkpoint <code>pi0_fast_base</code> é aberto no openpi (Apache-2.0) e o LeRobot suporta Pi0-FAST desde a v0.5 (mar/2026).</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">FAST</strong> (Frequency-space Action Sequence Tokenization, Physical Intelligence, 2025) inverte a lógica: em vez de tokenizar no tempo, transforma a trajetória para o <strong class="text-emerald-400">domínio da frequência via DCT</strong> (a mesma transformada do JPEG), quantiza os coeficientes e os comprime com <strong class="text-emerald-400">BPE</strong>. Como sinais suaves concentram energia em poucas frequências baixas, o resultado sêo <strong class="text-emerald-400">poucos tokens de alta fidelidade</strong>. Segundo a PI, FAST torna VLAs autoregressivos competitivos com difusêo em controle de alta frequência e treina "5 vezes mais rápido" — RT-2/OpenVLA-style, mas dexterosos. O checkpoint <code>pi0_fast_base</code> é aberto no openpi (Apache-2.0) e o LeRobot suporta Pi0-FAST desde a v0.5 (mar/2026).</p>
 <div class="space-y-6 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">1</div>
@@ -259,12 +259,12 @@ tokens = 50 × 7 = 350  ← maioria redundante
 </div>
 <div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 Por que FAST importa</h3>
-<p class="dark:text-gray-300 light-text-gray-700">FAST reduz drasticamente o comprimento de sequência mantendo fidelidade, acelerando o treino e habilitando VLAs autoregressivos para tarefas dexterosas. É a ponte entre a simplicidade do paradigma token e a exigência de alta frequência da manipulação fina.</p>
-<p class="dark:text-gray-300 light-text-gray-700 mt-3">Em 2026 o FAST ganhou uma <strong class="text-emerald-400">reimplementação aberta</strong>, com dados abertos, no MolmoAct 2 (Ai2, mai/2026), que chega a 97,2% no LIBERO (98,1% no modo Think) e, segundo a Ai2, faz uma chamada de ação em 180 ms contra 6.700 ms do MolmoAct 1. Os autoregressivos voltaram com força: o Galaxea G0.5 (checkpoint jun/2026) usa "um único stream autoregressivo" para raciocínio e ação — mas atenção, os pesos têm <strong class="text-emerald-400">licença não comercial</strong>.</p>
+<p class="dark:text-gray-300 light-text-gray-700">FAST reduz drasticamente o comprimento de sequência mantendo fidelidade, acelerando o treino e habilitando VLAs autoregressivos para tarefas dexterosas. É a ponte entre a simplicidade do paradigma token e a exigência de alta frequência da manipulaçêo fina.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mt-3">Em 2026 o FAST ganhou uma <strong class="text-emerald-400">reimplementaçêo aberta</strong>, com dados abertos, no MolmoAct 2 (Ai2, mai/2026), que chega a 97,2% no LIBERO (98,1% no modo Think) e, segundo a Ai2, faz uma chamada de açêo em 180 ms contra 6.700 ms do MolmoAct 1. Os autoregressivos voltaram com força: o Galaxea G0.5 (checkpoint jun/2026) usa "um único stream autoregressivo" para raciocínio e açêo — mas atençêo, os pesos têm <strong class="text-emerald-400">licença nêo comercial</strong>.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">DCT</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Transformada para frequência.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">BPE</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Compressão por byte-pair.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">BPE</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Compressêo por byte-pair.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Frequency domain</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Comprimir energia concentrada.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">AR competitivo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Tokens dexterosos a alta freq.</p></div>
 </div>
@@ -275,7 +275,7 @@ tokens = 50 × 7 = 350  ← maioria redundante
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">5</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⚖️ Trade-offs: comprimento × fidelidade × velocidade</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Toda tokenização vive numa <strong class="text-emerald-400">fronteira de Pareto</strong>: menos tokens treinam mais rápido mas podem perder fidelidade; mais tokens preservam detalhe mas custam treino e latência. Binning ingênuo fica num ponto ruim (muitos tokens, fidelidade média). FAST <strong class="text-emerald-400">desloca a fronteira</strong> — poucos tokens E alta fidelidade — ao explorar a estrutura de frequência do sinal. A escolha certa depende de quanto seu sinal é comprimível.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Toda tokenizaçêo vive numa <strong class="text-emerald-400">fronteira de Pareto</strong>: menos tokens treinam mais rápido mas podem perder fidelidade; mais tokens preservam detalhe mas custam treino e latência. Binning ingênuo fica num ponto ruim (muitos tokens, fidelidade média). FAST <strong class="text-emerald-400">desloca a fronteira</strong> — poucos tokens E alta fidelidade — ao explorar a estrutura de frequência do sinal. A escolha certa depende de quanto seu sinal é comprimível.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
 <pre class="font-mono text-xs sm:text-sm dark:text-gray-300 light-text-gray-700"><code>Esquema     Tokens/chunk   Fidelidade   Treino
 contínuo    1 (vetor)      total        rápido*  (*precisa head expressiva)
@@ -287,7 +287,7 @@ FAST        poucos         alta         rápido</code></pre>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
 <li><strong>↓ comprimento</strong> — muito menos tokens que binning por timestep em sinais suaves.</li>
 <li><strong>↑ velocidade</strong> — treino autoregressivo mais rápido ("5 vezes", segundo a PI).</li>
-<li><strong>= fidelidade</strong> — qualidade comparável à difusão em tarefas dexterosas, segundo a PI.</li>
+<li><strong>= fidelidade</strong> — qualidade comparável à difusêo em tarefas dexterosas, segundo a PI.</li>
 </ul>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
@@ -303,7 +303,7 @@ FAST        poucos         alta         rápido</code></pre>
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">6</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🎛 Escolha por caso e impacto no action head</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Não existe tokenização universal — a escolha molda toda a cabeça de ação. <strong class="text-emerald-400">Tarefa lenta e quasi-estática</strong> (pick-and-place pausado)? Binning serve. <strong class="text-emerald-400">Manipulação dexterosa e dinâmica</strong> (dobrar roupa, inserções)? FAST (autoregressivo) ou difusão/flow. A decisão de representação determina se a cabeça é um detokenizer, um action expert generativo ou um regressor — fechando o ciclo conceitual que começou no Módulo 1.2.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Nêo existe tokenizaçêo universal — a escolha molda toda a cabeça de açêo. <strong class="text-emerald-400">Tarefa lenta e quasi-estática</strong> (pick-and-place pausado)? Binning serve. <strong class="text-emerald-400">Manipulaçêo dexterosa e dinâmica</strong> (dobrar roupa, inserções)? FAST (autoregressivo) ou difusêo/flow. A decisêo de representaçêo determina se a cabeça é um detokenizer, um action expert generativo ou um regressor — fechando o ciclo conceitual que começou no Módulo 1.2.</p>
 <div class="space-y-6 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">1</div>
@@ -315,15 +315,15 @@ FAST        poucos         alta         rápido</code></pre>
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">2</div>
 <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
-<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Escolha a representação</h4>
-<p class="dark:text-gray-400 light-text-gray-600 text-sm">Binning, FAST ou contínuo+difusão conforme o perfil.</p>
+<h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Escolha a representaçêo</h4>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Binning, FAST ou contínuo+difusêo conforme o perfil.</p>
 </div>
 </div>
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">3</div>
 <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
 <h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Casar com a cabeça</h4>
-<p class="dark:text-gray-400 light-text-gray-600 text-sm">Detokenizer, action expert ou regressor — coerente com a representação.</p>
+<p class="dark:text-gray-400 light-text-gray-600 text-sm">Detokenizer, action expert ou regressor — coerente com a representaçêo.</p>
 </div>
 </div>
 </div>
@@ -333,8 +333,8 @@ FAST        poucos         alta         rápido</code></pre>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Task dynamics</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Lenta vs dinâmica.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Head design</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Cabeça segue a representação.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Decisão de repr.</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Define toda a saída.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Head design</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Cabeça segue a representaçêo.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Decisêo de repr.</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Define toda a saída.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Ciclo fechado</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Conecta de volta ao M1.2.</p></div>
 </div>
 </section>
@@ -343,10 +343,10 @@ FAST        poucos         alta         rápido</code></pre>
 <div class="bg-gradient-to-br dark:from-emerald-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-8">
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumo do módulo e da Trilha 1</h2>
 <div class="space-y-3 mb-8">
-<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Contínuo vs binning</strong><span class="dark:text-gray-400 light-text-gray-600"> — floats são simples mas unimodais; bins integram ao LLM com perda de resolução.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Contínuo vs binning</strong><span class="dark:text-gray-400 light-text-gray-600"> — floats sêo simples mas unimodais; bins integram ao LLM com perda de resoluçêo.</span></div></div>
 <div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Alta frequência quebra binning</strong><span class="dark:text-gray-400 light-text-gray-600"> — tokens redundantes e sequências enormes a 50Hz.</span></div></div>
-<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">FAST</strong><span class="dark:text-gray-400 light-text-gray-600"> — DCT+BPE comprime no domínio da frequência, tornando AR competitivo com difusão.</span></div></div>
-<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">A representação molda a cabeça</strong><span class="dark:text-gray-400 light-text-gray-600"> — e fecha a teoria que sustenta toda a prática da Trilha 2.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">FAST</strong><span class="dark:text-gray-400 light-text-gray-600"> — DCT+BPE comprime no domínio da frequência, tornando AR competitivo com difusêo.</span></div></div>
+<div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">A representaçêo molda a cabeça</strong><span class="dark:text-gray-400 light-text-gray-600"> — e fecha a teoria que sustenta toda a prática da Trilha 2.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Próximo: Trilha 2 — Ferramentas</h3><p class="dark:text-gray-300 light-text-gray-700">M2.1 — Python + PyTorch: a stack dominante para implementar tudo que você aprendeu aqui, de tensores e LoRA a inferência a 10-50Hz.</p></div>
 <p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Atualizado em out/2026.</p>

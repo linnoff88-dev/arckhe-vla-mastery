@@ -103,7 +103,7 @@
 <a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-purple-400 mb-4 inline-block" href="index.html">← Voltar à Trilha 3</a>
 <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-full mb-4">MÓDULO 3.3</span>
 <h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🧠 Arquiteturas Híbridas: LLM Planner + VLA Executor</h1>
-<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Nenhuma rede única raciocina sobre minutos de tarefa E controla atuadores a 200 Hz. A solução é dividir: um cérebro lento que pensa, uma política rápida que age — e a cola entre eles.</p>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Nenhuma rede única raciocina sobre minutos de tarefa E controla atuadores a 200 Hz. A soluçêo é dividir: um cérebro lento que pensa, uma política rápida que age — e a cola entre eles.</p>
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
 <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tópicos</div></div>
 <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">~45</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
@@ -116,7 +116,7 @@
 <h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-10">Conteúdo detalhado</h2>
 <!-- SVG: fluxo planner -> fila de skills -> VLA -->
 <div class="rounded-2xl border border-purple-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-12">
-<svg aria-label="Fluxo de decisão: LLM planner decompõe a instrução numa fila de skills que o VLA executor consome, com feedback de falha replanejando" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 880 320">
+<svg aria-label="Fluxo de decisêo: LLM planner decompõe a instruçêo numa fila de skills que o VLA executor consome, com feedback de falha replanejando" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 880 320">
 <defs>
 <lineargradient id="m33-grad" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#a855f7"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
 <marker id="m33-arrow" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0 0 L8 3 L0 6 Z" fill="#38bdf8"></path></marker>
@@ -159,7 +159,7 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">1</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🏗️ Hierarquia de controle: simbólico × reativo</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A robótica clássica sempre separou <strong class="text-purple-400">planejamento</strong> (alto nível, abstrato, lento) de <strong>controle</strong> (baixo nível, contínuo, rápido). As arquiteturas híbridas modernas reencarnam essa hierarquia com componentes aprendidos: um modelo de raciocínio no topo, uma política reativa na base. O motivo é fundamental — as escalas de tempo são incompatíveis.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A robótica clássica sempre separou <strong class="text-purple-400">planejamento</strong> (alto nível, abstrato, lento) de <strong>controle</strong> (baixo nível, contínuo, rápido). As arquiteturas híbridas modernas reencarnam essa hierarquia com componentes aprendidos: um modelo de raciocínio no topo, uma política reativa na base. O motivo é fundamental — as escalas de tempo sêo incompatíveis.</p>
 <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 O conflito de escalas de tempo</h3>
 <p class="dark:text-gray-300 light-text-gray-700">Raciocinar "como guardar a louça" leva segundos de inferência num VLM grande. Controlar um dedo exige decisões a cada ~5 ms. Forçar uma rede só a fazer ambos resulta em algo lento demais para a malha ou burro demais para a tarefa. A hierarquia <strong>desacopla</strong> as frequências.</p>
@@ -177,7 +177,7 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">2</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🐢🐇 System 1 / System 2 (Helix, GR00T)</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A instância de ponta da hierarquia é o <strong class="text-purple-400">dual-system</strong>, emprestando a metáfora de Kahneman. O <strong>System 2</strong> (VLM lento) raciocina e emite um <em>vetor latente</em> de intenção; o <strong>System 1</strong> (política rápida) condiciona-se nesse latente para gerar ação de alta frequência. Helix e GR00T convergiram para esse desenho — e ele roda <strong>assíncrono</strong>: o S1 não espera o S2 a cada passo. Em 2026 a hierarquia ficou mais funda: o <strong>Helix 02</strong> (Figure, jan/2026) acrescentou um <strong>System 0</strong> de corpo inteiro a 1 kHz abaixo do S1 (200 Hz), e o <strong>GR00T N1.7</strong> (NVIDIA, abr/2026) chama o seu S2→S1 (Cosmos-Reason2-2B → DiT) de "Action Cascade".</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A instância de ponta da hierarquia é o <strong class="text-purple-400">dual-system</strong>, emprestando a metáfora de Kahneman. O <strong>System 2</strong> (VLM lento) raciocina e emite um <em>vetor latente</em> de intençêo; o <strong>System 1</strong> (política rápida) condiciona-se nesse latente para gerar açêo de alta frequência. Helix e GR00T convergiram para esse desenho — e ele roda <strong>assíncrono</strong>: o S1 nêo espera o S2 a cada passo. Em 2026 a hierarquia ficou mais funda: o <strong>Helix 02</strong> (Figure, jan/2026) acrescentou um <strong>System 0</strong> de corpo inteiro a 1 kHz abaixo do S1 (200 Hz), e o <strong>GR00T N1.7</strong> (NVIDIA, abr/2026) chama o seu S2→S1 (Cosmos-Reason2-2B → DiT) de "Action Cascade".</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Inferência assíncrona dual-system
 latent = None
@@ -187,11 +187,11 @@ loop_S1 (~200 Hz): action = policy(obs, latent)       # controle
 # S1 reusa o último latent enquanto S2 ainda pensa</code></pre>
 </div>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
-<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por que o latente, e não texto?</h3>
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por que o latente, e nêo texto?</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
 <li><strong>Banda larga</strong> — um vetor contínuo carrega mais nuance que uma string de skill discreta.</li>
 <li><strong>Diferenciável</strong> — permite treinar S1 e S2 de forma acoplada quando desejado.</li>
-<li><strong>Rápido</strong> — não há parsing de linguagem na malha de controle.</li>
+<li><strong>Rápido</strong> — nêo há parsing de linguagem na malha de controle.</li>
 </ul>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
@@ -207,16 +207,16 @@ loop_S1 (~200 Hz): action = policy(obs, latent)       # controle
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📋 LLM como planejador: SayCan, Code-as-Policies</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Antes do latente contínuo, a primeira onda de híbridos usou o LLM como <strong class="text-purple-400">planejador simbólico</strong>. <strong>SayCan</strong> (Google, 2022) combinou a probabilidade do LLM ("say") com a viabilidade de cada skill ("can") para escolher o próximo passo. <strong>Code-as-Policies</strong> foi além: o LLM escreve <em>código</em> que chama APIs de percepção e controle, ganhando loops, condicionais e composição. Em 2026 essa ideia virou produto como <strong>padrão agêntico</strong>: o <strong>Gemini Robotics-ER 2</strong> (Google DeepMind, 30/07/2026) é um "agente físico" que orquestra VLAs e APIs como <em>ferramentas</em>, via Gemini Live API com streaming, e está em prévia no Google AI Studio (<code>gemini-robotics-er-2-preview</code>); o VLA 2 que ele chama segue só para parceiros. Antes, o ER 1.6 (abr/2026) já usava código para dar zoom e ler instrumentos (manômetros, displays) no Spot.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Antes do latente contínuo, a primeira onda de híbridos usou o LLM como <strong class="text-purple-400">planejador simbólico</strong>. <strong>SayCan</strong> (Google, 2022) combinou a probabilidade do LLM ("say") com a viabilidade de cada skill ("can") para escolher o próximo passo. <strong>Code-as-Policies</strong> foi além: o LLM escreve <em>código</em> que chama APIs de percepçêo e controle, ganhando loops, condicionais e composiçêo. Em 2026 essa ideia virou produto como <strong>padrêo agêntico</strong>: o <strong>Gemini Robotics-ER 2</strong> (Google DeepMind, 30/07/2026) é um "agente físico" que orquestra VLAs e APIs como <em>ferramentas</em>, via Gemini Live API com streaming, e está em prévia no Google AI Studio (<code>gemini-robotics-er-2-preview</code>); o VLA 2 que ele chama segue só para parceiros. Antes, o ER 1.6 (abr/2026) já usava código para dar zoom e ler instrumentos (manômetros, displays) no Spot.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Code-as-Policies — LLM gera o plano como programa
-# instrução: "empilhe os blocos por cor"
+# instruçêo: "empilhe os blocos por cor"
 for color in detect_colors():
     blocks = get_objects(color=color)
     base = blocks[0]
     for b in blocks[1:]:
         pick(b); place_on(base); base = b
-# loops + lógica que uma lista plana de skills não expressa</code></pre>
+# loops + lógica que uma lista plana de skills nêo expressa</code></pre>
 </div>
 <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 SayCan em uma frase</h3>
@@ -235,13 +235,13 @@ for color in detect_colors():
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">4</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🎯 Affordances e grounding</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Um plano só vale se for executável. <strong class="text-purple-400">Affordance</strong> é a estimativa de quão viável é uma ação no estado atual; <strong>grounding</strong> é a ligação entre a linguagem do planejador e as habilidades reais do robô. Sem isso, o LLM produz planos eloquentes e impossíveis — pedir para "pegar o copo" quando não há copo à vista.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Um plano só vale se for executável. <strong class="text-purple-400">Affordance</strong> é a estimativa de quêo viável é uma açêo no estado atual; <strong>grounding</strong> é a ligaçêo entre a linguagem do planejador e as habilidades reais do robô. Sem isso, o LLM produz planos eloquentes e impossíveis — pedir para "pegar o copo" quando nêo há copo à vista.</p>
 <div class="grid md:grid-cols-2 gap-6 mb-6">
 <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
 <h4 class="font-bold text-emerald-400 mb-4">✓ Fazer</h4>
 <ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Usar uma <strong>value function</strong> ou detector como filtro de viabilidade.</span></li>
-<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Grounding em percepção: só ofertar skills cujos objetos existem na cena.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Grounding em percepçêo: só ofertar skills cujos objetos existem na cena.</span></li>
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Restringir o vocabulário de skills ao que o executor domina.</span></li>
 </ul>
 </div>
@@ -255,7 +255,7 @@ for color in detect_colors():
 </div>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Affordance</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Viabilidade da ação.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Affordance</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Viabilidade da açêo.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Grounding</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Linguagem → skill real.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Value function</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Filtro de viabilidade.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Viabilidade</p><p class="text-xs dark:text-gray-400 light-text-gray-600">O "can" do SayCan.</p></div>
@@ -267,11 +267,11 @@ for color in detect_colors():
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">5</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔁 Memória e feedback: replanejar com falha</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Execução cega quebra no primeiro imprevisto. Sistemas robustos fecham o loop: detectam falha, atualizam a <strong class="text-purple-400">memória</strong> e <strong>replanejam</strong>. Técnicas como <em>inner monologue</em> realimentam observações textuais ("o copo escorregou") ao planejador, que ajusta o plano. Robustez vem de recuperação, não de execução perfeita.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Execuçêo cega quebra no primeiro imprevisto. Sistemas robustos fecham o loop: detectam falha, atualizam a <strong class="text-purple-400">memória</strong> e <strong>replanejam</strong>. Técnicas como <em>inner monologue</em> realimentam observações textuais ("o copo escorregou") ao planejador, que ajusta o plano. Robustez vem de recuperaçêo, nêo de execuçêo perfeita.</p>
 <div class="space-y-4 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">1</div>
-<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Detectar</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Sucesso/falha por percepção (objeto na mão? superfície limpa?) ou success detector aprendido.</p></div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Detectar</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Sucesso/falha por percepçêo (objeto na mêo? superfície limpa?) ou success detector aprendido.</p></div>
 </div>
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">2</div>
@@ -284,7 +284,7 @@ for color in detect_colors():
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
-<p class="dark:text-gray-300 light-text-gray-700">Não replaneje a cada quadro (caro e instável). Replaneje em <strong>eventos</strong>: fim de skill, falha detectada ou mudança grande de cena. O resto do tempo, deixe a política reativa absorver pequenas perturbações sozinha.</p>
+<p class="dark:text-gray-300 light-text-gray-700">Nêo replaneje a cada quadro (caro e instável). Replaneje em <strong>eventos</strong>: fim de skill, falha detectada ou mudança grande de cena. O resto do tempo, deixe a política reativa absorver pequenas perturbações sozinha.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Closed-loop</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Loop fechado com feedback.</p></div>
@@ -297,15 +297,15 @@ for color in detect_colors():
 <section class="mb-16" id="topico-6">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">6</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⏳ Horizonte longo: composição de skills</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⏳ Horizonte longo: composiçêo de skills</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O gargalo atual da robótica generalista é o <strong class="text-purple-400">horizonte longo</strong>: tarefas de minutos que encadeiam dezenas de skills. Mesmo com 95% de sucesso por skill, 20 skills em série dão ~36% de sucesso total — o erro composto que vimos na Trilha 1 reaparece em escala de tarefa. A híbrida ataca isso com replanejamento e recuperação, mas a robustez de ponta a ponta ainda é fronteira aberta. Duas referências de 2026: o <strong>MEM</strong> da Physical Intelligence (mar/2026) dá memória de curto e longo prazo a um VLA (sobre o π0.6) e faz tarefas de mais de 10 minutos, como limpar a cozinha inteira; o <strong>BEHAVIOR Challenge 2026</strong> (Stanford) mede 100 tarefas domésticas completas, com 20.000 demos e 1.950 h de teleoperação, pontuando crédito parcial.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O gargalo atual da robótica generalista é o <strong class="text-purple-400">horizonte longo</strong>: tarefas de minutos que encadeiam dezenas de skills. Mesmo com 95% de sucesso por skill, 20 skills em série dêo ~36% de sucesso total — o erro composto que vimos na Trilha 1 reaparece em escala de tarefa. A híbrida ataca isso com replanejamento e recuperaçêo, mas a robustez de ponta a ponta ainda é fronteira aberta. Duas referências de 2026: o <strong>MEM</strong> da Physical Intelligence (mar/2026) dá memória de curto e longo prazo a um VLA (sobre o π0.6) e faz tarefas de mais de 10 minutos, como limpar a cozinha inteira; o <strong>BEHAVIOR Challenge 2026</strong> (Stanford) mede 100 tarefas domésticas completas, com 20.000 demos e 1.950 h de teleoperaçêo, pontuando crédito parcial.</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 A matemática do erro composto em tarefas</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
-<li><strong>0.95<sup>20</sup> ≈ 36%</strong> — sucesso de tarefa com 20 skills a 95% cada, sem recuperação.</li>
+<li><strong>0.95<sup>20</sup> ≈ 36%</strong> — sucesso de tarefa com 20 skills a 95% cada, sem recuperaçêo.</li>
 <li><strong>0.99<sup>20</sup> ≈ 82%</strong> — por que cada ponto de success rate por skill importa enormemente.</li>
-<li><strong>Recuperação</strong> muda a conta: replanejar transforma falha em retry, não em fim da tarefa.</li>
+<li><strong>Recuperaçêo</strong> muda a conta: replanejar transforma falha em retry, nêo em fim da tarefa.</li>
 </ul>
 </div>
 <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
@@ -328,7 +328,7 @@ for color in detect_colors():
 <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Dual-system</strong><span class="dark:text-gray-400 light-text-gray-600"> — S2 lento emite latente, S1 rápido executa, assíncrono (Helix, GR00T); em 2026 ganhou S0 a 1 kHz (Helix 02) e planejador agêntico que chama o VLA como ferramenta (Gemini Robotics-ER 2).</span></div></div>
 <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">LLM planner</strong><span class="dark:text-gray-400 light-text-gray-600"> — SayCan e Code-as-Policies decompõem tarefa longa sem treinar política nova.</span></div></div>
 <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Affordances + closed-loop</strong><span class="dark:text-gray-400 light-text-gray-600"> — ancore planos na realidade e replaneje em eventos de falha.</span></div></div>
-<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Horizonte longo</strong><span class="dark:text-gray-400 light-text-gray-600"> — erro composto é o gargalo; recuperação é o que vence a matemática.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Horizonte longo</strong><span class="dark:text-gray-400 light-text-gray-600"> — erro composto é o gargalo; recuperaçêo é o que vence a matemática.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-purple-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">3.4 — Aplicações: Manufatura, Logística, Saúde, Agro. Onde essas arquiteturas viram valor de mercado.</p></div>
 <p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Atualizado em out/2026.</p>

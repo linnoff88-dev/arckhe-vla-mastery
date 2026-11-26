@@ -302,10 +302,10 @@ execute(A[:exec_horizon])               # receding horizon</code></pre>
 </div>
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La gran decisión de diseño de la cabeza de acción: <strong class="text-emerald-400">generación por difusión/flow</strong> versus <strong class="text-emerald-400">tokens autorregresivos</strong>. La difusión es más expresiva (multimodal continua), pero exige varios pasos. El modelo autorregresivo (RT-2, OpenVLA, FAST) reutiliza el backbone LLM y tiene un entrenamiento simple, pero genera token a token y la discretización puede limitar la fidelidad. No hay un ganador universal: la disyuntiva es <strong class="text-emerald-400">expresividad × latencia × simplicidad de integración</strong>.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-xs sm:text-sm dark:text-gray-300 light-text-gray-700"><code>Eixo            Difusão/Flow        Autoregressivo (tokens)
+<pre class="font-mono text-xs sm:text-sm dark:text-gray-300 light-text-gray-700"><code>Eixo            Difusêo/Flow        Autoregressivo (tokens)
 expressividade  alta (multimodal)   média (depende da disc.)
 latência        K passos por chunk  1 forward, N tokens
-integração      action expert extra reusa o backbone LLM
+integraçêo      action expert extra reusa o backbone LLM
 exemplos        Diffusion Policy,π0 RT-2, OpenVLA, FAST</code></pre>
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">

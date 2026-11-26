@@ -209,7 +209,7 @@
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Fine-tunar OpenVLA com LoRA (esquema)
 from transformers import AutoModelForVision2Seq
 model = AutoModelForVision2Seq.from_pretrained(
-    "openvla/openvla-7b", load_in_4bit=True)   # quantização
+    "openvla/openvla-7b", load_in_4bit=True)   # quantizaçêo
 model = get_peft_model(model, LoraConfig(r=32))  # adapta poucos params
 # treina em demos do seu robô → política especializada</code></pre>
 </div>
@@ -297,10 +297,10 @@ model = get_peft_model(model, LoraConfig(r=32))  # adapta poucos params
 </div>
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Resumiendo el linaje en cinco dimensiones — <strong class="text-emerald-400">tamaño, datos, tokenización, licencia y enfoque</strong>. La tendencia es clara: acción cada vez más continua/expresiva, y una división entre frontera cerrada o por API (RT-2, Gemini Robotics 2, π0.7) y open práctico (OpenVLA, π0/π0.5, SmolVLA, X-VLA, GR00T N1.7, MolmoAct 2). En 2026, "abierto" tiene grados: Apache-2.0, licencia propia (NVIDIA Open Model License), no comercial (Galaxea G0.5) o solo API (Pi API).</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-xs sm:text-sm dark:text-gray-300 light-text-gray-700"><code>Modelo         Ano        Params    Ação             Licença / acesso
+<pre class="font-mono text-xs sm:text-sm dark:text-gray-300 light-text-gray-700"><code>Modelo         Ano        Params    Açêo             Licença / acesso
 RT-1           2022       35M       bins (256)       fechado
 RT-2           2023       até 55B   tokens/texto     fechado
-Octo           2024       27-93M    difusão          open
+Octo           2024       27-93M    difusêo          open
 OpenVLA        jun/2024   7B        tokens (bins)    open
 OpenVLA-OFT    fev/2025   7B        contínua (L1)    open
 π0/π0.5        2024-25    ~3B       flow / FAST      open (Apache-2.0, openpi)
@@ -309,7 +309,7 @@ SmolVLA        jun/2025   450M      flow matching    open (Apache-2.0)
 GR00T N1.7     2026       3B        DiT (S1)         código Apache-2.0, pesos NVIDIA OML
 MolmoAct 2     mai/2026   n/d*      FAST aberto      open (pesos + dados)
 Gemini Rob. 2  jul/2026   n/d       corpo inteiro    parceiros (ER 2 em prévia)
-* "5,4B" só aparece em agregadores; o blog da Ai2 não informa.</code></pre>
+* "5,4B" só aparece em agregadores; o blog da Ai2 nêo informa.</code></pre>
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
